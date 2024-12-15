@@ -5,6 +5,133 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FFDF9B"
     tools:context=".IniciarSesionKit">
 
+    <Button
+        android:id="@+id/btnIniciarSesionKit"
+        android:layout_width="200dp"
+        android:layout_height="60dp"
+        android:layout_marginBottom="92dp"
+        android:backgroundTint="#879FD4"
+        android:text="¡Comienza ahora!"
+        android:textColor="#FFFFFF"
+        android:textColorLink="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtNoTienesCuenta"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/txtNoTienesCuenta"
+        android:layout_width="300dp"
+        android:layout_height="30dp"
+        android:fontFamily="@font/gayathri_bold"
+        android:gravity="center"
+        android:text="¿No tienes una cuenta? - Regístrate ahora"
+        android:textColor="#000000"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/inputInicioSesionCodPresa"
+        app:layout_constraintVertical_bias="0.154" />
+
+    <EditText
+        android:id="@+id/inputInicioSesionCodPresa"
+        android:layout_width="320dp"
+        android:layout_height="50dp"
+        android:background="@drawable/input_border"
+        android:ems="10"
+        android:fontFamily="@font/gayathri_bold"
+        android:hint="Código presa"
+        android:inputType="text"
+        android:padding="8dp"
+        android:textColor="#000000"
+        android:textColorHint="#7C7878"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.494"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/inputInicioSesionNombreUsuario"
+        app:layout_constraintVertical_bias="0.092" />
+
+    <EditText
+        android:id="@+id/inputInicioSesionNombreUsuario"
+        android:layout_width="320dp"
+        android:layout_height="50dp"
+        android:background="@drawable/input_border"
+        android:ems="10"
+        android:fontFamily="@font/gayathri_bold"
+        android:hint="Nombre de usuario"
+        android:inputType="text"
+        android:padding="8dp"
+        android:textColor="#000000"
+        android:textColorHighlight="#7C7878"
+        android:textColorHint="#7C7878"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.494"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView9"
+        app:layout_constraintVertical_bias="0.123" />
+
+    <TextView
+        android:id="@+id/textView9"
+        android:layout_width="361dp"
+        android:layout_height="65dp"
+        android:fontFamily="@font/gayathri_bold"
+        android:gravity="center"
+        android:text="Si no recuerdas el código de Presa, tu tutor lo tiene en el apartado de “información personal&quot;."
+        android:textColor="#000000"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtTitInicioSesionKit"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/txtTitInicioSesionKit"
+        android:layout_width="339dp"
+        android:layout_height="108dp"
+        android:fontFamily="@font/dongle_bold"
+        android:gravity="center"
+        android:lineSpacingExtra="0dp"
+        android:lineSpacingMultiplier="0.5"
+        android:text="Inicio de sesión de Kit"
+        android:textColor="#000000"
+        android:textSize="55sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView8"
+        app:layout_constraintVertical_bias="0.03" />
+
+    <ImageView
+        android:id="@+id/imgInicioSesionRegresarAzul"
+        android:layout_width="31dp"
+        android:layout_height="22dp"
+        android:layout_marginStart="32dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/imageView8"
+        app:layout_constraintHorizontal_bias="0.015"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.049"
+        app:srcCompat="@drawable/imgregresarazul" />
+
+    <ImageView
+        android:id="@+id/imageView8"
+        android:layout_width="208dp"
+        android:layout_height="55dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.023"
+        app:srcCompat="@drawable/iconappcafeazul" />
 </androidx.constraintlayout.widget.ConstraintLayout>

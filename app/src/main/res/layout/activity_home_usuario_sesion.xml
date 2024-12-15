@@ -6,8 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFFFFF"
-    android:backgroundTint="#FFFFFF"
-    tools:context=".MainActivity">
+    tools:context=".HomeUsuarioSesion">
 
     <TextView
         android:id="@+id/txtTitHome"
@@ -99,5 +98,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.035"
         app:srcCompat="@drawable/logocastorway" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

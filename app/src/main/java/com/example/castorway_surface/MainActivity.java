@@ -1,6 +1,7 @@
 package com.example.castorway_surface;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -18,8 +19,6 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 public class MainActivity extends AppCompatActivity {
-    TextView txtTitHome, txtComienaHome;
-    Button btnIniciarSesion, btnRegistrarse;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,82 +28,29 @@ public class MainActivity extends AppCompatActivity {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
 
-            txtTitHome = findViewById(R.id.txtTitHome);
-            String fullText = "Hábitos saludables, futuro brillante.";
-
-            String greenWord = "Hábitos";
-            String blueWord = "futuro";
-
-            SpannableString spannableString = new SpannableString(fullText);
-
-            applyColorToWord(spannableString, fullText, greenWord, 0xFF52B788);
-            applyColorToWord(spannableString, fullText, blueWord, 0xFF879FD4);
-            txtTitHome.setText(spannableString);
-
-
-            txtComienaHome = findViewById(R.id.txtComienaHome);
-            String txtFullLink = "Comienza tu CastorWay ->";
-            String clickableText = "Way ->";
-
-            SpannableString spannableString2 = new SpannableString(txtFullLink);
-
-            applyClickableColor(spannableString2, txtFullLink, clickableText, 0xFFBA6958);
-
-            txtComienaHome.setText(spannableString2);
-            txtComienaHome.setMovementMethod(LinkMovementMethod.getInstance());
-
-            btnIniciarSesion = findViewById(R.id.btnIniciarSesion);
-            btnRegistrarse = findViewById(R.id.btnRegistrarse);
-
-            btnIniciarSesion.setOnClickListener(this::iniciarSesion);
-            btnRegistrarse.setOnClickListener(this::registrarse);
             return insets;
         });
-    }
-    private void iniciarSesion(View view){
-        Intent iniciarSesion = new Intent(this, ElegirUsrIniciarSesion.class);
-        startActivity(iniciarSesion);
-    }
-    private void registrarse(View view){
-        Intent registrarse = new Intent(this, ElegirUsrRegistrarse.class);
-        startActivity(registrarse);
-    }
-    private void applyColorToWord(SpannableString spannableString, String fullText, String word, int color) {
-        int startIndex = fullText.indexOf(word);
-        while (startIndex != -1) {
-            int endIndex = startIndex + word.length();
-            spannableString.setSpan(
-                    new ForegroundColorSpan(color),
-                    startIndex,
-                    endIndex,
-                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-            );
-            startIndex = fullText.indexOf(word, endIndex);
-        }
-    }
-    private void applyClickableColor(SpannableString spannableString, String fullText, String fragment, int color) {
-        int startIndex = fullText.indexOf(fragment);
-        if (startIndex != -1) {
-            int endIndex = startIndex + fragment.length();
-            spannableString.setSpan(
-                    new ForegroundColorSpan(color),
-                    startIndex,
-                    endIndex,
-                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-            );
-            spannableString.setSpan(new ClickableSpan() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(MainActivity.this, ElegirUsrRegistrarse.class);
-                    startActivity(intent);
-                }
-                public void updateDrawState(android.text.TextPaint ds) {
-                    super.updateDrawState(ds);
-                    ds.setUnderlineText(false);
-                    ds.setColor(0xFFBA6958);
-                    ds.bgColor = 0x00000000;
-                }
-            }, startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+    }@Override
+    protected void onStart() {
+        super.onStart();
+        SharedPreferences preferences = getSharedPreferences("Castor", MODE_PRIVATE);
+        boolean sesionActiva = preferences.getBoolean("sesionActiva", false);
+
+        if (sesionActiva) {
+            String tipoUsuario = preferences.getString("tipoUsuario", "");
+
+            if ("Castor".equals(tipoUsuario)) {
+                Intent intent = new Intent(this, VerAppWeb.class);
+                startActivity(intent);
+            } else if ("Kit".equals(tipoUsuario)) {
+                Intent intent = new Intent(this, VerAppWebKit.class);
+                startActivity(intent);
+            }
+            finish();
+        } else {
+            Intent intent = new Intent(this, HomeUsuarioSesion.class);
+            startActivity(intent);
+            finish();
         }
     }
 }

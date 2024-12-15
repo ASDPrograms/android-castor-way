@@ -39,7 +39,7 @@
         android:layout_height="101dp"
         android:fontFamily="@font/gayathri_bold"
         android:gravity="center"
-        android:text="Quiero usar CastorWay como..."
+        android:text="Mi cuenta en CastorWay es de..."
         android:textColor="#000000"
         android:textSize="34sp"
         app:layout_constraintBottom_toBottomOf="parent"
