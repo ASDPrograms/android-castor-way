@@ -1,4 +1,4 @@
-package com.example.castorway_surface;
+package com.example.castorway;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,14 +14,14 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-public class VerAppWebKit extends AppCompatActivity {
+public class VerAppWeb extends AppCompatActivity {
     Button btnSalirWeb, btnVerInfo;
     WebView webView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_ver_app_web_kit);
+        setContentView(R.layout.activity_ver_app_web);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -39,8 +39,9 @@ public class VerAppWebKit extends AppCompatActivity {
 
             return insets;
         });
-    }public void irVerInfo(View vista){
-        Intent irVerInfo = new Intent(this, InformacionKit.class);
+    }
+    public void irVerInfo(View vista){
+        Intent irVerInfo = new Intent(this, InformacionTutor.class);
         startActivity(irVerInfo);
     }
     public void cerrarSesion(View vista){

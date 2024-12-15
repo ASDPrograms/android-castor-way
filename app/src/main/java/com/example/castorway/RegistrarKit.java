@@ -1,4 +1,4 @@
-package com.example.castorway_surface;
+package com.example.castorway;
 
 import android.content.ContentValues;
 import android.content.Intent;
@@ -23,8 +23,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-
-import java.security.SecureRandom;
 
 public class RegistrarKit extends AppCompatActivity {
     TextView txtTitRegistrarKit, txtYaTienesCuenta;

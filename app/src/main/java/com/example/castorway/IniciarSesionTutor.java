@@ -1,4 +1,4 @@
-package com.example.castorway_surface;
+package com.example.castorway;
 
 import android.content.ContentValues;
 import android.content.Intent;
