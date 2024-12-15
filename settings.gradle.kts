@@ -19,5 +19,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "CastorWay_Surface"
+rootProject.name = "CastorWay"
 include(":app")

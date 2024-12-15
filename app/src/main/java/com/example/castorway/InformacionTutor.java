@@ -1,4 +1,4 @@
-package com.example.castorway;
+package com.example.CastorWay;
 
 import android.content.ClipData;
 import android.content.ClipboardManager;
