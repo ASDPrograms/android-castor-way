@@ -11,6 +11,7 @@ import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -24,7 +25,17 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.CastorWay.api.ApiService;
+import com.example.CastorWay.modelsDB.Castor;
+import com.example.CastorWay.retrofit.RetrofitClient;
+
 import java.security.SecureRandom;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class RegistrarTutor extends AppCompatActivity {
     TextView txtTitRegistroTutor, txtYaTienesCuenta;
@@ -98,53 +109,114 @@ public class RegistrarTutor extends AppCompatActivity {
                     }
                     if(edad > 0 && edad < 100){
                         if (android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                            administrador_BD admin = new administrador_BD(this, "Base", null, 1);
-                            SQLiteDatabase BaseDeDatos = admin.getWritableDatabase();
+                            //Inicio código verificar email
+                            ApiService apiService = RetrofitClient.getApiService();
+                            Call<List<Castor>> call = apiService.getAllCastores();
 
-                            ContentValues registro = new ContentValues();
-                            Cursor cursor = BaseDeDatos.rawQuery("SELECT * FROM Castor WHERE email = ?", new String[]{email});
-                            if (cursor.getCount() == 0) {
-                                if (contrasena.length() >= 6) {
-                                    String caracteres = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-                                    SecureRandom random = new SecureRandom();
-                                    StringBuilder codigo = new StringBuilder();
+                            call.enqueue(new Callback<List<Castor>>() {
+                                @Override
+                                public void onResponse(Call<List<Castor>> call, Response<List<Castor>> response) {
+                                    if (response.isSuccessful()) {
+                                        List<Castor> castores = response.body();
+                                        AtomicInteger cntCoincidEmail = new AtomicInteger(0);
 
-                                    for (int i = 0; i < 12; i++) {
-                                        int indice = random.nextInt(caracteres.length());
-                                        codigo.append(caracteres.charAt(indice));
+                                        if (castores != null) {
+                                            for (Castor castor : castores) {
+                                                if(castor.getEmail().equalsIgnoreCase(email)){
+                                                    cntCoincidEmail.incrementAndGet();
+                                                    Log.d("MainActivity", "Castor: " + castor.getEmail());
+                                                    break;
+                                                }
+                                            }
+                                        }
+
+                                        if (cntCoincidEmail.get() == 0) {
+                                            if (contrasena.length() >= 6) {
+                                                String caracteres = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+                                                SecureRandom random = new SecureRandom();
+                                                StringBuilder codigo = new StringBuilder();
+
+                                                for (int i = 0; i < 12; i++) {
+                                                    int indice = random.nextInt(caracteres.length());
+                                                    codigo.append(caracteres.charAt(indice));
+                                                }
+                                                String codPresa = codigo.toString();
+                                                Log.d("MainActivity", "codPresa: " + codPresa);
+
+                                                //Inicio de código para insertar nuevo Usuario
+
+                                                ApiService apiService2 = RetrofitClient.getApiService();
+                                                Castor nuevoCastor = new Castor();
+                                                nuevoCastor.setCodPresa(codPresa);
+                                                nuevoCastor.setNombre(nombre);
+                                                nuevoCastor.setApellidos(apellidos);
+                                                nuevoCastor.setEdad(edad);
+                                                nuevoCastor.setEmail(email);
+                                                nuevoCastor.setContraseña(contrasena);
+
+                                                Call<Castor> call2 = apiService2.createCastor(nuevoCastor);
+
+                                                call2.enqueue(new Callback<Castor>() {
+                                                    @Override
+                                                    public void onResponse(Call<Castor> call, Response<Castor> response) {
+                                                        if (response.isSuccessful()) {
+                                                            Toast.makeText(RegistrarTutor.this, "¡Bienvenido(a) a CastorWay!", Toast.LENGTH_SHORT).show();
+
+                                                            SharedPreferences preferences = getSharedPreferences("User", MODE_PRIVATE);
+                                                            SharedPreferences.Editor editor = preferences.edit();
+
+                                                            editor.putString("email", email);
+                                                            editor.putString("tipoUsuario", "Castor");
+                                                            editor.putBoolean("sesionActiva", true);
+                                                            editor.apply();
+
+                                                            Intent intent = new Intent(RegistrarTutor.this, VerAppWeb.class);
+                                                            startActivity(intent);
+                                                            finish();
+                                                        } else {
+                                                            Toast.makeText(RegistrarTutor.this, "Error en el registro", Toast.LENGTH_SHORT).show();
+                                                        }
+                                                    }
+
+                                                    @Override
+                                                    public void onFailure(Call<Castor> call, Throwable t) {
+                                                        Toast.makeText(RegistrarTutor.this, "Error en la conexión", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                });
+                                                //Fin código insertar nuevo usuario
+                                            }else{
+                                                Toast.makeText(RegistrarTutor.this, "La contraseña debe de tener al menos de 6 caractéres.", Toast.LENGTH_SHORT).show();
+                                                inputContrasena.requestFocus();
+                                                return;
+                                            }
+                                        }else{
+                                            Toast.makeText(RegistrarTutor.this, "El correo ingresado ya está asociado a otra cuenta.", Toast.LENGTH_SHORT).show();
+                                        }
+
+                                    } else {
+                                        Log.e("API_RESPONSE", "Error HTTP: " + response.code());
+                                        Log.e("API_RESPONSE", "Mensaje de error: " + response.message());
+                                        try {
+                                            Log.e("API_RESPONSE", "Cuerpo del error: " + response.errorBody().string());
+                                        } catch (Exception e) {
+                                            Log.e("API_RESPONSE", "Error al leer el cuerpo de la respuesta", e);
+                                        } finally {
+                                            if (response.errorBody() != null) {
+                                                response.errorBody().close();
+                                            }
+                                        }
                                     }
-
-                                    registro.put("codPresa", codigo.toString());
-                                    registro.put("nombre", nombre);
-                                    registro.put("apellidos", apellidos);
-                                    registro.put("edad", edad);
-                                    registro.put("email", email);
-                                    registro.put("contrasena", contrasena);
-
-                                    SharedPreferences preferences = getSharedPreferences("Castor", MODE_PRIVATE);
-                                    SharedPreferences.Editor editor = preferences.edit();
-
-                                    editor.putString("email", email);
-                                    editor.putString("tipoUsuario", "Castor");
-                                    editor.putBoolean("sesionActiva", true);
-                                    editor.apply();
-
-                                    BaseDeDatos.insert("Castor", null, registro);
-                                    BaseDeDatos.close();
-
-                                    Toast.makeText(this, "¡Bienvenido(a) a CastorWay!", Toast.LENGTH_SHORT).show();
-                                    Intent intent = new Intent(this, VerAppWeb.class);
-                                    startActivity(intent);
-                                    finish();
-                                }else{
-                                    Toast.makeText(this, "La contraseña debe de tener al menos de 6 caractéres.", Toast.LENGTH_SHORT).show();
-                                    inputContrasena.requestFocus();
-                                    return;
                                 }
-                            }else{
-                                Toast.makeText(this, "El correo ingresado ya está asociado a otra cuenta.", Toast.LENGTH_SHORT).show();
-                                cursor.close();
-                            }
+
+                                @Override
+                                public void onFailure(Call<List<Castor>> call, Throwable t) {
+                                    Log.e("RegistrarTutor", "Error de conexión: " + t.getMessage());
+                                }
+                            });
+
+                            //Fin de la consulta a la BD
+
+
                         }else{
                             Toast.makeText(this, "Ingresa un correo electrónico válido.", Toast.LENGTH_SHORT).show();
                             inputEmail.requestFocus();

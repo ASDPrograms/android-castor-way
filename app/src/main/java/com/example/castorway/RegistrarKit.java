@@ -11,6 +11,7 @@ import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,6 +24,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
+import com.example.CastorWay.api.ApiService;
+import com.example.CastorWay.modelsDB.Castor;
+import com.example.CastorWay.modelsDB.Kit;
+import com.example.CastorWay.retrofit.RetrofitClient;
+
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class RegistrarKit extends AppCompatActivity {
     TextView txtTitRegistrarKit, txtYaTienesCuenta;
@@ -95,43 +108,128 @@ public class RegistrarKit extends AppCompatActivity {
                         return;
                     }
                     if(edad > 0 && edad < 100){
-                        administrador_BD admin = new administrador_BD(this, "Base", null, 1);
-                        SQLiteDatabase BaseDeDatos = admin.getWritableDatabase();
+                        ApiService apiService = RetrofitClient.getApiService();
+                        Call<List<Kit>> call = apiService.getAllKits();
+                        call.enqueue(new Callback<List<Kit>>() {
+                            @Override
+                            public void onResponse(Call<List<Kit>> call, Response<List<Kit>> response) {
+                                if (response.isSuccessful()) {
+                                    List<Kit> kits = response.body();
+                                    AtomicInteger cntCoincidNombreUser = new AtomicInteger(0);
 
-                        ContentValues registro = new ContentValues();
+                                    if (kits != null) {
+                                        for (Kit kit : kits) {
+                                            if(kit.getNombreUsuario().equals(nombreUsuario)){
+                                                cntCoincidNombreUser.incrementAndGet();
+                                                Log.d("MainActivity", "Castor: " + kit.getNombreUsuario());
+                                            }
+                                        }
+                                    }
+                                    if(cntCoincidNombreUser.get() == 0){
+                                        ApiService apiService2 = RetrofitClient.getApiService();
+                                        Call<List<Castor>> call2 = apiService2.getAllCastores();
+                                        call2.enqueue(new Callback<List<Castor>>() {
+                                            @Override
+                                            public void onResponse(Call<List<Castor>> call2, Response<List<Castor>> response2) {
+                                                if (response2.isSuccessful()) {
+                                                    List<Castor> castors = response2.body();
+                                                    AtomicInteger cntCoincidCodPresa = new AtomicInteger(0);
 
-                        Cursor cursor = BaseDeDatos.rawQuery("SELECT * FROM Kit WHERE nombreUsuario = ?", new String[]{nombreUsuario});
-                        if (cursor.getCount() == 0) {
-                            Cursor cursor2 = BaseDeDatos.rawQuery("SELECT * FROM Castor WHERE codPresa = ?", new String[]{codPresa});
-                            if (cursor2.getCount() == 1) {
-                                registro.put("codPresa", codPresa);
-                                registro.put("nombreUsuario", nombreUsuario);
-                                registro.put("nombre", nombre);
-                                registro.put("apellidos", apellidos);
-                                registro.put("edad", edad);
+                                                    if (castors != null) {
+                                                        for (Castor castor : castors) {
+                                                            if (castor.getCodPresa() != null && castor.getCodPresa().equals(codPresa)) {
+                                                                cntCoincidCodPresa.incrementAndGet();
+                                                                Log.d("CodPresa", "SiCodPresa: " + castor.getCodPresa());
+                                                                break;
+                                                            }else{
+                                                                Log.d("CodPresa", "NoCodPresa: " + castor.getCodPresa());
+                                                            }
+                                                        }
+                                                    }
+                                                    else{
+                                                        Log.d("NoCastores", "Sin Castor");
+                                                    }
+                                                    if(cntCoincidCodPresa.get() == 1){
 
-                                SharedPreferences preferences = getSharedPreferences("Castor", MODE_PRIVATE);
-                                SharedPreferences.Editor editor = preferences.edit();
+                                                        ApiService apiService3 = RetrofitClient.getApiService();
+                                                        Kit nuevoKit = new Kit();
+                                                        nuevoKit.setCodPresa(codPresa);
+                                                        nuevoKit.setNombreUsuario(nombreUsuario);
+                                                        nuevoKit.setNombre(nombre);
+                                                        nuevoKit.setApellidos(apellidos);
+                                                        nuevoKit.setEdad(edad);
 
-                                editor.putString("nombreUsuario", nombreUsuario);
-                                editor.putString("tipoUsuario", "Kit");
-                                editor.putBoolean("sesionActiva", true);
-                                editor.apply();
+                                                        Call<Kit> call3 = apiService3.createKit(nuevoKit);
+                                                        call3.enqueue(new Callback<Kit>() {
+                                                            @Override
+                                                            public void onResponse(Call<Kit> call3, Response<Kit> response3) {
+                                                                if (response3.isSuccessful()) {
+                                                                    Toast.makeText(RegistrarKit.this, "¡Bienvenido(a) a CastorWay!", Toast.LENGTH_SHORT).show();
 
-                                BaseDeDatos.insert("Kit", null, registro);
-                                BaseDeDatos.close();
+                                                                    SharedPreferences preferences = getSharedPreferences("User", MODE_PRIVATE);
+                                                                    SharedPreferences.Editor editor = preferences.edit();
 
-                                Toast.makeText(this, "¡Bienvenido(a) a CastorWay!", Toast.LENGTH_SHORT).show();
-                                Intent intent = new Intent(this, VerAppWebKit.class);
-                                startActivity(intent);
-                                finish();
-                            }else{
-                                Toast.makeText(this, "No existe el código de presa ingresado.", Toast.LENGTH_SHORT).show();
+                                                                    editor.putString("nombreUsuario", nombreUsuario);
+                                                                    editor.putString("tipoUsuario", "Kit");
+                                                                    editor.putBoolean("sesionActiva", true);
+                                                                    editor.apply();
+
+                                                                    Intent intent = new Intent(RegistrarKit.this, VerAppWebKit.class);
+                                                                    startActivity(intent);
+                                                                    finish();
+                                                                } else {
+                                                                    Toast.makeText(RegistrarKit.this, "Error en el registro", Toast.LENGTH_SHORT).show();
+                                                                }
+                                                            }
+                                                            @Override
+                                                            public void onFailure(Call<Kit> call, Throwable t) {
+                                                                Toast.makeText(RegistrarKit.this, "Error en la conexión", Toast.LENGTH_SHORT).show();
+                                                            }
+                                                        });
+                                                    }else{
+                                                        Toast.makeText(RegistrarKit.this, "No existe el código de presa ingresado.", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                } else {
+                                                    Log.e("API_RESPONSE", "Error HTTP: " + response2.code());
+                                                    Log.e("API_RESPONSE", "Mensaje de error: " + response2.message());
+                                                    try {
+                                                        Log.e("API_RESPONSE", "Cuerpo del error: " + response2.errorBody().string());
+                                                    } catch (Exception e) {
+                                                        Log.e("API_RESPONSE", "Error al leer el cuerpo de la respuesta", e);
+                                                    } finally {
+                                                        if (response2.errorBody() != null) {
+                                                            response2.errorBody().close();
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            @Override
+                                            public void onFailure(Call<List<Castor>> call2, Throwable t) {
+                                                Log.e("ConsultarCastor", "Error de conexión: " + t.getMessage());
+                                            }
+                                        });
+                                    }else{
+                                        Toast.makeText(RegistrarKit.this, "El nombre de usuario ingresado ya está ocupado por otra cuenta.", Toast.LENGTH_SHORT).show();
+                                    }
+                                } else {
+                                    Log.e("API_RESPONSE", "Error HTTP: " + response.code());
+                                    Log.e("API_RESPONSE", "Mensaje de error: " + response.message());
+                                    try {
+                                        Log.e("API_RESPONSE", "Cuerpo del error: " + response.errorBody().string());
+                                    } catch (Exception e) {
+                                        Log.e("API_RESPONSE", "Error al leer el cuerpo de la respuesta", e);
+                                    } finally {
+                                        if (response.errorBody() != null) {
+                                            response.errorBody().close();
+                                        }
+                                    }
+                                }
                             }
-                        }else{
-                            Toast.makeText(this, "El nombre de usuario ingresado ya está ocupado por otra cuenta.", Toast.LENGTH_SHORT).show();
-                            cursor.close();
-                        }
+                            @Override
+                            public void onFailure(Call<List<Kit>> call, Throwable t) {
+                                Log.e("RegistrarKit", "Error de conexión: " + t.getMessage());
+                            }
+                        });
                     }else{
                         Toast.makeText(this, "Ingrese una edad válida.", Toast.LENGTH_SHORT).show();
                     }

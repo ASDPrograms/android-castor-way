@@ -25,20 +25,21 @@ public class MainActivity extends AppCompatActivity {
     }@Override
     protected void onStart() {
         super.onStart();
-        SharedPreferences preferences = getSharedPreferences("Castor", MODE_PRIVATE);
+        SharedPreferences preferences = getSharedPreferences("User", MODE_PRIVATE);
         boolean sesionActiva = preferences.getBoolean("sesionActiva", false);
 
         if (sesionActiva) {
             String tipoUsuario = preferences.getString("tipoUsuario", "");
 
-            if ("Castor".equals(tipoUsuario)) {
+            if (tipoUsuario.equals("Castor")) {
                 Intent intent = new Intent(this, VerAppWeb.class);
                 startActivity(intent);
-            } else if ("Kit".equals(tipoUsuario)) {
+                finish();
+            } else if (tipoUsuario.equals("Kit")) {
                 Intent intent = new Intent(this, VerAppWebKit.class);
                 startActivity(intent);
+                finish();
             }
-            finish();
         } else {
             Intent intent = new Intent(this, HomeUsuarioSesion.class);
             startActivity(intent);

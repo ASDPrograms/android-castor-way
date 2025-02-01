@@ -11,6 +11,7 @@ import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,6 +24,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
+import com.example.CastorWay.api.ApiService;
+import com.example.CastorWay.modelsDB.Castor;
+import com.example.CastorWay.retrofit.RetrofitClient;
+
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class IniciarSesionTutor extends AppCompatActivity {
     Button btnIniciarSesionTutor;
@@ -78,29 +90,62 @@ public class IniciarSesionTutor extends AppCompatActivity {
 
             if(!email.isEmpty() && !contrasena.isEmpty()){
 
-                administrador_BD admin = new administrador_BD(this, "Base", null, 1);
-                SQLiteDatabase BaseDeDatos = admin.getWritableDatabase();
+                ApiService apiService = RetrofitClient.getApiService();
+                Call<List<Castor>> call = apiService.getAllCastores();
+                call.enqueue(new Callback<List<Castor>>() {
+                    @Override
+                    public void onResponse(Call<List<Castor>> call, Response<List<Castor>> response) {
+                        if (response.isSuccessful()) {
+                            List<Castor> castores = response.body();
+                            AtomicInteger cntCoincidUser = new AtomicInteger(0);
 
-                ContentValues registro = new ContentValues();
-                Cursor cursor = BaseDeDatos.rawQuery("SELECT * FROM Castor WHERE email = ? AND contrasena = ?", new String[]{email, contrasena});
-                if (cursor.getCount() == 1) {
+                            if (castores != null) {
+                                for (Castor castor : castores) {
+                                    if(castor.getEmail().equalsIgnoreCase(email) && castor.getContraseña().equals(contrasena)){
+                                        cntCoincidUser.incrementAndGet();
+                                        Log.d("MainActivity", "Castor: " + castor.getNombre());
+                                        break;
+                                    }
+                                }
+                            }
 
-                    SharedPreferences preferences = getSharedPreferences("Castor", MODE_PRIVATE);
-                    SharedPreferences.Editor editor = preferences.edit();
+                            if (cntCoincidUser.get() == 1) {
+                                SharedPreferences preferences = getSharedPreferences("User", MODE_PRIVATE);
+                                SharedPreferences.Editor editor = preferences.edit();
 
-                    editor.putString("email", email);
-                    editor.putString("tipoUsuario", "Castor");
-                    editor.putBoolean("sesionActiva", true);
-                    editor.apply();
+                                editor.putString("email", email);
+                                editor.putString("tipoUsuario", "Castor");
+                                editor.putBoolean("sesionActiva", true);
+                                editor.apply();
 
 
-                    Toast.makeText(this, "¡Estás de regreso!, bienvenido", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(this, VerAppWeb.class);
-                    startActivity(intent);
-                    finish();
-                }else{
-                    Toast.makeText(this, "No se encontró una cuenta con la información proporcionada, pruebe con otros datos.", Toast.LENGTH_SHORT).show();
-                }
+                                Toast.makeText(IniciarSesionTutor.this, "¡Estás de regreso!, bienvenido", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(IniciarSesionTutor.this, VerAppWeb.class);
+                                startActivity(intent);
+                                finish();
+                            }else{
+                                Toast.makeText(IniciarSesionTutor.this, "No se encontró una cuenta con la información proporcionada, pruebe con otros datos.", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            Log.e("API_RESPONSE", "Error HTTP: " + response.code());
+                            Log.e("API_RESPONSE", "Mensaje de error: " + response.message());
+                            try {
+                                Log.e("API_RESPONSE", "Cuerpo del error: " + response.errorBody().string());
+                            } catch (Exception e) {
+                                Log.e("API_RESPONSE", "Error al leer el cuerpo de la respuesta", e);
+                            } finally {
+                                if (response.errorBody() != null) {
+                                    response.errorBody().close();
+                                }
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<Castor>> call, Throwable t) {
+                        Log.e("MainActivity", "Error de conexión: " + t.getMessage());
+                    }
+                });
 
             }else{
                 Toast.makeText(this, "Favor de completar todos los campos.", Toast.LENGTH_SHORT).show();
