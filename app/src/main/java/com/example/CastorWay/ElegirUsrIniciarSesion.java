@@ -1,4 +1,4 @@
-package com.example.CastorWay;
+package com.example.castorway;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +11,7 @@ import androidx.cardview.widget.CardView;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import android.util.Log;
 
 public class ElegirUsrIniciarSesion extends AppCompatActivity {
     CardView cardViewTutor, cardViewKit;
@@ -20,17 +21,25 @@ public class ElegirUsrIniciarSesion extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_elegir_usr_iniciar_sesion);
+        cardViewTutor = findViewById(R.id.cardViewTutor);
+        cardViewKit = findViewById(R.id.cardViewKit);
+        imgRegresarAzul = findViewById(R.id.imgRegresarAzul);
+
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
 
-            cardViewTutor = findViewById(R.id.cardViewTutor);
-            cardViewKit = findViewById(R.id.cardViewKit);
-            imgRegresarAzul = findViewById(R.id.imgRegresarAzul);
+            if (cardViewTutor == null || cardViewKit == null || imgRegresarAzul == null) {
+                Log.e("ElegirUsrIniciarSesion", "Algunas vistas no se inicializaron correctamente.");
+            } else {
+                Log.d("ElegirUsrIniciarSesion", "Las vistas se inicializaron correctamente.");
+            }
 
             cardViewTutor.setOnClickListener(this::iniciarSesionTutor);
             cardViewKit.setOnClickListener(this::iniciarSesionKit);
             imgRegresarAzul.setOnClickListener(this::regresarHome);
+
             return insets;
         });
     }

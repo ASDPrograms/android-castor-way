@@ -1,11 +1,11 @@
-package com.example.CastorWay;
+package com.example.castorway;
 
-import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.text.InputType;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,9 +26,9 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.example.CastorWay.api.ApiService;
-import com.example.CastorWay.modelsDB.Castor;
-import com.example.CastorWay.retrofit.RetrofitClient;
+import com.example.castorway.api.ApiService;
+import com.example.castorway.modelsDB.Castor;
+import com.example.castorway.retrofit.RetrofitClient;
 
 import java.security.SecureRandom;
 import java.util.List;
@@ -42,6 +43,9 @@ public class RegistrarTutor extends AppCompatActivity {
     Button btnRegistrarTutor;
     EditText inputNombre, inputApellidos, inputEdad, inputEmail, inputContrasena;
     ImageView imgRegresarAzul2;
+    ImageButton btnPassword;
+    private boolean isPasswordVisible = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +54,8 @@ public class RegistrarTutor extends AppCompatActivity {
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+
+            btnPassword = findViewById(R.id.btnPassword);
 
             txtTitRegistroTutor = findViewById(R.id.txtTitRegistroTutor);
             String fullText = "Registro de Castor";
@@ -77,6 +83,9 @@ public class RegistrarTutor extends AppCompatActivity {
 
             imgRegresarAzul2 = findViewById(R.id.imgRegresarAzul2);
             imgRegresarAzul2.setOnClickListener(this::backElegirUsrRegistro);
+
+            inputContrasena = findViewById(R.id.inputContrasena);
+            btnPassword.setOnClickListener(this::togglePasswordVisibility);
 
             return insets;
         });
@@ -292,4 +301,20 @@ public class RegistrarTutor extends AppCompatActivity {
         Intent backElegirUsrRegistro = new Intent(this, ElegirUsrRegistrarse.class);
         startActivity(backElegirUsrRegistro);
     }
+    private void togglePasswordVisibility(View view) {
+        if (isPasswordVisible) {
+            inputContrasena.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+            btnPassword.setImageResource(R.drawable.no_ver_contrasena);
+        } else {
+            inputContrasena.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+            btnPassword.setImageResource(R.drawable.ver_contrasena);
+        }
+
+        isPasswordVisible = !isPasswordVisible;
+
+        inputContrasena.setTypeface(inputContrasena.getTypeface());
+
+        inputContrasena.setSelection(inputContrasena.getText().length());
+    }
+
 }

@@ -1,9 +1,11 @@
-package com.example.CastorWay;
+package com.example.castorway;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -42,6 +44,7 @@ public class ElegirUsrRegistrarse extends AppCompatActivity {
     private void registrarKit(View view){
         Intent registrarKit = new Intent(this, RegistrarKit.class);
         startActivity(registrarKit);
+        finish();
     }
     private void regresarHome(View view){
         Intent regresarHome = new Intent(this, MainActivity.class);

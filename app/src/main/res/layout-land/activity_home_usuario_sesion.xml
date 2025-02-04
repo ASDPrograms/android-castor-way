@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:background="#BCF0E4">
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -8,24 +16,39 @@
     android:background="#FFFFFF"
     tools:context=".HomeUsuarioSesion">
 
+    <!-- Directrices para posicionar los elementos -->
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineTop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintGuide_begin="100dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineCenter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintGuide_percent="0.5" />
+
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineBottom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintGuide_percent="0.75" />
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintGuide_begin="267dp"
-        />
+    <!-- Logo -->
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/txtTitHome"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintVertical_bias="0.1"
+        app:srcCompat="@drawable/logocastorway"/>
 
+    <!-- Texto principal -->
     <TextView
         android:id="@+id/txtTitHome"
         android:layout_width="0dp"
@@ -35,13 +58,12 @@
         android:gravity="center"
         android:text="Hábitos saludables,\nfuturo brillante."
         android:textColor="#000000"
-        android:textColorLink="#000000"
         android:textSize="44sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/imageView2"
-        />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
+    <!-- Subtítulo -->
     <TextView
         android:id="@+id/txtComienaHome"
         android:layout_width="wrap_content"
@@ -49,24 +71,36 @@
         android:fontFamily="@font/gayathri_bold"
         android:text="Comienza tu CastorWay ->"
         android:textColor="#000000"
-        android:textColorLink="#000000"
         android:textSize="16sp"
         app:layout_constraintTop_toBottomOf="@id/txtTitHome"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintVertical_bias="0.25"/>
+        app:layout_constraintVertical_bias="0.1"/>
 
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/txtComienaHome"
+        app:layout_constraintVertical_bias="0.4"
+        app:srcCompat="@drawable/raudy" />
+
+    <!-- Contenedor de botones centrado -->
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintWidth_percent="0.7"
-        app:layout_constraintTop_toTopOf="@+id/guideline"
+        android:padding="16dp"
+        app:layout_constraintWidth_percent="0.35"
+        app:layout_constraintTop_toBottomOf="@id/imageView"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:padding="16dp">
+        app:layout_constraintVertical_bias="0.5">
 
         <Button
             android:id="@+id/btnRegistrarUsr"
@@ -76,8 +110,9 @@
             android:fontFamily="@font/dongle_bold"
             android:text="¡Comienza ya!"
             android:textColor="#FFFFFF"
-            android:textColorLink="#FFFFFF"
-            android:textSize="24sp" />
+            android:textSize="24sp"
+            android:layout_marginBottom="12dp"
+            />
 
         <Button
             android:id="@+id/btnIniciarSesionUsr"
@@ -87,31 +122,8 @@
             android:fontFamily="@font/dongle_bold"
             android:text="Ya tengo una cuenta"
             android:textColor="#FFFFFF"
-            android:textColorLink="#FFFFFF"
             android:textSize="24sp" />
     </LinearLayout>
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/txtComienaHome"
-        app:layout_constraintVertical_bias="0.4"
-        app:srcCompat="@drawable/raudy" />
-
-    <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.05"
-        app:srcCompat="@drawable/logocastorway"/>
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

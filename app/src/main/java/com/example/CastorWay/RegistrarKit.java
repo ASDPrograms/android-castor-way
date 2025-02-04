@@ -1,10 +1,7 @@
-package com.example.CastorWay;
+package com.example.castorway;
 
-import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -25,10 +22,10 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.example.CastorWay.api.ApiService;
-import com.example.CastorWay.modelsDB.Castor;
-import com.example.CastorWay.modelsDB.Kit;
-import com.example.CastorWay.retrofit.RetrofitClient;
+import com.example.castorway.api.ApiService;
+import com.example.castorway.modelsDB.Castor;
+import com.example.castorway.modelsDB.Kit;
+import com.example.castorway.retrofit.RetrofitClient;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;

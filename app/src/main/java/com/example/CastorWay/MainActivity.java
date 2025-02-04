@@ -1,4 +1,4 @@
-package com.example.CastorWay;
+package com.example.castorway;
 
 import android.content.Intent;
 import android.content.SharedPreferences;

@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:background="#BCF0E4">
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -34,11 +42,11 @@
 
     <ImageView
         android:id="@+id/imageView4"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginTop="24dp"
         android:adjustViewBounds="true"
-        app:layout_constraintWidth_percent="0.4"
+        app:layout_constraintHeight_percent="0.06"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -50,7 +58,7 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/dongle_bold"
         android:gravity="center"
-        android:text="Registro de Castor"
+        android:text="Registro de Kit"
         android:textColor="#000000"
         android:textSize="42sp"
         app:layout_constraintTop_toBottomOf="@+id/imageView4"
@@ -62,15 +70,17 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/gayathri_bold"
-        android:text="Ingresa tus datos como tutor"
+        android:text="Éste formulario debe de ser llenado por el Tutor por seguridad del menor."
         android:textColor="#000000"
         android:textSize="16sp"
         app:layout_constraintTop_toBottomOf="@+id/txtTitRegistrarKit"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintVertical_bias="0.035"
+        app:layout_constraintWidth_percent="0.6"/>
     <EditText
         android:id="@+id/inputNombreUsuario"
-        android:layout_width="320dp"
+        android:layout_width="0dp"
         android:layout_height="50dp"
         android:background="@drawable/input_border"
         android:ems="10"
@@ -85,10 +95,11 @@
         app:layout_constraintHorizontal_bias="0.494"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView4"
-        app:layout_constraintVertical_bias="0.035" />
+        app:layout_constraintVertical_bias="0.035"
+        app:layout_constraintWidth_percent="0.6"/>
     <EditText
         android:id="@+id/inputNombre"
-        android:layout_width="320dp"
+        android:layout_width="0dp"
         android:layout_height="50dp"
         android:background="@drawable/input_border"
         android:ems="10"
@@ -103,11 +114,12 @@
         app:layout_constraintHorizontal_bias="0.494"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/inputNombreUsuario"
-        app:layout_constraintVertical_bias="0.035" />
+        app:layout_constraintVertical_bias="0.035"
+        app:layout_constraintWidth_percent="0.6"/>
 
     <EditText
         android:id="@+id/inputApellidos"
-        android:layout_width="320dp"
+        android:layout_width="0dp"
         android:layout_height="50dp"
         android:background="@drawable/input_border"
         android:ems="10"
@@ -122,11 +134,12 @@
         app:layout_constraintHorizontal_bias="0.494"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/inputNombre"
-        app:layout_constraintVertical_bias="0.045" />
+        app:layout_constraintVertical_bias="0.045"
+        app:layout_constraintWidth_percent="0.6"/>
 
     <EditText
         android:id="@+id/inputEdad"
-        android:layout_width="320dp"
+        android:layout_width="0dp"
         android:layout_height="50dp"
         android:background="@drawable/input_border"
         android:ems="10"
@@ -142,11 +155,12 @@
         app:layout_constraintHorizontal_bias="0.494"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/inputApellidos"
-        app:layout_constraintVertical_bias="0.048" />
+        app:layout_constraintVertical_bias="0.048"
+        app:layout_constraintWidth_percent="0.6"/>
 
     <EditText
         android:id="@+id/inputCodPresa"
-        android:layout_width="320dp"
+        android:layout_width="0dp"
         android:layout_height="50dp"
         android:background="@drawable/input_border"
         android:ems="10"
@@ -161,7 +175,8 @@
         app:layout_constraintHorizontal_bias="0.494"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/inputEdad"
-        app:layout_constraintVertical_bias="0.061" />
+        app:layout_constraintVertical_bias="0.061"
+        app:layout_constraintWidth_percent="0.6"/>
 
     <TextView
         android:id="@+id/txtYaTienesCuenta"
@@ -225,3 +240,4 @@
         app:layout_constraintVertical_bias="0.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

@@ -1,7 +1,7 @@
-package com.example.CastorWay.api;
+package com.example.castorway.api;
 
-import com.example.CastorWay.modelsDB.Castor;
-import com.example.CastorWay.modelsDB.Kit;
+import com.example.castorway.modelsDB.Castor;
+import com.example.castorway.modelsDB.Kit;
 
 import java.util.List;
 

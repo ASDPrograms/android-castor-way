@@ -1,4 +1,4 @@
-package com.example.CastorWay;
+package com.example.castorway;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -16,9 +15,9 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.example.CastorWay.api.ApiService;
-import com.example.CastorWay.modelsDB.Castor;
-import com.example.CastorWay.retrofit.RetrofitClient;
+import com.example.castorway.api.ApiService;
+import com.example.castorway.modelsDB.Castor;
+import com.example.castorway.retrofit.RetrofitClient;
 
 import java.util.List;
 

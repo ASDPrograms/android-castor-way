@@ -1,19 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:background="#BCF0E4">
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F7B9A2"
-    tools:context=".IniciarSesionTutor">
+    android:background="#FFDF9B"
+    tools:context=".IniciarSesionKit">
 
     <Button
-        android:id="@+id/btnIniciarSesionTutor"
+        android:id="@+id/btnIniciarSesionKit"
         android:layout_width="200dp"
         android:layout_height="60dp"
-        android:layout_marginBottom="20dp"
-        android:backgroundTint="#885551"
+        android:layout_marginBottom="92dp"
+        android:backgroundTint="#879FD4"
         android:text="¡Comienza ahora!"
         android:textColor="#FFFFFF"
         android:textColorLink="#FFFFFF"
@@ -34,100 +42,76 @@
         android:textColor="#000000"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
-        app:layout_constraintVertical_bias="0.532" />
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout"
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        app:layout_constraintWidth_percent="0.8"
-        android:background="@drawable/input_border"
-        android:ems="10"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/inputInicioSesionEmail"
-        app:layout_constraintVertical_bias="0.066">
-
-        <EditText
-            android:id="@+id/inputInicioSesionContrasena"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:background="@drawable/input_border"
-            android:ems="10"
-            android:fontFamily="@font/gayathri_bold"
-            android:hint="Contraseña"
-            android:inputType="textPassword"
-            android:padding="8dp"
-            android:textColor="#000000"
-            android:textColorHint="#7C7878"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/btnPassword"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0" />
-
-        <ImageButton
-            android:id="@+id/btnPassword"
-            android:layout_width="40dp"
-            android:layout_height="match_parent"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="Mostrar contraseña"
-            android:scaleType="centerInside"
-            android:src="@drawable/no_ver_contrasena"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="MissingConstraints" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
+        app:layout_constraintTop_toBottomOf="@+id/inputInicioSesionCodPresa"
+        app:layout_constraintVertical_bias="0.154" />
 
     <EditText
-        android:id="@+id/inputInicioSesionEmail"
+        android:id="@+id/inputInicioSesionCodPresa"
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:background="@drawable/input_border"
         android:ems="10"
         android:fontFamily="@font/gayathri_bold"
-        android:hint="Email"
-        android:inputType="textEmailAddress"
+        android:hint="Código presa"
+        android:inputType="text"
         android:padding="8dp"
         android:textColor="#000000"
         android:textColorHint="#7C7878"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.494"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/inputInicioSesionNombreUsuario"
+        app:layout_constraintVertical_bias="0.035"
+        app:layout_constraintWidth_percent="0.6"/>
+
+    <EditText
+        android:id="@+id/inputInicioSesionNombreUsuario"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:background="@drawable/input_border"
+        android:ems="10"
+        android:fontFamily="@font/gayathri_bold"
+        android:hint="Nombre de usuario"
+        android:inputType="text"
+        android:padding="8dp"
+        android:textColor="#000000"
+        android:textColorHint="#7C7878"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.494"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView9"
-        app:layout_constraintVertical_bias="0.268"
-        app:layout_constraintWidth_percent="0.8" />
+        app:layout_constraintVertical_bias="0.035"
+        app:layout_constraintWidth_percent="0.6"/>
 
     <TextView
         android:id="@+id/textView9"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/gayathri_bold"
-        android:text="Ingresa tus datos como tutor"
+        android:gravity="center"
+        android:text="Si no recuerdas el código de Presa, tu tutor lo tiene en el apartado de \n“información personal&quot;."
         android:textColor="#000000"
         android:textSize="16sp"
-        app:layout_constraintTop_toBottomOf="@+id/txtTitInicioSesionTutor"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintTop_toBottomOf="@+id/txtTitInicioSesionKit"
+        />
 
     <TextView
-        android:id="@+id/txtTitInicioSesionTutor"
+        android:id="@+id/txtTitInicioSesionKit"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:fontFamily="@font/dongle_bold"
         android:gravity="center"
-        android:text="Inicio de sesión de Castor"
+        android:text="Inicio de sesión de Kit"
         android:textColor="#000000"
         android:textSize="42sp"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView8"
         />
 
@@ -144,13 +128,15 @@
 
     <ImageView
         android:id="@+id/imageView8"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:adjustViewBounds="true"
-        app:layout_constraintWidth_percent="0.4"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:src="@drawable/iconappcafeazul"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        app:layout_constraintHeight_percent="0.06"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/iconappcafeazul" />
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintVertical_bias="0.023"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

@@ -1,4 +1,4 @@
-package com.example.CastorWay;
+package com.example.castorway;
 
 import android.content.ContentValues;
 import android.content.Intent;
@@ -25,9 +25,11 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.example.CastorWay.api.ApiService;
-import com.example.CastorWay.modelsDB.Castor;
-import com.example.CastorWay.retrofit.RetrofitClient;
+import com.example.castorway.api.ApiService;
+import com.example.castorway.modelsDB.Castor;
+import com.example.castorway.modelsDB.Kit;
+import com.example.castorway.retrofit.RetrofitClient;
+import com.example.castorway.api.ApiService;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -36,16 +38,16 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class IniciarSesionTutor extends AppCompatActivity {
-    Button btnIniciarSesionTutor;
-    TextView txtTitInicioSesionTutor, txtNoTienesCuenta;
+public class IniciarSesionKit extends AppCompatActivity {
+    Button btnIniciarSesionKit;
+    TextView txtTitInicioSesionKit, txtNoTienesCuenta;
     ImageView imgInicioSesionRegresarAzul;
-    EditText inputEmail, inputContrasena;
+    EditText inputInicioSesionNombreUsuario, inputInicioSesionCodPresa;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_iniciar_sesion_tutor);
+        setContentView(R.layout.activity_iniciar_sesion_kit);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -53,15 +55,14 @@ public class IniciarSesionTutor extends AppCompatActivity {
             imgInicioSesionRegresarAzul = findViewById(R.id.imgInicioSesionRegresarAzul);
             imgInicioSesionRegresarAzul.setOnClickListener(this::regresarElegirIniciarSesion);
 
+            txtTitInicioSesionKit = findViewById(R.id.txtTitInicioSesionKit );
+            String fullText = "Inicio de sesión de Kit";
 
-            txtTitInicioSesionTutor = findViewById(R.id.txtTitInicioSesionTutor );
-            String fullText = "Inicio de sesión de Castor";
-
-            String brownWord = "Castor";
+            String brownWord = "Kit";
             SpannableString spannableString = new SpannableString(fullText);
 
-            applyColorToWord(spannableString, fullText, brownWord, 0xFF885551);
-            txtTitInicioSesionTutor.setText(spannableString);
+            applyColorToWord(spannableString, fullText, brownWord, 0xFF879FD4);
+            txtTitInicioSesionKit.setText(spannableString);
 
             txtNoTienesCuenta = findViewById(R.id.txtNoTienesCuenta);
             String txtFullLink = "¿No tienes una cuenta? - Regístrate ahora";
@@ -74,36 +75,36 @@ public class IniciarSesionTutor extends AppCompatActivity {
             txtNoTienesCuenta.setText(spannableString2);
             txtNoTienesCuenta.setMovementMethod(LinkMovementMethod.getInstance());
 
-            btnIniciarSesionTutor = findViewById(R.id.btnIniciarSesionTutor);
-            btnIniciarSesionTutor.setOnClickListener(this::ValidIniciarSesionTutor);
+            btnIniciarSesionKit = findViewById(R.id.btnIniciarSesionKit);
+            btnIniciarSesionKit.setOnClickListener(this::ValidIniciarSesionTutor);
+
 
             return insets;
         });
-    }
-    private void ValidIniciarSesionTutor(View view){
+    }private void ValidIniciarSesionTutor(View view){
         try{
-            inputEmail = findViewById(R.id.inputInicioSesionEmail);
-            inputContrasena = findViewById(R.id.inputInicioSesionContrasena);
+            inputInicioSesionNombreUsuario = findViewById(R.id.inputInicioSesionNombreUsuario);
+            inputInicioSesionCodPresa = findViewById(R.id.inputInicioSesionCodPresa);
 
-            String email = inputEmail.getText().toString().trim();
-            String contrasena = inputContrasena.getText().toString().trim();
+            String nombreUsuario = inputInicioSesionNombreUsuario.getText().toString().trim();
+            String codPresa = inputInicioSesionCodPresa.getText().toString().trim();
 
-            if(!email.isEmpty() && !contrasena.isEmpty()){
+            if(!nombreUsuario.isEmpty() && !codPresa.isEmpty()){
 
                 ApiService apiService = RetrofitClient.getApiService();
-                Call<List<Castor>> call = apiService.getAllCastores();
-                call.enqueue(new Callback<List<Castor>>() {
+                Call<List<Kit>> call = apiService.getAllKits();
+                call.enqueue(new Callback<List<Kit>>() {
                     @Override
-                    public void onResponse(Call<List<Castor>> call, Response<List<Castor>> response) {
+                    public void onResponse(Call<List<Kit>> call, Response<List<Kit>> response) {
                         if (response.isSuccessful()) {
-                            List<Castor> castores = response.body();
+                            List<Kit> kits = response.body();
                             AtomicInteger cntCoincidUser = new AtomicInteger(0);
 
-                            if (castores != null) {
-                                for (Castor castor : castores) {
-                                    if(castor.getEmail().equalsIgnoreCase(email) && castor.getContraseña().equals(contrasena)){
+                            if (kits != null) {
+                                for (Kit kit : kits) {
+                                    if(kit.getCodPresa().equals(codPresa) && kit.getNombreUsuario().equals(nombreUsuario)){
                                         cntCoincidUser.incrementAndGet();
-                                        Log.d("MainActivity", "Castor: " + castor.getNombre());
+                                        Log.d("MainActivity", "Castor: " + kit.getNombre());
                                         break;
                                     }
                                 }
@@ -113,18 +114,18 @@ public class IniciarSesionTutor extends AppCompatActivity {
                                 SharedPreferences preferences = getSharedPreferences("User", MODE_PRIVATE);
                                 SharedPreferences.Editor editor = preferences.edit();
 
-                                editor.putString("email", email);
-                                editor.putString("tipoUsuario", "Castor");
+                                editor.putString("nombreUsuario", nombreUsuario);
+                                editor.putString("tipoUsuario", "Kit");
                                 editor.putBoolean("sesionActiva", true);
                                 editor.apply();
 
 
-                                Toast.makeText(IniciarSesionTutor.this, "¡Estás de regreso!, bienvenido", Toast.LENGTH_SHORT).show();
-                                Intent intent = new Intent(IniciarSesionTutor.this, VerAppWeb.class);
+                                Toast.makeText(IniciarSesionKit.this, "¡Estás de regreso!, bienvenido", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(IniciarSesionKit.this, VerAppWebKit.class);
                                 startActivity(intent);
                                 finish();
                             }else{
-                                Toast.makeText(IniciarSesionTutor.this, "No se encontró una cuenta con la información proporcionada, pruebe con otros datos.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(IniciarSesionKit.this, "No se encontró una cuenta con la información proporcionada, pruebe con otros datos.", Toast.LENGTH_SHORT).show();
                             }
                         } else {
                             Log.e("API_RESPONSE", "Error HTTP: " + response.code());
@@ -140,13 +141,11 @@ public class IniciarSesionTutor extends AppCompatActivity {
                             }
                         }
                     }
-
                     @Override
-                    public void onFailure(Call<List<Castor>> call, Throwable t) {
+                    public void onFailure(Call<List<Kit>> call, Throwable t) {
                         Log.e("MainActivity", "Error de conexión: " + t.getMessage());
                     }
                 });
-
             }else{
                 Toast.makeText(this, "Favor de completar todos los campos.", Toast.LENGTH_SHORT).show();
             }
@@ -182,7 +181,7 @@ public class IniciarSesionTutor extends AppCompatActivity {
             spannableString.setSpan(new ClickableSpan() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(IniciarSesionTutor.this, RegistrarTutor.class);
+                    Intent intent = new Intent(IniciarSesionKit.this, RegistrarKit.class);
                     startActivity(intent);
                 }
                 public void updateDrawState(android.text.TextPaint ds) {

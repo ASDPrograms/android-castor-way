@@ -1,24 +1,25 @@
-package com.example.CastorWay.modelsDB;
+package com.example.castorway.modelsDB;
 
-public class Castor {
-    private int idCastor;
+public class Kit {
+    private int idKit;
     private String codPresa;
+    private String nombreUsuario;
     private String nombre;
     private String apellidos;
     private int edad;
-    private String email;
-    private String contraseña;
+    private String etapaVida;
     private int ramitas;
     private String imagenPerfil;
     private String fechaRegistro;
+    private int hojasCongeladas;
     private boolean estadoConect;
 
-    public int getIdCastor() {
-        return idCastor;
+    public int getIdKit() {
+        return idKit;
     }
 
-    public void setIdCastor(int idCastor) {
-        this.idCastor = idCastor;
+    public void setIdKit(int idKit) {
+        this.idKit = idKit;
     }
 
     public String getCodPresa() {
@@ -27,6 +28,14 @@ public class Castor {
 
     public void setCodPresa(String codPresa) {
         this.codPresa = codPresa;
+    }
+
+    public String getNombreUsuario() {
+        return nombreUsuario;
+    }
+
+    public void setNombreUsuario(String nombreUsuario) {
+        this.nombreUsuario = nombreUsuario;
     }
 
     public String getNombre() {
@@ -53,20 +62,12 @@ public class Castor {
         this.edad = edad;
     }
 
-    public String getEmail() {
-        return email;
+    public String getEtapaVida() {
+        return etapaVida;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getContraseña() {
-        return contraseña;
-    }
-
-    public void setContraseña(String contraseña) {
-        this.contraseña = contraseña;
+    public void setEtapaVida(String etapaVida) {
+        this.etapaVida = etapaVida;
     }
 
     public int getRamitas() {
@@ -93,6 +94,14 @@ public class Castor {
         this.fechaRegistro = fechaRegistro;
     }
 
+    public int getHojasCongeladas() {
+        return hojasCongeladas;
+    }
+
+    public void setHojasCongeladas(int hojasCongeladas) {
+        this.hojasCongeladas = hojasCongeladas;
+    }
+
     public boolean isEstadoConect() {
         return estadoConect;
     }
@@ -100,4 +109,6 @@ public class Castor {
     public void setEstadoConect(boolean estadoConect) {
         this.estadoConect = estadoConect;
     }
+
+
 }

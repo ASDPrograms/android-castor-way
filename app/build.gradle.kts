@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.CastorWay"
+    namespace = "com.example.castorway"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.CastorWay"
+        applicationId = "com.example.castorway"
         minSdk = 24
         targetSdk = 34
         versionCode = 1

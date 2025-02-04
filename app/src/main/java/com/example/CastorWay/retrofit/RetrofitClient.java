@@ -1,5 +1,5 @@
-package com.example.CastorWay.retrofit;
-import com.example.CastorWay.api.ApiService;
+package com.example.castorway.retrofit;
+import com.example.castorway.api.ApiService;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 

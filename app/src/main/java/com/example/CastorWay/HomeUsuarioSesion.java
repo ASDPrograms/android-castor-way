@@ -1,7 +1,4 @@
-package com.example.CastorWay;
-import com.example.CastorWay.api.ApiService;
-import com.example.CastorWay.retrofit.RetrofitClient;
-import com.example.CastorWay.modelsDB.Castor;
+package com.example.castorway;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,7 +7,6 @@ import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -20,12 +16,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-
-import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class HomeUsuarioSesion extends AppCompatActivity {
     TextView txtTitHome, txtComienaHome;
@@ -40,7 +30,7 @@ public class HomeUsuarioSesion extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
 
             txtTitHome = findViewById(R.id.txtTitHome);
-            String fullText = "Hábitos saludables, futuro brillante.";
+            String fullText = "Hábitos saludables, \nfuturo brillante.";
 
             String greenWord = "Hábitos";
             String blueWord = "futuro";
