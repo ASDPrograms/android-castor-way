@@ -1,6 +1,7 @@
 package com.example.castorway;
 
 import android.animation.ObjectAnimator;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -8,6 +9,8 @@ import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,8 +21,21 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.castorway.api.ApiService;
+import com.example.castorway.modelsDB.Castor;
+import com.example.castorway.modelsDB.Kit;
+import com.example.castorway.retrofit.RetrofitClient;
+
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class HomeKit extends AppCompatActivity {
     private ImageView lastSelectedIcon;
+    TextView txt_hjs_congeladas, txt_ramas;
     private ImageView iconHome, iconActividades, iconCalendar, iconRecompensas, iconDiario, iconChat;
 
     @Override
@@ -50,6 +66,41 @@ public class HomeKit extends AppCompatActivity {
 
         selectIcon(iconHome);
         loadFragment(new HomeFragmentKit());
+        actuInfoTopNav();
+    }
+    private void actuInfoTopNav(){
+        ApiService apiService = RetrofitClient.getApiService();
+        Call<List<Kit>> call = apiService.getAllKits();
+        call.enqueue(new Callback<List<Kit>>() {
+            @Override
+            public void onResponse(Call<List<Kit>> call, Response<List<Kit>> response) {
+                List<Kit> kits = response.body();
+                if (kits != null) {
+                    SharedPreferences preferences = getSharedPreferences("User", MODE_PRIVATE);
+                    for (Kit kit : kits) {
+                        if(kit.getNombreUsuario().equals(preferences.getString("nombreUsuario", ""))){
+
+                            int ramitas = kit.getRamitas();
+                            String stringNumRamitas = String.valueOf(ramitas);
+
+                            int hjsCongeladas = kit.getHojasCongeladas();
+                            String stringHjsCongeldas = String.valueOf(hjsCongeladas);
+
+                            txt_hjs_congeladas = findViewById(R.id.txt_hjs_congeladas);
+                            txt_hjs_congeladas.setText(stringHjsCongeldas);
+
+                            txt_ramas = findViewById(R.id.txt_ramas);
+                            txt_ramas.setText(stringNumRamitas);
+                            break;
+                        }
+                    }
+                }
+            }
+            @Override
+            public void onFailure(Call<List<Kit>> call, Throwable t) {
+                Toast.makeText(HomeKit.this, "Error en la conexión", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
     private void setMinWidthForIcons() {
         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
@@ -63,7 +114,6 @@ public class HomeKit extends AppCompatActivity {
         iconDiario.setMinimumWidth(minWidthPx);
         iconChat.setMinimumWidth(minWidthPx);
     }
-
 
     private final View.OnClickListener iconClickListener = new View.OnClickListener() {
         @Override
