@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/homeFragment"
+        android:icon="@drawable/icon_home"
+        android:title=""/>
+    <item
+        android:id="@+id/actividadesFragment"
+        android:icon="@drawable/icon_actividades"
+        android:title=""/>
+    <item
+        android:id="@+id/calendarioFragment"
+        android:icon="@drawable/icon_calendar"
+        android:title=""/>
+    <item
+        android:id="@+id/recompensasFragment"
+        android:icon="@drawable/icon_recompensas"
+        android:title=""/>
+    <item
+        android:id="@+id/diarioFragment"
+        android:icon="@drawable/icon_diario"
+        android:title=""/>
+    <item
+        android:id="@+id/chatFragment"
+        android:icon="@drawable/icon_chat"
+        android:title=""/>
+</menu>

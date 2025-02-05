@@ -2,4 +2,13 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="cafecito">#885551</color>
+    <color name="cafe_subtono">#BA6958</color>
+    <color name="cafe_clarito">#F7B9A2</color>
+    <color name="verdecitu">#BCF0E4</color>
+    <color name="aguita">#879FD4</color>
+    <color name="amarillito">#FFDF9B</color>
+
+    <color name="azul_fondo">#EDF3FF</color>
+    <color name="cafe_ramita">#664126</color>
 </resources>

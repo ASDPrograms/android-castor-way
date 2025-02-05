@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".HomeTutor">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar">
+
+        <LinearLayout
+            android:id="@+id/top_navigation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:background="@color/azul_fondo"
+            android:weightSum="4"
+            android:padding="5dp"
+            >
+
+            <!-- Primer ícono -->
+            <ImageView
+                android:id="@+id/img_prof_usr"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.68"
+                android:scaleType="fitCenter"
+                android:padding="8dp"
+                android:src="@drawable/icn_user_gris"
+                android:minHeight="50dp"
+                android:contentDescription="Icono 1" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1.3"
+                android:orientation="horizontal"
+                android:gravity="center"
+                >
+
+                <ImageView
+                    android:id="@+id/icn_hojas_congeladas"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/img_hoja_cong"
+                    android:minHeight="50dp"
+                    android:contentDescription="Icono 2" />
+
+                <TextView
+                    android:id="@+id/txt_hjs_congeladas"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/dongle_bold"
+                    android:paddingStart="8dp"
+                    android:text="0"
+                    android:textColor="@color/aguita"
+                    android:textSize="34sp"
+                    android:maxWidth="100dp"
+                    android:ellipsize="end"
+                    android:singleLine="true"/>
+            </LinearLayout>
+
+            <!-- Sección con ícono y texto -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1.5"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:paddingLeft="15dp"
+                >
+
+                <ImageView
+                    android:id="@+id/icn_ramitas"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/img_ramita"
+                    android:minHeight="50dp"
+                    android:contentDescription="Icono 3" />
+
+                <TextView
+                    android:id="@+id/txt_ramas"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/dongle_bold"
+                    android:paddingStart="8dp"
+                    android:text="0"
+                    android:textColor="@color/cafe_ramita"
+                    android:textSize="34sp"
+                    android:maxWidth="100dp"
+                    android:ellipsize="end"
+                    android:singleLine="true"/>
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/icn_notificaciones"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.53"
+                android:scaleType="fitCenter"
+                android:padding="8dp"
+                android:src="@drawable/icn_notificaciones"
+                android:minHeight="50dp"
+                android:contentDescription="Icono 4" />
+        </LinearLayout>
+
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <FrameLayout
+        android:id="@+id/frame_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/bottmAppBar"
+        android:layout_marginBottom="60dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+
+    <LinearLayout
+        android:id="@+id/bottmAppBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_gravity="bottom"
+        android:weightSum="6">
+
+        <ImageView
+            android:id="@+id/icon_home"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:minHeight="70dp"
+            android:scaleType="fitCenter"
+            android:background="@drawable/icon_background_selector"
+            android:clickable="true"
+            android:contentDescription="Inicio"
+            android:focusable="true"
+            android:padding="12dp"
+            android:src="@drawable/icon_home" />
+
+
+        <ImageView
+            android:id="@+id/icon_actividades"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:minHeight="65dp"
+            android:scaleType="fitCenter"
+            android:background="@drawable/icon_background_selector"
+            android:padding="12dp"
+            android:src="@drawable/icon_actividades"
+            android:clickable="true"
+            android:focusable="true"
+            android:contentDescription="Actividades"/>
+
+        <ImageView
+            android:id="@+id/icon_calendario"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:scaleType="fitCenter"
+            android:background="@drawable/icon_background_selector"
+            android:padding="12dp"
+            android:src="@drawable/icon_calendar"
+            android:contentDescription="Calendario"
+            android:clickable="true"
+            android:focusable="true"
+            android:minHeight="65dp"
+            />
+
+        <ImageView
+            android:id="@+id/icon_recompensa"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:scaleType="fitCenter"
+            android:background="@drawable/icon_background_selector"
+            android:padding="12dp"
+            android:src="@drawable/icon_recompensas"
+            android:contentDescription="Recompensas"
+            android:clickable="true"
+            android:focusable="true"/>
+
+        <ImageView
+            android:id="@+id/icon_diario"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:scaleType="fitCenter"
+            android:background="@drawable/icon_background_selector"
+            android:padding="12dp"
+            android:src="@drawable/icon_diario"
+            android:contentDescription="Diario"
+            android:clickable="true"
+            android:focusable="true"
+            android:minHeight="65dp"
+            />
+
+        <ImageView
+            android:id="@+id/icon_chat"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:scaleType="fitCenter"
+            android:background="@drawable/icon_background_selector"
+            android:padding="12dp"
+            android:src="@drawable/icon_chat"
+            android:contentDescription="Chat"
+            android:clickable="true"
+            android:focusable="true"
+            android:minHeight="65dp"
+            />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/bottmAppBar"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="70dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <FrameLayout
+            android:id="@+id/circulo_grande"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="20dp"
+            android:background="@drawable/circle_white"
+            android:elevation="8dp">
+
+            <ImageView
+                android:id="@+id/img_perfil"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_margin="10dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/icn_user_gris" />
+
+            <ImageView
+                android:id="@+id/btnDesplegar"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="bottom|end"
+                android:padding="0dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:src="@drawable/icn_elegir_usr_kit" />
+        </FrameLayout>
+
+        <HorizontalScrollView
+            android:id="@+id/userScrollView"
+            android:layout_width="wrap_content"
+            android:layout_height="80dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="-10dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="20dp"
+            android:layout_toEndOf="@+id/circulo_grande"
+            android:elevation="8dp"
+            android:overScrollMode="always"
+            android:scrollbars="horizontal"
+            >
+
+            <LinearLayout
+                android:id="@+id/userContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp"
+                    android:text="" />
+            </LinearLayout>
+        </HorizontalScrollView>
+    </RelativeLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

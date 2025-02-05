@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.castorway">
@@ -16,56 +17,39 @@
         android:theme="@style/Theme.CastorWay_Surface"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
-
         <activity
-            android:name=".InformacionKit"
-            android:exported="true" />
-
+            android:name=".HomeTutor"
+            android:exported="false" />
         <activity
-            android:name=".VerAppWebKit"
-            android:exported="true" />
-
+            android:name=".HomeKit"
+            android:exported="false" />
         <activity
             android:name=".HomeUsuarioSesion"
             android:exported="true" />
-
-        <activity
-            android:name=".InformacionTutor"
-            android:exported="true" />
-
-        <activity
-            android:name=".VerAppWeb"
-            android:exported="true" />
-
         <activity
             android:name=".RegistrarTutor"
             android:exported="true" />
-
         <activity
             android:name=".RegistrarKit"
             android:exported="true" />
-
         <activity
             android:name=".IniciarSesionTutor"
             android:exported="true" />
-
         <activity
             android:name=".IniciarSesionKit"
             android:exported="true" />
-
         <activity
             android:name=".ElegirUsrRegistrarse"
             android:exported="true" />
-
         <activity
             android:name=".ElegirUsrIniciarSesion"
             android:exported="true" />
-
         <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

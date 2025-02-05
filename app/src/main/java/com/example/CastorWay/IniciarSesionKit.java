@@ -1,10 +1,7 @@
 package com.example.castorway;
 
-import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -26,10 +23,8 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.castorway.api.ApiService;
-import com.example.castorway.modelsDB.Castor;
 import com.example.castorway.modelsDB.Kit;
 import com.example.castorway.retrofit.RetrofitClient;
-import com.example.castorway.api.ApiService;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -121,7 +116,7 @@ public class IniciarSesionKit extends AppCompatActivity {
 
 
                                 Toast.makeText(IniciarSesionKit.this, "¡Estás de regreso!, bienvenido", Toast.LENGTH_SHORT).show();
-                                Intent intent = new Intent(IniciarSesionKit.this, VerAppWebKit.class);
+                                Intent intent = new Intent(IniciarSesionKit.this, HomeKit.class);
                                 startActivity(intent);
                                 finish();
                             }else{

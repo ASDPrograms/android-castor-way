@@ -171,7 +171,7 @@ public class RegistrarKit extends AppCompatActivity {
                                                                     editor.putBoolean("sesionActiva", true);
                                                                     editor.apply();
 
-                                                                    Intent intent = new Intent(RegistrarKit.this, VerAppWebKit.class);
+                                                                    Intent intent = new Intent(RegistrarKit.this, HomeKit.class);
                                                                     startActivity(intent);
                                                                     finish();
                                                                 } else {

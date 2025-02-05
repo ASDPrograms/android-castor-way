@@ -32,11 +32,11 @@ public class MainActivity extends AppCompatActivity {
             String tipoUsuario = preferences.getString("tipoUsuario", "");
 
             if (tipoUsuario.equals("Castor")) {
-                Intent intent = new Intent(this, VerAppWeb.class);
+                Intent intent = new Intent(this, HomeTutor.class);
                 startActivity(intent);
                 finish();
             } else if (tipoUsuario.equals("Kit")) {
-                Intent intent = new Intent(this, VerAppWebKit.class);
+                Intent intent = new Intent(this, HomeKit.class);
                 startActivity(intent);
                 finish();
             }

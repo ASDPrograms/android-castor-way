@@ -2,8 +2,6 @@ package com.example.castorway;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.text.InputType;
 import android.text.Spannable;
@@ -179,7 +177,7 @@ public class RegistrarTutor extends AppCompatActivity {
                                                             editor.putBoolean("sesionActiva", true);
                                                             editor.apply();
 
-                                                            Intent intent = new Intent(RegistrarTutor.this, VerAppWeb.class);
+                                                            Intent intent = new Intent(RegistrarTutor.this, HomeTutor.class);
                                                             startActivity(intent);
                                                             finish();
                                                         } else {
@@ -192,7 +190,6 @@ public class RegistrarTutor extends AppCompatActivity {
                                                         Toast.makeText(RegistrarTutor.this, "Error en la conexión", Toast.LENGTH_SHORT).show();
                                                     }
                                                 });
-                                                //Fin código insertar nuevo usuario
                                             }else{
                                                 Toast.makeText(RegistrarTutor.this, "La contraseña debe de tener al menos de 6 caractéres.", Toast.LENGTH_SHORT).show();
                                                 inputContrasena.requestFocus();

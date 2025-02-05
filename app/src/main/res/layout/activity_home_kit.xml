@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".HomeKit">
+
+    <FrameLayout
+        android:id="@+id/frame_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/bottmAppBar"
+        android:layout_marginBottom="60dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    <LinearLayout
+        android:id="@+id/bottmAppBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_gravity="bottom"
+        android:weightSum="6">
+
+        <ImageView
+            android:id="@+id/icon_home"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:minHeight="70dp"
+            android:scaleType="fitCenter"
+            android:background="@drawable/icon_background_selector"
+            android:clickable="true"
+            android:contentDescription="Inicio"
+            android:focusable="true"
+            android:padding="12dp"
+            android:src="@drawable/icon_home" />
+
+
+        <ImageView
+            android:id="@+id/icon_actividades"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:minHeight="65dp"
+            android:scaleType="fitCenter"
+            android:background="@drawable/icon_background_selector"
+            android:padding="12dp"
+            android:src="@drawable/icon_actividades"
+            android:clickable="true"
+            android:focusable="true"
+            android:contentDescription="Actividades"/>
+
+        <ImageView
+            android:id="@+id/icon_calendario"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:scaleType="fitCenter"
+            android:background="@drawable/icon_background_selector"
+            android:padding="12dp"
+            android:src="@drawable/icon_calendar"
+            android:contentDescription="Calendario"
+            android:clickable="true"
+            android:focusable="true"
+            android:minHeight="65dp"
+            />
+
+        <ImageView
+            android:id="@+id/icon_recompensa"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:scaleType="fitCenter"
+            android:background="@drawable/icon_background_selector"
+            android:padding="12dp"
+            android:src="@drawable/icon_recompensas"
+            android:contentDescription="Recompensas"
+            android:clickable="true"
+            android:focusable="true"/>
+
+        <ImageView
+            android:id="@+id/icon_diario"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:scaleType="fitCenter"
+            android:background="@drawable/icon_background_selector"
+            android:padding="12dp"
+            android:src="@drawable/icon_diario"
+            android:contentDescription="Diario"
+            android:clickable="true"
+            android:focusable="true"
+            android:minHeight="65dp"
+            />
+
+        <ImageView
+            android:id="@+id/icon_chat"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:scaleType="fitCenter"
+            android:background="@drawable/icon_background_selector"
+            android:padding="12dp"
+            android:src="@drawable/icon_chat"
+            android:contentDescription="Chat"
+            android:clickable="true"
+            android:focusable="true"
+            android:minHeight="65dp"
+            />
+    </LinearLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
