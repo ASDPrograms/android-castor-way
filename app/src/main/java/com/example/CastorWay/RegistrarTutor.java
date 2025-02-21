@@ -193,7 +193,6 @@ public class RegistrarTutor extends AppCompatActivity {
                                             }else{
                                                 Toast.makeText(RegistrarTutor.this, "La contraseña debe de tener al menos de 6 caractéres.", Toast.LENGTH_SHORT).show();
                                                 inputContrasena.requestFocus();
-                                                return;
                                             }
                                         }else{
                                             Toast.makeText(RegistrarTutor.this, "El correo ingresado ya está asociado a otra cuenta.", Toast.LENGTH_SHORT).show();
@@ -226,7 +225,6 @@ public class RegistrarTutor extends AppCompatActivity {
                         }else{
                             Toast.makeText(this, "Ingresa un correo electrónico válido.", Toast.LENGTH_SHORT).show();
                             inputEmail.requestFocus();
-                            return;
                         }
                     }else{
                         Toast.makeText(this, "Ingrese una edad válida.", Toast.LENGTH_SHORT).show();
@@ -238,19 +236,14 @@ public class RegistrarTutor extends AppCompatActivity {
                 Toast.makeText(this, "Favor de llenar todos los campos.", Toast.LENGTH_SHORT).show();
                 if(nombre.isEmpty()){
                     inputNombre.requestFocus();
-                    return;
                 } else if (apellidos.isEmpty()) {
                     inputApellidos.requestFocus();
-                    return;
                 }else if (edadStr.isEmpty()) {
                     inputEdad.requestFocus();
-                    return;
                 }else  if (email.isEmpty()) {
                     inputEmail.requestFocus();
-                    return;
                 }else if (contrasena.isEmpty()) {
                     inputContrasena.requestFocus();
-                    return;
                 }
             }
         }catch (Exception ex){

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="CustomDatePickerStyle" parent="android:Widget.DatePicker">
+        <item name="android:headerBackground">@color/tu_color_header</item>
+        <item name="android:calendarTextColor">@color/tu_color_text</item>
+        <!-- Agrega otros atributos según necesites -->
+    </style>
+</resources>

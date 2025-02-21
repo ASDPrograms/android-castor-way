@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/input_border"
+    android:ems="10"
+    android:layout_margin="10dp"
+    android:paddingTop="3dp"
+    android:paddingBottom="3dp"
+    android:paddingRight="5dp"
+    android:paddingLeft="5dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="2dp">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp">
+            <ImageView
+                android:id="@+id/imgActividad"
+                android:layout_width="40dp"
+                android:layout_height="40dp">
+            </ImageView>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/txtTitActi"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Título"
+                android:textSize="20sp"
+                android:fontFamily="@font/gayathri_bold"
+                android:textStyle="bold"
+                android:textColor="@color/black"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/img_ramita"
+                    android:layout_marginRight="10dp"
+                    ></ImageView>
+                <TextView
+                    android:id="@+id/txtRamitasActi"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0 ramitas"
+                    android:fontFamily="@font/dongle_bold"
+                    android:textSize="23sp"
+                    android:gravity="start"
+                    android:textColor="@color/cafe_ramita"
+                    ></TextView>
+            </LinearLayout>
+        </LinearLayout>
+
+       <LinearLayout
+           android:layout_width="wrap_content"
+           android:layout_height="match_parent"
+           android:orientation="vertical">
+           <LinearLayout
+               android:layout_width="match_parent"
+               android:layout_height="match_parent"
+               android:layout_gravity="center"
+               android:gravity="center"
+               android:layout_weight="1">
+               <Button
+                   android:id="@+id/btn_ir"
+                   android:layout_width="60dp"
+                   android:layout_height="45dp"
+                   android:layout_gravity="center"
+                   android:backgroundTint="@color/gricecito"
+                   android:elevation="4dp"
+                   android:padding="2dp"
+                   android:text="Ir"
+                   android:fontFamily="@font/dongle_bold"
+                   android:textSize="25sp"
+                   android:layout_marginLeft="10dp"
+                   android:gravity="center"
+                   android:textColor="@android:color/black" />
+           </LinearLayout>
+           <LinearLayout
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:layout_gravity="bottom"
+               android:layout_weight="0.1"
+               android:gravity="center">
+               <TextView
+                   android:id="@+id/txtIntervaloHrs"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:text="00:00 - 00:00"
+                   android:fontFamily="@font/gayathri_bold"
+                   android:textSize="12sp"
+                   android:gravity="center"
+                   android:layout_gravity="center"
+                   android:textColor="@color/black"/>
+           </LinearLayout>
+       </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/containerInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:padding="10dp"
+        android:background="@android:color/darker_gray">
+
+        <TextView
+            android:id="@+id/txtDetails"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Detalles aquí..."
+            android:textSize="16sp"/>
+    </LinearLayout>
+
+</LinearLayout>

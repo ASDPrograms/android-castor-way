@@ -3,5 +3,10 @@
     <style name="Base.Theme.CastorWay_Surface" parent="Theme.Material3.DayNight.NoActionBar">
     </style>
 
-    <style name="Theme.CastorWay_Surface" parent="Base.Theme.CastorWay_Surface" />
+    <style name="Theme.CastorWay_Surface" parent="Base.Theme.CastorWay_Surface" >
+    </style>
+    <style name="Theme.SplashScreen" parent="Base.Theme.CastorWay_Surface">
+        <item name="android:windowBackground">@color/cafe_subtono</item>
+    </style>
+
 </resources>

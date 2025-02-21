@@ -110,6 +110,7 @@ public class IniciarSesionKit extends AppCompatActivity {
                                 SharedPreferences.Editor editor = preferences.edit();
 
                                 editor.putString("nombreUsuario", nombreUsuario);
+                                editor.putString("codPresa", codPresa);
                                 editor.putString("tipoUsuario", "Kit");
                                 editor.putBoolean("sesionActiva", true);
                                 editor.apply();

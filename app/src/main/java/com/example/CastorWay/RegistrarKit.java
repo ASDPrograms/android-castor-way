@@ -73,6 +73,14 @@ public class RegistrarKit extends AppCompatActivity {
             imgRegresarAzul2 = findViewById(R.id.imgRegresarAzul2);
             imgRegresarAzul2.setOnClickListener(this::backElegirUsrRegistro);
 
+            //Aquí se verifica si se abrió la activity con el botón de agregar hijo
+            inputCodPresa = findViewById(R.id.inputCodPresa);
+            String codPresaRecibido = getIntent().getStringExtra("codPresa");
+            if (codPresaRecibido != null && !codPresaRecibido.isEmpty()) {
+                inputCodPresa.setText(codPresaRecibido);
+                inputCodPresa.setEnabled(false);
+            }
+
             btnRegistrarKit = findViewById(R.id.btnRegistrarKit);
             btnRegistrarKit.setOnClickListener(this::validRegistroTutor);
             return insets;
@@ -92,6 +100,7 @@ public class RegistrarKit extends AppCompatActivity {
             String edadStr = inputEdad.getText().toString().trim();
             String codPresa = inputCodPresa.getText().toString().trim();
 
+            boolean isCodPresaDisabled = !inputCodPresa.isEnabled();
 
             if (!nombre.isEmpty() && !apellidos.isEmpty() && !edadStr.isEmpty() && !nombreUsuario.isEmpty() && !codPresa.isEmpty()) {
                 String nombrePattern = "^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+$";
@@ -161,19 +170,29 @@ public class RegistrarKit extends AppCompatActivity {
                                                             @Override
                                                             public void onResponse(Call<Kit> call3, Response<Kit> response3) {
                                                                 if (response3.isSuccessful()) {
-                                                                    Toast.makeText(RegistrarKit.this, "¡Bienvenido(a) a CastorWay!", Toast.LENGTH_SHORT).show();
+                                                                    if (isCodPresaDisabled) {
+                                                                        Toast.makeText(RegistrarKit.this, "¡Nuevo usuario Kit registrado con éxito!", Toast.LENGTH_SHORT).show();
 
-                                                                    SharedPreferences preferences = getSharedPreferences("User", MODE_PRIVATE);
-                                                                    SharedPreferences.Editor editor = preferences.edit();
+                                                                        Intent intent = new Intent(RegistrarKit.this, HomeTutor.class);
+                                                                        startActivity(intent);
+                                                                        finish();
+                                                                    }else{
+                                                                        Toast.makeText(RegistrarKit.this, "¡Bienvenido(a) a CastorWay!", Toast.LENGTH_SHORT).show();
 
-                                                                    editor.putString("nombreUsuario", nombreUsuario);
-                                                                    editor.putString("tipoUsuario", "Kit");
-                                                                    editor.putBoolean("sesionActiva", true);
-                                                                    editor.apply();
+                                                                        SharedPreferences preferences = getSharedPreferences("User", MODE_PRIVATE);
+                                                                        SharedPreferences.Editor editor = preferences.edit();
 
-                                                                    Intent intent = new Intent(RegistrarKit.this, HomeKit.class);
-                                                                    startActivity(intent);
-                                                                    finish();
+                                                                        editor.putString("nombreUsuario", nombreUsuario);
+                                                                        editor.putString("codPresa", codPresa);
+                                                                        editor.putString("tipoUsuario", "Kit");
+                                                                        editor.putBoolean("sesionActiva", true);
+                                                                        editor.apply();
+
+                                                                        Intent intent = new Intent(RegistrarKit.this, HomeKit.class);
+                                                                        startActivity(intent);
+                                                                        finish();
+                                                                    }
+
                                                                 } else {
                                                                     Toast.makeText(RegistrarKit.this, "Error en el registro", Toast.LENGTH_SHORT).show();
                                                                 }

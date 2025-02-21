@@ -1,5 +1,6 @@
 package com.example.castorway.api;
 
+import com.example.castorway.modelsDB.Actividad;
 import com.example.castorway.modelsDB.Castor;
 import com.example.castorway.modelsDB.Kit;
 
@@ -21,4 +22,10 @@ public interface  ApiService{
 
     @POST("tablaKit")
     Call<Kit> createKit(@Body Kit kit);
+
+    @GET("tablaActividad")
+    Call<List<Actividad>> getAllActividades();
+
+    @POST("tablaActividad")
+    Call<Actividad> createActividad(@Body Actividad actividad);
 }

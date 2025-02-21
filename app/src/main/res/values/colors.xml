@@ -6,9 +6,13 @@
     <color name="cafe_subtono">#BA6958</color>
     <color name="cafe_clarito">#F7B9A2</color>
     <color name="verdecitu">#BCF0E4</color>
+    <color name="verdecitu_fuerte">#8DE3CF</color>
     <color name="aguita">#879FD4</color>
     <color name="amarillito">#FFDF9B</color>
-
+    <color name="azulito_juerte">#566C9F</color>
+    <color name="rojito">#E64C3C</color>
     <color name="azul_fondo">#EDF3FF</color>
     <color name="cafe_ramita">#664126</color>
+    <color name="gricecito">#D9D9D9</color>
+    <color name="gris_fuertecito">#7C7C7C</color>
 </resources>

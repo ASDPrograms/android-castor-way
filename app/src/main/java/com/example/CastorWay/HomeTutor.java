@@ -1,20 +1,27 @@
 package com.example.castorway;
 
 import android.animation.ObjectAnimator;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -23,6 +30,9 @@ import android.util.TypedValue;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.example.castorway.api.ApiService;
 import com.example.castorway.modelsDB.Castor;
@@ -48,14 +58,30 @@ public class HomeTutor extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_tutor);
 
+        SharedPreferences preferences = getSharedPreferences("User", Context.MODE_PRIVATE);
+        String email = preferences.getString("email", null);
+
+        if (email == null) {
+            Log.e("DEBUG", "Email en SharedPreferences es NULL. Esperando...");
+            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    confirmExistUsrKit();
+                }
+            }, 1000);
+        } else {
+            confirmExistUsrKit();
+        }
+        //Aquí se actualizan los datos del navegador de arriba (numRamitas, hojasCongeladas)
         actuInfoTopNav();
 
+        //Pq por alguna razón le cambiaba el color del rectángulo que contiene info del cel(batería, wifi, etc.)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getWindow();
             window.setStatusBarColor(Color.TRANSPARENT);
         }
 
-
+        //Se declaran variables del xml
         iconHome = findViewById(R.id.icon_home);
         iconActividades = findViewById(R.id.icon_actividades);
         iconCalendar = findViewById(R.id.icon_calendario);
@@ -63,8 +89,12 @@ public class HomeTutor extends AppCompatActivity {
         iconDiario = findViewById(R.id.icon_diario);
         iconChat = findViewById(R.id.icon_chat);
 
+        //se actualiza el tamaño de los íconos de acuerdo a las medidas del dispositivo
         setMinWidthForIcons();
 
+
+
+        //se asignan interacciones a los elementos del nav para q dependiendo de lo q seleccione te lleve a un fragment u otro
         iconHome.setOnClickListener(iconClickListener);
         iconActividades.setOnClickListener(iconClickListener);
         iconCalendar.setOnClickListener(iconClickListener);
@@ -72,14 +102,23 @@ public class HomeTutor extends AppCompatActivity {
         iconDiario.setOnClickListener(iconClickListener);
         iconChat.setOnClickListener(iconClickListener);
 
+        //por default el seleccionado es el de home
         selectIcon(iconHome);
         loadFragment(new HomeFragmentTutor());
 
+        //declaración de elementos del xml y funcionalidad para la burbuja de elegir usr kit
         circulogrande = findViewById(R.id.circulo_grande);
         circulogrande.setOnClickListener(this::desplListUsrsKit);
 
+
+        //declaración de xml y funcionalidad del botón que despliega los hijos disponibles
         btnDesplegar = findViewById(R.id.btnDesplegar);
         btnDesplegar.setOnClickListener(this::desplListUsrsKit);
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        confirmExistUsrKit();
     }
     private void actuInfoTopNav(){
         ApiService apiService = RetrofitClient.getApiService();
@@ -152,6 +191,141 @@ public class HomeTutor extends AppCompatActivity {
         });
     }
 
+    private void confirmExistUsrKit() {
+        ApiService apiService = RetrofitClient.getApiService();
+        Call<List<Castor>> call = apiService.getAllCastores();
+
+        call.enqueue(new Callback<List<Castor>>() {
+            @Override
+            public void onResponse(Call<List<Castor>> call, Response<List<Castor>> response) {
+                List<Castor> castores = response.body();
+                String codPresa = null;
+                int cont = 0;
+                if (castores != null) {
+                    SharedPreferences sharedPreferences = getSharedPreferences("User", MODE_PRIVATE);
+                    String userEmail = sharedPreferences.getString("email", "");
+
+                    for (Castor castor : castores) {
+                        if (castor.getEmail().equals(userEmail)) {
+                            codPresa = castor.getCodPresa();
+                            cont ++;
+                            break;
+                        }
+                    }
+                }
+
+                if (cont > 0) {
+                    verificarRelacionKit(codPresa);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Castor>> call, Throwable t) {
+                Toast.makeText(HomeTutor.this, "Error al obtener los datos del usuario", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void verificarRelacionKit(String codPresa) {
+        if (codPresa == null || codPresa.isEmpty()) {
+            Log.e("DEBUG", "Error: codPresa es NULL o vacío antes de llamar a la API.");
+            return;
+        }
+        ApiService apiService2 = RetrofitClient.getApiService();
+        Call<List<Kit>> call2 = apiService2.getAllKits();
+
+        call2.enqueue(new Callback<List<Kit>>() {
+            @Override
+            public void onResponse(Call<List<Kit>> call, Response<List<Kit>> response) {
+                List<Kit> kits = response.body();
+
+                if (kits != null) {
+                    boolean existeKitRelacionado = false;
+                    for (Kit kit : kits) {
+                        if (codPresa.equals(kit.getCodPresa())) {
+                            existeKitRelacionado = true;
+                            break;
+                        }
+                    }
+                    if (!existeKitRelacionado) {
+                        mostrarModal();
+                    }
+                }
+            }
+            @Override
+            public void onFailure(Call<List<Kit>> call, Throwable t) {
+                Toast.makeText(HomeTutor.this, "Error al obtener los kits", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void mostrarModal() {
+        // Crear el AlertDialog que es como un modal jsjs
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        View modalView = getLayoutInflater().inflate(R.layout.modal_basico, null);
+
+        // Aquí se asignan los componentes de la vista
+        builder.setView(modalView);
+        // Esto es para evitar que se cierre tocando fuera
+        builder.setCancelable(false);
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+
+        //Se declaran título, subtítulo y botón del modal con los id's del modal
+        TextView txtDialogTitle = modalView.findViewById(R.id.txtDialogTitle);
+        TextView txtDialogMessage = modalView.findViewById(R.id.txtDialogMessage);
+
+        //Se cambian los valores para que sea personalizado y se pueda reciclar código
+        txtDialogTitle.setText("Registro de Hijo (a)");
+        txtDialogMessage.setText("No tienes ningún hijo (a) registrado (a). Por favor, registra a tu hijo (a) para continuar.");
+
+        Button btnPositive = modalView.findViewById(R.id.btnPositive);
+        btnPositive.setText("Registrar hijo(a)");
+
+        // Aquí se personaliza lo que queremos que haga el botón
+        btnPositive.setOnClickListener(v -> {
+
+            //Se saca el codPresa que se va a mandar al form de registrar hijo
+            ApiService apiService = RetrofitClient.getApiService();
+            Call<List<Castor>> call = apiService.getAllCastores();
+            call.enqueue(new Callback<List<Castor>>() {
+                @Override
+                public void onResponse(Call<List<Castor>> call, Response<List<Castor>> response) {
+                    List<Castor> castores = response.body();
+                    String codPresa = null;
+                    if (castores != null) {
+                        for (Castor castor : castores) {
+                            SharedPreferences sharedPreferences = getSharedPreferences("User", MODE_PRIVATE);
+                            if (castor.getEmail().equals(sharedPreferences.getString("email", ""))) {
+                                codPresa = castor.getCodPresa();
+                                break;
+                            }
+                        }
+                    }
+                    if (codPresa != null) {
+                        Intent intent = new Intent(HomeTutor.this, RegistrarKit.class);
+                        intent.putExtra("codPresa", codPresa);
+                        startActivity(intent);
+                    }
+                }
+                @Override
+                public void onFailure(Call<List<Castor>> call, Throwable t) {
+                    Toast.makeText(HomeTutor.this, "Error tratando de conectar", Toast.LENGTH_SHORT).show();
+                }
+            });
+        });
+
+
+        Window window = alertDialog.getWindow();
+        if (window != null) {
+            window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        }
+    }
+
+
+
     private void desplListUsrsKit(View view){
         HorizontalScrollView userScrollView = findViewById(R.id.userScrollView);
         LinearLayout userContainer = findViewById(R.id.userContainer);
@@ -214,12 +388,63 @@ public class HomeTutor extends AppCompatActivity {
                                             editor.putInt("idKit", idKit);
                                             editor.apply();
                                             Toast.makeText(HomeTutor.this, "Usuario seleccionado: " + kit.getNombreUsuario(), Toast.LENGTH_SHORT).show();
+
+
+                                            //Ya que se selecciona un usr Kit se actualiza el fragment para que jale la info de ese hijo
+                                            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+
+                                            Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.frame_container);
+                                            String fragmentName = currentFragment.getClass().getSimpleName();
+                                            Log.e("DEBUG", "Nombre del fragment: " + fragmentName);
+
+
+                                            //con el valor que se saca del nombre del fragment se decide que fragment cargar:
+                                            if(fragmentName.equals("HomeFragmentTutor")){
+                                                HomeFragmentTutor nuevoFragment = new HomeFragmentTutor();
+                                                transaction.replace(R.id.frame_container, nuevoFragment);
+                                                transaction.commit();
+                                            }
+                                            else if(fragmentName.equals("ActividadesFragmentTutor")){
+                                                ActividadesFragmentTutor nuevoFragment = new ActividadesFragmentTutor();
+                                                transaction.replace(R.id.frame_container, nuevoFragment);
+                                                transaction.commit();
+                                            }
+                                            else if(fragmentName.equals("CalendarioFragmentTutor")){
+                                                CalendarioFragmentTutor nuevoFragment = new CalendarioFragmentTutor();
+                                                transaction.replace(R.id.frame_container, nuevoFragment);
+                                                transaction.commit();
+                                            }
+                                            else if(fragmentName.equals("RecompensasFragmentTutor")){
+                                                RecompensasFragmentTutor nuevoFragment = new RecompensasFragmentTutor();
+                                                transaction.replace(R.id.frame_container, nuevoFragment);
+                                                transaction.commit();
+                                            }
+                                            else if(fragmentName.equals("DiarioFragmentTutor")){
+                                                DiarioFragmentTutor nuevoFragment = new DiarioFragmentTutor();
+                                                transaction.replace(R.id.frame_container, nuevoFragment);
+                                                transaction.commit();
+                                            }
+                                            else if(fragmentName.equals("ChatFragmentTutor")){
+                                                ChatFragmentTutor nuevoFragment = new ChatFragmentTutor();
+                                                transaction.replace(R.id.frame_container, nuevoFragment);
+                                                transaction.commit();
+                                            }
                                             actuInfoTopNav();
+
                                         });
                                         userContainer.addView(usuarioView);
                                     }
                                 }
                             }
+                            View agregarUsuarioView = LayoutInflater.from(HomeTutor.this).inflate(R.layout.item_nuevo_usuario, userContainer, false);
+                            userContainer.addView(agregarUsuarioView);
+
+                            LinearLayout botonAgregar = agregarUsuarioView.findViewById(R.id.layoutCadUsr);
+                            botonAgregar.setOnClickListener(v -> {
+                                Intent intent = new Intent(HomeTutor.this, RegistrarKit.class);
+                                intent.putExtra("codPresa", finalCodPresa);
+                                startActivity(intent);
+                            });
                         }
 
                         @Override

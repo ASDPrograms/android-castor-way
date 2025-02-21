@@ -2,4 +2,14 @@
     <string name="app_name">CastorWay</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+    <string-array name="opciones">
+        <item>Salud</item>
+        <item>Productividad</item>
+        <item>Personales</item>
+        <item>Sociales</item>
+        <item>Financieros</item>
+        <item>Emocionales</item>
+    </string-array>
 </resources>
