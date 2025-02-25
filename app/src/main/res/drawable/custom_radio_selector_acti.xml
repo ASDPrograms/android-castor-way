@@ -4,4 +4,6 @@
     <item android:state_checked="true" android:drawable="@drawable/radio_selected_radio_acti" />
     <!-- Estado por defecto (no seleccionado) -->
     <item android:drawable="@drawable/radio_unselected_radio_acti" />
+
+    <item android:drawable="@drawable/radio_unselected_radio_acti"/>
 </selector>

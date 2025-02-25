@@ -66,7 +66,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
-                <EditText
+                <AutoCompleteTextView
+                    android:id="@+id/nombreHabitInput"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_marginStart="30dp"
@@ -74,6 +75,7 @@
                     android:padding="8dp"
                     android:hint="Nombre del hábito"
                     android:textColor="@color/black"
+                    android:clickable="true"
                     android:fontFamily="@font/gayathri_bold"
                     android:background="@drawable/input_border"/>
                 <LinearLayout
@@ -107,6 +109,7 @@
                     android:hint="Seleccionar tipo"
                     android:background="@drawable/input_border"
                     android:entries="@array/opciones"
+                    android:theme="@style/SpinnerTextStyle"/>
                     />
             </LinearLayout>
             <LinearLayout
@@ -148,104 +151,129 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:layout_gravity="center">
-                            <RadioButton
+                            <CheckBox
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Cada día"
-                                android:textColor="@color/black"
+                                android:buttonTint="@color/azulito_juerte"                                android:textColor="@color/black"
                                 android:fontFamily="@font/gayathri_bold"
                                 android:textSize="20dp"
                                 android:scaleX=".75"
+                                android:id="@+id/radioBtnCadaDia"
                                 android:scaleY=".75">
-                            </RadioButton>
+                            </CheckBox>
                         </LinearLayout>
                     </LinearLayout>
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
-                        <RadioGroup
-                            android:id="@+id/radioGroup"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal">
-
-                            <RadioButton
-                                android:id="@+id/radioButton1"
+                            <CheckBox
+                                android:id="@+id/semanaDia1"
                                 android:layout_weight="1"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:button="@null"
+                                android:checked="false"
                                 android:background="@drawable/custom_radio_selector_acti"
                                 android:padding="8dp"
-                                android:textColor="@color/gris_fuertecito"
-                                android:text="1"
+                                android:fontFamily="@font/gayathri_bold"
+                                android:textSize="16dp"
+                                android:textColor="@drawable/custom_radio_selector_color_acti"
+                                android:text="L"
                                 android:gravity="center"
                                 android:layout_margin="5dp"
                                 />
 
-                            <RadioButton
-                                android:id="@+id/radioButton2"
+                            <CheckBox
+                                android:id="@+id/semanaDia2"
+                                android:layout_weight="1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:button="@null"
+                                android:checked="false"
+                                android:background="@drawable/custom_radio_selector_acti"
+                                android:text="M"
+                                android:textColor="@drawable/custom_radio_selector_color_acti"
+                                android:gravity="center"
+                                android:fontFamily="@font/gayathri_bold"
+                                android:textSize="16dp"
+                                android:layout_margin="5dp"
+                                />
+                            <CheckBox
+                                android:id="@+id/semanaDia3"
                                 android:layout_weight="1"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:button="@null"
                                 android:background="@drawable/custom_radio_selector_acti"
-                                android:text="2"
+                                android:text="M"
+                                android:textColor="@drawable/custom_radio_selector_color_acti"
                                 android:gravity="center"
+                                android:checked="false"
+                                android:fontFamily="@font/gayathri_bold"
+                                android:textSize="16dp"
                                 android:layout_margin="5dp"
                                 />
-                            <RadioButton
-                                android:id="@+id/radioButton3"
+                            <CheckBox
+                                android:id="@+id/semanaDia4"
                                 android:layout_weight="1"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:button="@null"
+                                android:checked="false"
                                 android:background="@drawable/custom_radio_selector_acti"
-                                android:text="3"
+                                android:text="J"
                                 android:gravity="center"
                                 android:layout_margin="5dp"
+                                android:fontFamily="@font/gayathri_bold"
+                                android:textSize="16dp"
+                                android:textColor="@drawable/custom_radio_selector_color_acti"
                                 />
-                            <RadioButton
-                                android:id="@+id/radioButton4"
+                            <CheckBox
+                                android:id="@+id/semanaDia5"
                                 android:layout_weight="1"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:button="@null"
-                                android:background="@drawable/custom_radio_selector_acti"                                android:text="4"
+                                android:checked="false"
+                                android:background="@drawable/custom_radio_selector_acti"
+                                android:text="V"
                                 android:gravity="center"
                                 android:layout_margin="5dp"
+                                android:fontFamily="@font/gayathri_bold"
+                                android:textSize="16dp"
+                                android:textColor="@drawable/custom_radio_selector_color_acti"
                                 />
-                            <RadioButton
-                                android:id="@+id/radioButton5"
+                            <CheckBox
+                                android:id="@+id/semanaDia6"
                                 android:layout_weight="1"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:button="@null"
-                                android:background="@drawable/custom_radio_selector_acti"                                android:text="5"
+                                android:checked="false"
+                                android:background="@drawable/custom_radio_selector_acti"
+                                android:text="S"
                                 android:gravity="center"
                                 android:layout_margin="5dp"
+                                android:fontFamily="@font/gayathri_bold"
+                                android:textSize="16dp"
+                                android:textColor="@drawable/custom_radio_selector_color_acti"
                                 />
-                            <RadioButton
-                                android:id="@+id/radioButton6"
+                            <CheckBox
+                                android:id="@+id/semanaDia7"
                                 android:layout_weight="1"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:button="@null"
-                                android:background="@drawable/custom_radio_selector_acti"                                android:text="6"
+                                android:checked="false"
+                                android:background="@drawable/custom_radio_selector_acti"
+                                android:text="D"
                                 android:gravity="center"
                                 android:layout_margin="5dp"
+                                android:fontFamily="@font/gayathri_bold"
+                                android:textSize="16dp"
+                                android:textColor="@drawable/custom_radio_selector_color_acti"
                                 />
-                            <RadioButton
-                                android:id="@+id/radioButton7"
-                                android:layout_weight="1"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:button="@null"
-                                android:background="@drawable/custom_radio_selector_acti"                                android:text="7"
-                                android:gravity="center"
-                                android:layout_margin="5dp"
-                                />
-                        </RadioGroup>
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
@@ -268,6 +296,7 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_marginBottom="10dp"
                             android:layout_gravity="center">
                             <ImageView
                                 android:layout_width="30dp"
@@ -277,37 +306,56 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:text="Periodo de la actividad"
+                                android:fontFamily="@font/gayathri_bold"
+                                android:textSize="17sp"
                                 android:layout_marginLeft="10dp"
                                 android:layout_gravity="center"
                                 android:gravity="center"></TextView>
                         </LinearLayout>
                         <LinearLayout
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_weight="2"
                             android:orientation="horizontal">
                             <LinearLayout
-                                android:layout_width="wrap_content"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:padding="5dp">
-                                <DatePicker
-                                    android:id="@+id/datePicker"
+                                <TextView
+                                    android:id="@+id/txtFechaInicial"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
+                                    android:padding="10dp"
+                                    android:clickable="true"
                                     android:layout_weight="1"
-                                    style="@style/CustomDatePickerStyle" />
+                                    android:fontFamily="@font/gayathri_bold"
+                                    android:textSize="14sp"
+                                    android:textColor="@color/black"
+                                    android:text="Seleccione una fecha"
+                                    android:background="@drawable/input_border_calendar"
+                                    ></TextView>
                             </LinearLayout>
                             <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
                                 android:layout_weight="1"
                                 android:padding="5dp">
-                                <DatePicker
-                                    android:id="@+id/datePic"
+                                <TextView
+                                    android:id="@+id/txtFechaFinal"
                                     android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    style="@style/CustomDatePickerStyle" />
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1"
+                                    android:padding="10dp"
+                                    android:text="-"
+                                    android:layout_gravity="center"
+                                    android:gravity="center"
+                                    android:textColor="@color/black"
+                                    android:fontFamily="@font/gayathri_bold"
+                                    android:textSize="14sp"
+                                    android:clickable="true"
+                                    android:background="@drawable/input_border_calendar"
+                                    ></TextView>
                             </LinearLayout>
                         </LinearLayout>
                     </LinearLayout>

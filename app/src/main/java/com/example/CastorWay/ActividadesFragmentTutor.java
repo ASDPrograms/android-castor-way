@@ -121,6 +121,8 @@ public class ActividadesFragmentTutor extends Fragment {
         contenedor_esta_semana = view.findViewById(R.id.contenedor_esta_semana);
         contenedor_siguiente_semana = view.findViewById(R.id.contenedor_siguiente_semana);
 
+        btnAgregarActi = view.findViewById(R.id.btnAgregarActi);
+
         imgFlechEstaSemana = view.findViewById(R.id.imgFlechEstaSemana);
         imgFlechSigSemana = view.findViewById(R.id.imgFlechSigSemana);
         imgFlechMasTarde = view.findViewById(R.id.imgFlechSigMasTarde);
@@ -131,14 +133,15 @@ public class ActividadesFragmentTutor extends Fragment {
         layout_mas_tarde.setOnClickListener(v -> alternarVisibActis(contenedor_despues));
 
         confirmUsrKitSeleccionado();
-        actuNumActis();
-
         //Btn que se encarga de abrir modal para agregar nueva acti, al dar click manda a otra acti sin terminar este fragment para que al regresar mande al fragment de nuevo
-        btnAgregarActi = view.findViewById(R.id.btnAgregarActi);
         btnAgregarActi.setOnClickListener(v -> {
-            Intent intent = new Intent(requireActivity(), AgregarActiTutor.class);
-            startActivity(intent);
+            int num = confirmUsrKitSeleccionado();
+            if(num != 0){
+                Intent intent = new Intent(requireActivity(), AgregarActiTutor.class);
+                startActivity(intent);
+            }
         });
+        actuNumActis();
     }
     private void alternarVisibActis(LinearLayout contenedor) {
         // Aquí se va alternando la visibilidad de los contenedores de las actividades

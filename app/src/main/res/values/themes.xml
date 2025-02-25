@@ -5,8 +5,38 @@
 
     <style name="Theme.CastorWay_Surface" parent="Base.Theme.CastorWay_Surface" >
     </style>
+
     <style name="Theme.SplashScreen" parent="Base.Theme.CastorWay_Surface">
         <item name="android:windowBackground">@color/cafe_subtono</item>
     </style>
 
+    <!-- Estilo personalizado para el modal del calendario -->
+    <style name="CustomMaterialDatePickerTheme" parent="ThemeOverlay.MaterialComponents.MaterialCalendar">
+        <!-- Color del encabezado del calendario -->
+        <item name="colorPrimary">@color/azulito_juerte</item>
+        <item name="colorOnPrimary">@color/white</item>
+
+        <!-- Color del botón de confirmación -->
+        <item name="colorSecondary">@color/azulito_juerte</item>
+        <item name="colorOnSecondary">@color/white</item>
+
+        <!-- Color del texto del calendario -->
+        <item name="colorOnSurface">@color/white</item>
+
+        <!-- Fondo del modal del calendario -->
+        <item name="android:windowBackground">@color/white</item>
+
+        <!-- Aplicar el estilo personalizado del calendario -->
+
+        <!-- Establecer el diseño de bordes redondeados -->
+        <item name="shapeAppearanceMediumComponent">@style/CustomShapeAppearance</item>
+    </style>
+
+
+
+    <!-- Definir bordes redondeados para el modal -->
+    <style name="CustomShapeAppearance" parent="ShapeAppearance.Material3.MediumComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">16dp</item>
+    </style>
 </resources>

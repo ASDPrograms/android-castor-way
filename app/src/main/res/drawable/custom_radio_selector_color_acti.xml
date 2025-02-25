@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Color del texto cuando el elemento está seleccionado -->
+    <item android:state_checked="true" android:color="@color/white"/>
+    <!-- Color del texto cuando el elemento está presionado -->
+    <item android:state_pressed="true" android:color="@color/gris_fuertecito"/>
+    <!-- Color del texto por defecto -->
+    <item android:color="@color/gris_fuertecito"/>
+</selector>
