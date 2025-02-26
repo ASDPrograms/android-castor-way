@@ -34,6 +34,20 @@
 
 
 
+
+    <style name="CustomTimePickerTheme" parent="ThemeOverlay.MaterialComponents.TimePicker">
+        <item name="android:windowBackground">@color/white</item>
+        <item name="android:textColorPrimary">@color/azulito_juerte</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="colorPrimary">@color/azulito_juerte</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorAccent">@color/white</item>
+        <item name="android:hand_hour">@android:color/black</item>
+    </style>
+
+
+
+
     <!-- Definir bordes redondeados para el modal -->
     <style name="CustomShapeAppearance" parent="ShapeAppearance.Material3.MediumComponent">
         <item name="cornerFamily">rounded</item>
