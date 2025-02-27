@@ -75,6 +75,7 @@
                     android:layout_marginEnd="30dp"
                     android:padding="8dp"
                     android:hint="Nombre del hábito"
+                    android:textColorHint="@color/hint_input"
                     android:textColor="@color/black"
                     android:clickable="true"
                     android:maxLength="35"
@@ -987,6 +988,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:text="Periodo de la actividad"
+                                android:textColor="@color/black"
                                 android:fontFamily="@font/gayathri_bold"
                                 android:textSize="17sp"
                                 android:layout_marginLeft="10dp"
@@ -1071,6 +1073,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:text="Intervalo de horas"
+                                android:textColor="@color/black"
                                 android:fontFamily="@font/gayathri_bold"
                                 android:textSize="17sp"
                                 android:layout_marginLeft="10dp"
@@ -1124,31 +1127,240 @@
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-            <EditText
-                android:id="@+id/numRamitas"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginStart="30dp"
-                android:layout_marginEnd="30dp"
-                android:padding="10dp"
-                android:hint="Número de ramitas"
-                android:textColor="@color/black"
-                android:clickable="true"
-                android:inputType="number"
-                android:fontFamily="@font/gayathri_bold"
-                android:drawableLeft="@drawable/img_ramita"
-                android:drawablePadding="8dp"
-                android:background="@drawable/input_border"></EditText>
-        </LinearLayout>
-    </LinearLayout>
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="20dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    >
+                    <EditText
+                        android:id="@+id/numRamitas"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginStart="30dp"
+                        android:layout_marginEnd="30dp"
+                        android:padding="10dp"
+                        android:hint="Número de ramitas"
+                        android:textColorHint="@color/hint_input"
+                        android:textColor="@color/black"
+                        android:clickable="true"
+                        android:inputType="number"
+                        android:fontFamily="@font/gayathri_bold"
+                        android:drawableLeft="@drawable/img_ramita"
+                        android:drawablePadding="8dp"
+                        android:background="@drawable/input_border"></EditText>
+                </LinearLayout>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="30dp"
+                        android:layout_marginEnd="30dp"
+                        android:layout_marginBottom="20dp"
+                        android:padding="8dp"
+                        android:orientation="vertical"
+                        android:layout_weight="1"
+                        android:background="@drawable/input_border"
+                        >
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                >
+                                <ImageView
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:src="@drawable/img_add_acti_azul"></ImageView>
+                            </LinearLayout>
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                >
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="Icono"
+                                    android:textColor="@color/black"
+                                    android:fontFamily="@font/gayathri_bold"
+                                    android:textSize="17dp"
+                                    android:layout_gravity="center"
+                                    android:gravity="center"
+                                    android:paddingLeft="5dp"></TextView>
+                            </LinearLayout>
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_gravity="center"
+                            android:gravity="center">
+                            <ImageView
+                                android:id="@+id/btnAgregarImgActi"
+                                android:layout_width="45dp"
+                                android:layout_height="45dp"
+                                android:layout_margin="10dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/icon_agregar_img_acti"></ImageView>
+                        </LinearLayout>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="30dp"
+                        android:layout_marginEnd="30dp"
+                        android:layout_marginBottom="20dp"
+                        android:padding="8dp"
+                        android:orientation="vertical"
+                        android:layout_weight="1"
+                        android:background="@drawable/input_border"
+                        >
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="horizontal">
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                >
+                                <ImageView
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:src="@drawable/img_circulo_color_azul"></ImageView>
+                            </LinearLayout>
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                >
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="Color"
+                                    android:textColor="@color/black"
+                                    android:fontFamily="@font/gayathri_bold"
+                                    android:textSize="17dp"
+                                    android:layout_gravity="center"
+                                    android:gravity="center"
+                                    android:paddingLeft="5dp"></TextView>
+                            </LinearLayout>
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_gravity="center"
+                            android:gravity="center">
+                            <LinearLayout
+                                android:id="@+id/btnCambiarIconoColor"
+                                android:layout_width="60dp"
+                                android:layout_height="45dp"
+                                android:layout_gravity="center"
+                                android:gravity="center"
+                                android:orientation="horizontal"
+                                android:background="@drawable/rectangule_acti_elegir_acti">
+                                <ImageView
+                                    android:id="@+id/circleColorElegidoIcon"
+                                    android:layout_width="25dp"
+                                    android:layout_height="25dp"
+                                    android:layout_gravity="center"
+                                    android:src="@drawable/circle_acti_elegir_color"></ImageView>
+                                <ImageView
+                                    android:layout_width="10dp"
+                                    android:layout_height="10dp"
+                                    android:layout_marginLeft="5dp"
+                                    android:layout_gravity="bottom"
+                                    android:src="@drawable/icon_flechita_abajo">
+                                </ImageView>
+                            </LinearLayout>
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="20dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    >
+                    <EditText
+                        android:id="@+id/txtMasInfo"
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        android:layout_marginStart="30dp"
+                        android:layout_marginEnd="30dp"
+                        android:padding="10dp"
+                        android:gravity="top"
+                        android:maxLength="250"
+                        android:hint="Ingresa información extra que quieras compartir con tu Kit sobre el hábito nuevo. No olvídes ser amable y apoyarlo siempre :)"
+                        android:textColor="@color/black"
+                        android:textColorHint="@color/hint_input"
+                        android:fontFamily="@font/gayathri_bold"
+                        android:background="@drawable/input_border"></EditText>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="right"
+                        android:paddingRight="35dp"
+                        android:paddingTop="5dp">
+                        <TextView
+                            android:id="@+id/contCaractInfoExtr"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0/250"
+                            android:textColor="@android:color/darker_gray"
+                            android:fontFamily="@font/gayathri_bold"
+                            android:textSize="15sp"
+                            android:gravity="center"></TextView>
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="20dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    >
+                    <Button
+                        android:id="@+id/btnCrearActiMandar"
+                        android:layout_width="match_parent"
+                        android:layout_height="65dp"
+                        android:layout_marginStart="30dp"
+                        android:layout_marginEnd="30dp"
+                        android:clickable="true"
+                        android:inputType="number"
+                        android:fontFamily="@font/dongle_bold"
+                        android:backgroundTint="@color/azulito_juerte"
+                        android:textSize="25sp"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:textColor="@color/white"
+                        android:text="Crear Actividad"></Button>
+                </LinearLayout>
+            </LinearLayout>
+
         </LinearLayout>
     </LinearLayout>
 </ScrollView>

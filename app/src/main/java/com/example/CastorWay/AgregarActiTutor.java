@@ -1,7 +1,16 @@
 package com.example.castorway;
 
+import android.app.Dialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.PictureDrawable;
 import android.icu.util.Calendar;
+import android.media.Image;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.SpannableString;
@@ -9,11 +18,17 @@ import android.text.Spanned;
 import android.text.TextWatcher;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.GridView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -29,9 +44,12 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -39,14 +57,26 @@ import java.util.Locale;
 import android.graphics.Color;
 
 
+import com.caverock.androidsvg.SVG;
+import com.caverock.androidsvg.SVGParseException;
+import com.example.castorway.api.ApiService;
+import com.example.castorway.modelsDB.Actividad;
+import com.example.castorway.modelsDB.Castor;
+import com.example.castorway.modelsDB.Kit;
+import com.example.castorway.retrofit.RetrofitClient;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.datepicker.CalendarConstraints;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 
 public class AgregarActiTutor extends AppCompatActivity {
-    TextView txtFechaInicial, txtFechaFinal, txtOptTipFechaSelected, contCaractNameHabit, txtTitNuevoHabit, txtHoraInicial, txtHoraFinal, numRamitas;
+    TextView txtFechaInicial, txtFechaFinal, txtOptTipFechaSelected, contCaractNameHabit, txtTitNuevoHabit, txtHoraInicial, txtHoraFinal, numRamitas, contCaractInfoExtr, txtMasInfo;
     AutoCompleteTextView nombreHabitInput;
     CheckBox radioBtnCadaDia, semanaDia1, semanaDia2, semanaDia3, semanaDia4, semanaDia5, semanaDia6, semanaDia7,
             diaCalendar1, diaCalendar2, diaCalendar3, diaCalendar4, diaCalendar5, diaCalendar6, diaCalendar7,
@@ -57,14 +87,21 @@ public class AgregarActiTutor extends AppCompatActivity {
     Spinner spinnerTiposHabit;
     List<String> selectedCheckBoxNames = new ArrayList<>();
     List<Integer> selectedWeekdays = new ArrayList<>();
-    LinearLayout linLayChangeOptFechas, linearLayDiasSemana, linearLayIntervalos, linearLayDiasMes, linLayCeckBxCadaDia;
-    ImageView btnChangeTipoInterFechas, btnSalirAddActi;
+    LinearLayout linLayChangeOptFechas, linearLayDiasSemana, linearLayIntervalos, linearLayDiasMes, linLayCeckBxCadaDia, bottomSheetLayout, btnCambiarIconoColor;
+    ImageView btnChangeTipoInterFechas, btnSalirAddActi, btnAgregarImgActi, circleColorElegidoIcon;
     RadioButton intervalo2, intervalo3, intervalo4, intervalo5, intervalo6, intervalo7;
     RadioGroup radioGroupIntervalosDias;
+    Button btnCrearActiMandar;
     private int estElegirOptFechas = 0;
     private final int limCharNombreHabit = 35;
+    private final int limCharInfoExtr = 250;
     private String fechasSeleccionadas = "";
-    private Calendar selectedStartTime = null; // Variable para almacenar la hora inicial
+    // Variable para almacenar la hora inicial
+    private Calendar selectedStartTime = null;
+    private ArrayList<String> imageFiles;
+    private GridView gridViewImages;
+    private String imagenActiSelected = "";
+    private int colorSeleccionado = Color.BLACK;
 
 
     @Override
@@ -78,7 +115,7 @@ public class AgregarActiTutor extends AppCompatActivity {
 
             //Se declara el btn que permite salir del activity de nuevo hábito:
             btnSalirAddActi = findViewById(R.id.btnSalirAddActi);
-            //btnSalirAddActi.setOnClickListener();
+            btnSalirAddActi.setOnClickListener(v1 -> mostrarModalCerrarView("¡Atención!", "Si das click en aceptar saldrás del formulario y no se guardará la información ingresada."));
 
             //Se declara el título para poder cambiarle el color
             txtTitNuevoHabit = findViewById(R.id.txtTitNuevoHabit);
@@ -93,8 +130,6 @@ public class AgregarActiTutor extends AppCompatActivity {
 
             spannableString.setSpan(new ForegroundColorSpan(colorHabit), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             txtTitNuevoHabit.setText(spannableString);
-
-
 
             spinnerTiposHabit = findViewById(R.id.spinnerTipHabits);
 
@@ -367,16 +402,12 @@ public class AgregarActiTutor extends AppCompatActivity {
             });
 
 
-
-
             //Se declara el Textview de hora inicial y final:
             txtHoraInicial = findViewById(R.id.txtHoraInicial);
             txtHoraFinal = findViewById(R.id.txtHoraFinal);
 
             txtHoraInicial.setOnClickListener(this::openTimePickerFechaInicial);
             txtHoraFinal.setOnClickListener(this::openTimePickerFechaFinal);
-
-
 
             //Se declara variable para el número de ramitas:
             numRamitas = findViewById(R.id.numRamitas);
@@ -396,6 +427,52 @@ public class AgregarActiTutor extends AppCompatActivity {
                     validNumRamitas();
                 }
             });
+
+
+            //Se declara el linearlayout como botón para cambiar el color:
+            btnCambiarIconoColor = findViewById(R.id.btnCambiarIconoColor);
+            btnCambiarIconoColor.setOnClickListener(this::cambiarColorIconActi);
+
+
+            //Botón que se encarga de abrir el modal de las imágenes y el círculo que cambia de color
+            btnAgregarImgActi = findViewById(R.id.btnAgregarImgActi);
+            circleColorElegidoIcon = findViewById(R.id.circleColorElegidoIcon);
+            btnAgregarImgActi.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showImageSelectionDialog();
+                }
+            });
+
+
+            //Declaración del input de info extra del modal:
+            txtMasInfo = findViewById(R.id.txtMasInfo);
+            //Se agrega un listener a cambio del texto para el contador de caractéres
+            //y se declara el contador de caractéres
+            contCaractInfoExtr = findViewById(R.id.contCaractInfoExtr);
+            txtMasInfo.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    int caracteresActuales = s.length();
+                    contCaractInfoExtr.setText(caracteresActuales + "/" + limCharInfoExtr);
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+
+                }
+            });
+
+
+            //Declaración del botón que crea la actividad:
+            btnCrearActiMandar = findViewById(R.id.btnCrearActiMandar);
+            btnCrearActiMandar.setOnClickListener(this::crearActividad);
+
             return insets;
         });
     }
@@ -413,7 +490,7 @@ public class AgregarActiTutor extends AppCompatActivity {
 
         // Crear el modal para mostrar las fechas disponibles en el calendario
         MaterialDatePicker<Long> datePicker = MaterialDatePicker.Builder.datePicker()
-                .setTitleText("Selecciona una fecha")
+                .setTitleText("Seleccione una fecha")
                 .setTheme(R.style.CustomMaterialDatePickerTheme)
                 .setSelection(todayInMillis) // Preseleccionar la fecha actual
                 .setCalendarConstraints(
@@ -580,7 +657,7 @@ public class AgregarActiTutor extends AppCompatActivity {
             }
             if (allUnchecked) {
                 fechaTextView.setText("Seleccione una fecha");
-                txtFechaFinal.setText(" - ");
+                txtFechaFinal.setText("-");
             }
         }
 
@@ -673,7 +750,7 @@ public class AgregarActiTutor extends AppCompatActivity {
                 break;
             }else{
                 fechaTextView.setText("Seleccione una fecha");
-                txtFechaFinal.setText(" - ");
+                txtFechaFinal.setText("-");
             }
         }
     }
@@ -740,7 +817,7 @@ public class AgregarActiTutor extends AppCompatActivity {
             recorrerFechasDiasSeleccionados(formattedDate, listaSeleccionados);
         }else{
             fechaTextView.setText("Seleccione una fecha");
-            txtFechaFinal.setText(" - ");
+            txtFechaFinal.setText("-");
         }
     }
 
@@ -803,7 +880,7 @@ public class AgregarActiTutor extends AppCompatActivity {
                 .setTimeFormat(TimeFormat.CLOCK_12H) // Formato de 12 horas con AM/PM
                 .setHour(7)
                 .setMinute(0)
-                .setTitleText("Selecciona la hora")
+                .setTitleText("Seleccione una hora")
                 .setTheme(R.style.CustomTimePickerTheme) // Aplica el tema personalizado
                 .build();
 
@@ -842,7 +919,7 @@ public class AgregarActiTutor extends AppCompatActivity {
                 .setTimeFormat(TimeFormat.CLOCK_12H) // Formato de 12 horas con AM/PM
                 .setHour(7)
                 .setMinute(0)
-                .setTitleText("Selecciona la hora")
+                .setTitleText("Seleccione una hora")
                 .setTheme(R.style.CustomTimePickerTheme) // Aplica el tema personalizado
                 .build();
 
@@ -887,4 +964,486 @@ public class AgregarActiTutor extends AppCompatActivity {
             numRamitas.setText("");
         }
     }
+
+
+    private void mostrarModalCerrarView(String titulo, String mensaje) {
+        //Se crea el modal al momento de hacer click en el botón
+        Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.modal_cerrar_view_confirm);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        dialog.setCancelable(true);
+
+        // Se obtienen los elementos del modal
+        TextView txtTitle = dialog.findViewById(R.id.txtDialogTitle);
+        TextView txtMessage = dialog.findViewById(R.id.txtDialogMessage);
+        Button btnClose = dialog.findViewById(R.id.btnCerrarModal);
+        Button btnConfirm = dialog.findViewById(R.id.btnConfirm);
+
+        // Asignar valores personalizados
+        txtTitle.setText(titulo);
+        txtMessage.setText(mensaje);
+
+        btnConfirm.setOnClickListener(v -> {
+            dialog.dismiss();
+            finish();
+        });
+
+        btnClose.setOnClickListener(v -> {
+            dialog.dismiss();
+            getSupportFragmentManager().beginTransaction()
+                    .addToBackStack(null)
+                    .commit();
+
+        });
+
+        // Mostrar el modal
+        dialog.show();
+    }
+    private void showImageSelectionDialog() {
+        // Crear el BottomSheetDialog
+        BottomSheetDialog modal = new BottomSheetDialog(AgregarActiTutor.this);
+        LayoutInflater inflater = getLayoutInflater();
+        View view = inflater.inflate(R.layout.modal_iconos_actis_view, null);
+        modal.setContentView(view);
+        //Se infla el elemento pa poder poner las imagenes
+        GridView gridViewImages = view.findViewById(R.id.gridViewImages);
+
+        // Configurar las imágenes en el GridView
+        ArrayList<String> imageFiles = new ArrayList<>();
+        try {
+            String[] files = getAssets().list("img/img_actividades");
+            if (files != null) {
+                for (String file : files) {
+                    if (!file.contains("rojo") && !file.contains("azul") && !file.contains("morado")
+                            && !file.contains("verde") && !file.contains("amarillo") &&!file.contains("icono_selector_iconos")) {
+                        imageFiles.add(file);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        Log.d("IMAGENES", "IMG: " + imageFiles);
+
+        // Configurar el adaptador para el GridView
+        ImageAdapter imageAdapter = new ImageAdapter(imageFiles, modal);
+        gridViewImages.setAdapter(imageAdapter);
+
+        modal.show();
+    }
+
+    private void updateButtonImage(String imageName) {
+        String imagePath = "img/img_actividades/" + imageName;
+        imagenActiSelected = imagePath;
+        Log.d("IMAGEN", "Imagen seleccionada: " + imagenActiSelected);
+
+        try {
+            InputStream inputStream = getAssets().open(imagePath);
+            SVG svg = SVG.getFromInputStream(inputStream);
+            Drawable drawable = new PictureDrawable(svg.renderToPicture());
+
+            // Asigna la imagen al botón que abre el modal
+            btnAgregarImgActi.setImageDrawable(drawable);
+        } catch (IOException | SVGParseException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void cambiarColorIconActi(View view){
+        Log.d("IMAGEN", "PA EL COLOR: " + imagenActiSelected);
+        if(!imagenActiSelected.equals("")){
+
+            final Dialog dialog = new Dialog(this);
+
+            // Infla el layout del modal
+            View modalView = LayoutInflater.from(this).inflate(R.layout.modal_colores_acti, null);
+            dialog.setContentView(modalView);
+
+            // Se jalan los ImageViews del modal
+            ImageView colorRojo = modalView.findViewById(R.id.colorRojo);
+            ImageView colorAmarillo = modalView.findViewById(R.id.coloAmarillo);
+            ImageView colorAzul = modalView.findViewById(R.id.colorAzul);
+            ImageView colorVerde = modalView.findViewById(R.id.colorVerde);
+            ImageView colorMorado = modalView.findViewById(R.id.colorMorado);
+            ImageView colorNegro = modalView.findViewById(R.id.colorNegro);
+
+            // Establece los OnClickListener para cada ImageView
+            colorRojo.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    circleColorElegidoIcon.setColorFilter(getResources().getColor(R.color.rojo_actis), PorterDuff.Mode.SRC_IN);
+                    colorSeleccionado = ContextCompat.getColor(AgregarActiTutor.this, R.color.rojo_actis);
+                    String nuevaImg = replaceColorSuffix(imagenActiSelected, "rojo");
+                    loadImageFromAssets(nuevaImg);
+                    dialog.dismiss();
+                }
+            });
+
+            colorAmarillo.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    circleColorElegidoIcon.setColorFilter(getResources().getColor(R.color.amarillo_actis), PorterDuff.Mode.SRC_IN);                    colorSeleccionado = ContextCompat.getColor(AgregarActiTutor.this, R.color.rojo_actis);
+                    colorSeleccionado = ContextCompat.getColor(AgregarActiTutor.this, R.color.amarillo_actis);
+                    String nuevaImg = replaceColorSuffix(imagenActiSelected, "amarillo");
+                    loadImageFromAssets(nuevaImg);
+                    dialog.dismiss();
+                }
+            });
+
+            colorAzul.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    circleColorElegidoIcon.setColorFilter(getResources().getColor(R.color.azul_actis), PorterDuff.Mode.SRC_IN);                    colorSeleccionado = ContextCompat.getColor(AgregarActiTutor.this, R.color.rojo_actis);
+                    colorSeleccionado = ContextCompat.getColor(AgregarActiTutor.this, R.color.azul_actis);
+                    String nuevaImg = replaceColorSuffix(imagenActiSelected, "azul");
+                    loadImageFromAssets(nuevaImg);
+                    dialog.dismiss();
+                }
+            });
+
+            colorVerde.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    circleColorElegidoIcon.setColorFilter(getResources().getColor(R.color.verde_actis), PorterDuff.Mode.SRC_IN);
+                    colorSeleccionado = ContextCompat.getColor(AgregarActiTutor.this, R.color.verde_actis);
+
+                    String nuevaImg = replaceColorSuffix(imagenActiSelected, "verde");
+
+                    loadImageFromAssets(nuevaImg);
+                    dialog.dismiss();
+                }
+            });
+
+            colorNegro.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    circleColorElegidoIcon.setColorFilter(getResources().getColor(R.color.black), PorterDuff.Mode.SRC_IN);
+                    colorSeleccionado = ContextCompat.getColor(AgregarActiTutor.this, R.color.black);
+                    String nuevaImg = imagenActiSelected.replaceAll("-(rojo|amarillo|azul|verde|morado)", "");
+                    loadImageFromAssets(nuevaImg);
+                    dialog.dismiss();
+                }
+            });
+
+            colorMorado.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    circleColorElegidoIcon.setColorFilter(getResources().getColor(R.color.morado_actis), PorterDuff.Mode.SRC_IN);
+                    colorSeleccionado = ContextCompat.getColor(AgregarActiTutor.this, R.color.morado_actis);
+                    String nuevaImg = replaceColorSuffix(imagenActiSelected, "morado");
+                    loadImageFromAssets(nuevaImg);
+                    dialog.dismiss();
+                }
+            });
+            dialog.show();
+
+        }else{
+            Toast.makeText(this, "Primero se debe elegir una imagen.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    // Método para reemplazar el sufijo de color si existe
+    private String replaceColorSuffix(String imageName, String color) {
+        // Se elimina cualquier sufijo de color existente
+        String baseName = imageName.replace(".svg", "");
+        baseName = baseName.replaceAll("-(rojo|amarillo|azul|verde|morado)", "");
+
+        // Añadir el nuevo sufijo
+        return baseName + "-" + color + ".svg";
+    }
+
+    private void loadImageFromAssets(String imageName) {
+        imagenActiSelected = imageName;
+        Log.d("IMAGEN", "SE RECIBE: " + imageName);
+        try {
+            // Carga el archivo SVG desde los assets
+            SVG svg = SVG.getFromAsset(getAssets(), imageName);
+            Drawable drawable = new PictureDrawable(svg.renderToPicture());
+            // Asigna el Drawable al ImageView
+            btnAgregarImgActi.setImageDrawable(drawable);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void crearActividad(View view){
+        String nombreHabito = nombreHabitInput.getText().toString().trim();
+        String fechaInicial = txtFechaInicial.getText().toString().trim();
+        String fechaFinal = txtFechaFinal.getText().toString().trim();
+        String horaInicial = txtHoraInicial.getText().toString().trim();
+        String horaFinal=  txtHoraFinal.getText().toString().trim();
+        String numeroRamitas = numRamitas.getText().toString().trim();
+        String masInfo = txtMasInfo.getText().toString().trim();
+
+        boolean verifiColor = false;
+        if (colorSeleccionado == getResources().getColor(R.color.rojo_actis) ||
+                colorSeleccionado == getResources().getColor(R.color.amarillo_actis) ||
+                colorSeleccionado == getResources().getColor(R.color.verde_actis) ||
+                colorSeleccionado == getResources().getColor(R.color.azul_actis) ||
+                colorSeleccionado == getResources().getColor(R.color.morado_actis) ||
+                colorSeleccionado == getResources().getColor(R.color.black)) {
+            verifiColor = true;
+        }else{
+            verifiColor = false;
+        }
+
+        try{
+            int number = Integer.parseInt(numeroRamitas);
+            if(!(number >= 2 && number <= 100)){
+                Toast.makeText(this, "Ingrese un número de ramitas entre 2 y 100", Toast.LENGTH_SHORT).show();
+            }
+
+        }catch (Exception ex){
+            Toast.makeText(this, "Favor de completar todos los campos antes de crear", Toast.LENGTH_SHORT).show();
+        }
+
+        if(nombreHabito.isEmpty() || fechaInicial.isEmpty() || fechaInicial.contains("Seleccione")
+                || fechaFinal.isEmpty() || fechaFinal.equals("-") || horaInicial.isEmpty()
+                || horaInicial.contains("Seleccione") || horaFinal.isEmpty()
+                || horaFinal.contains("Seleccione") || numeroRamitas.isEmpty()
+                || imagenActiSelected.isEmpty() || (verifiColor == false) || masInfo.isEmpty()){
+            Toast.makeText(this, "Favor de completar todos los campos antes de crear", Toast.LENGTH_SHORT).show();
+        }else{
+            Toast.makeText(this, "Todo completado", Toast.LENGTH_SHORT).show();
+
+            ApiService apiService = RetrofitClient.getApiService();
+            Call<List<Actividad>> call = apiService.getAllActividades();
+            call.enqueue(new Callback<List<Actividad>>() {
+                @Override
+                public void onResponse(Call<List<Actividad>> call, Response<List<Actividad>> response) {
+                    List<Actividad> actividades = response.body();
+                    if (actividades != null) {
+                        SharedPreferences preferences = getSharedPreferences("usrKitCuentaTutor", MODE_PRIVATE);
+                        int idKit = preferences.getInt("idKit", 0);
+                        Log.d("DEBUG", "IDKIT QUE SE TIENE: " + idKit);
+                        boolean hayTraslape = false;
+                        for (Actividad actividad : actividades) {
+                            Log.e("DEBUG", "Nombre: " + actividad.getNombreHabito());
+                            if(actividad.getIdKit() == idKit){
+                                String fechasBD = actividad.getFechasActividad();
+                                String fechas = String.valueOf(fechasBD);
+                                Log.d("DEBUG", "fechasBD: " + fechasBD);
+                                Log.d("DEBUG", "fechas: " + fechas);
+
+                                String horaInicioBDParse = actividad.getHoraInicioHabito();
+                                String horaInicialBD = String.valueOf(horaInicioBDParse);
+                                Log.d("DEBUG", "horaInicioBDParse: " + horaInicioBDParse);
+                                Log.d("DEBUG", "horaInicialBD: " + horaInicialBD);
+
+
+                                String horaFinBDParse = actividad.getHoraFinHabito();
+                                String horaFinalBD = String.valueOf(horaFinBDParse);
+                                Log.d("DEBUG", "horaInicialBD: " + horaFinBDParse);
+                                Log.d("DEBUG", "horaInicialBD: " + horaFinalBD);
+
+
+                                String [] listaFechas= fechas.split(",");
+                                String [] listFechasSelected = fechasSeleccionadas.split(",");
+
+                                Log.d("DEBUG", "listafechas: " + listaFechas);
+                                Log.d("DEBUG", "listFechasSelected: " + listFechasSelected);
+
+
+                                for(String fecha : listaFechas){
+                                    for (String fechaSeleccionada : listFechasSelected) {
+                                        if (fecha.trim().equals(fechaSeleccionada.trim())) {
+
+                                            Log.d("DEBUG", "ENTRÓ AL IF");
+
+                                            SimpleDateFormat formato12H = new SimpleDateFormat("hh:mm a", Locale.US);
+                                            SimpleDateFormat formato24H = new SimpleDateFormat("HH:mm:ss", Locale.US);
+                                            try {
+                                                Date inicioBD = formato24H.parse(horaInicialBD);
+                                                Date finBD = formato24H.parse(horaFinalBD);
+                                                Date inicioNueva = formato24H.parse(formato24H.format(formato12H.parse(horaInicial)));
+                                                Date finNueva = formato24H.parse(formato24H.format(formato12H.parse(horaFinal)));
+
+                                                Log.d("HORAS", "Hora inicio BD: " + inicioBD);
+                                                Log.d("HORAS", "Hora fin BD: " + finBD);
+                                                Log.d("HORAS", "Hora inicio BD: " + inicioNueva);
+                                                Log.d("HORAS", "Hora fin: " + finNueva);
+
+                                                if ((inicioNueva.before(finBD) && inicioNueva.after(inicioBD)) ||
+                                                        (finNueva.after(inicioBD) && finNueva.before(finBD)) ||
+                                                        (inicioNueva.equals(inicioBD) || finNueva.equals(finBD)) ||
+                                                        (inicioNueva.before(inicioBD) && finNueva.after(finBD))) {
+                                                    hayTraslape = true;
+                                                }
+
+
+                                            } catch (ParseException e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        if (hayTraslape) {
+                            Toast.makeText(AgregarActiTutor.this, "Error: Las horas seleccionadas se traslapan con otra actividad.", Toast.LENGTH_LONG).show();
+                        } else {
+                            ApiService apiService = RetrofitClient.getApiService();
+                            Call<List<Actividad>> call2 = apiService.getAllActividades();
+                            Actividad actividad = new Actividad();
+                            actividad.setNombreHabito(nombreHabito);
+
+                            String tipHabito = spinnerTiposHabit.getSelectedItem().toString();
+                            actividad.setTipoHabito(tipHabito);
+                            actividad.setNumRamitas(Integer.parseInt(numeroRamitas));
+                        }
+                    }
+                }
+                @Override
+                public void onFailure(Call<List<Actividad>> call, Throwable t) {
+
+                }
+            });
+        }
+    }
+
+    private void jalarIntervalos(){
+        boolean verifiCheckBoxesDiasSemana = false;
+        CheckBox[] allCheckBoxes = {semanaDia1, semanaDia2, semanaDia3, semanaDia4, semanaDia5, semanaDia6, semanaDia7};
+        StringBuilder diasSeleccionadosStr = new StringBuilder();
+        List<String> selectedSemanaDias = new ArrayList<>();
+        for (CheckBox checkBox : allCheckBoxes) {
+            if (checkBox.isChecked()) {
+                verifiCheckBoxesDiasSemana = true;
+                diasSeleccionadosStr.append(checkBox.getText().toString());
+                selectedSemanaDias.add(checkBox.getText().toString());
+            }
+        }
+
+        boolean verifiRadioButtonInterval = false;
+        RadioButton[] allRadioButtonInterval = {intervalo2, intervalo3, intervalo4, intervalo5, intervalo6, intervalo7};
+        String selectedIntervalo = "";
+        for (RadioButton radioButton : allRadioButtonInterval) {
+            if (radioButton.isChecked()) {
+                verifiRadioButtonInterval = true;
+                selectedIntervalo = radioButton.getText().toString();
+                break;
+            }
+        }
+
+
+        boolean verififiDiasCalendar = false;
+        CheckBox[] allCheckBoxsDiaCalendar = {
+                diaCalendar1, diaCalendar2, diaCalendar3, diaCalendar4, diaCalendar5, diaCalendar6,
+                diaCalendar7, diaCalendar8, diaCalendar9, diaCalendar10, diaCalendar11, diaCalendar12,
+                diaCalendar13, diaCalendar14, diaCalendar15, diaCalendar16, diaCalendar17, diaCalendar18,
+                diaCalendar19, diaCalendar20, diaCalendar21, diaCalendar22, diaCalendar23, diaCalendar24,
+                diaCalendar25, diaCalendar26, diaCalendar27, diaCalendar28, diaCalendar29, diaCalendar30,
+                diaCalendar31
+        };
+        List<String> selectedDiasCalendar = new ArrayList<>();
+        for (CheckBox checkBox : allCheckBoxsDiaCalendar) {
+            if (checkBox.isChecked()) {
+                verififiDiasCalendar = true;
+                selectedDiasCalendar.add(checkBox.getText().toString());
+            }
+        }
+
+
+        if(verifiCheckBoxesDiasSemana){
+        }
+        else if(verifiRadioButtonInterval){
+
+        }
+        else if(verififiDiasCalendar){
+
+        }
+
+    }
+
+    //Clase para poder procesar las imagenes como svg y de assets
+    private class ImageAdapter extends BaseAdapter {
+        private ArrayList<String> images;
+        private BottomSheetDialog modal;
+
+        public ImageAdapter(ArrayList<String> images, BottomSheetDialog modal) {
+            this.images = images;
+            this.modal = modal;
+        }
+
+        @Override
+        public int getCount() {
+            return images.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return images.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            ImageView imageView;
+            if (convertView == null) {
+                imageView = new ImageView(AgregarActiTutor.this);
+                imageView.setLayoutParams(new GridView.LayoutParams(150, 150));
+                imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            } else {
+                imageView = (ImageView) convertView;
+            }
+
+            String imagePath = "img/img_actividades/" + images.get(position);
+            try {
+                // Abre el archivo SVG
+                InputStream is = getAssets().open(imagePath);
+
+                // Usa AndroidSVG para convertir el archivo SVG a Drawable
+                SVG svg = SVG.getFromInputStream(is);
+                Drawable drawable = new PictureDrawable(svg.renderToPicture());
+
+                // Establece el Drawable en el ImageView
+                imageView.setImageDrawable(drawable);
+
+                // Cierra el InputStream
+                is.close();
+            } catch (IOException | SVGParseException e) {
+                e.printStackTrace();
+            }
+
+
+            //se le agrega el onlistener a las imágenes para que se de click y se guarde la imágen
+            imageView.setOnClickListener(v -> {
+                String selectedImage = images.get(position);
+
+                // Usar el color seleccionado previamente
+                int colorActual = colorSeleccionado;
+                String colorSuffix = "";
+
+                // Determinar el sufijo de color basado en el valor de colorActual
+                if (colorActual == getResources().getColor(R.color.rojo_actis)) {
+                    colorSuffix = "-rojo";
+                } else if (colorActual == getResources().getColor(R.color.amarillo_actis)) {
+                    colorSuffix = "-amarillo";
+                } else if (colorActual == getResources().getColor(R.color.azul_actis)) {
+                    colorSuffix = "-azul";
+                } else if (colorActual == getResources().getColor(R.color.verde_actis)) {
+                    colorSuffix = "-verde";
+                } else if (colorActual == getResources().getColor(R.color.morado_actis)) {
+                    colorSuffix = "-morado";
+                } else if (colorActual == getResources().getColor(R.color.black)) {
+                    colorSuffix = "";
+                }
+
+                String nuevaRuta = selectedImage.replace(".svg", "") + colorSuffix + ".svg";
+                updateButtonImage(nuevaRuta);
+                modal.dismiss();
+            });
+
+
+            return imageView;
+        }
+    }
+
+
 }
+
