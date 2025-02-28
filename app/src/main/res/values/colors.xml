@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    //colores de la app en general:
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="cafecito">#885551</color>
@@ -15,5 +16,16 @@
     <color name="cafe_ramita">#664126</color>
     <color name="gricecito">#D9D9D9</color>
     <color name="gris_fuertecito">#7C7C7C</color>
-    
+
+    <color name="hint_input">#8B8B8B</color>
+    <color name="moradito">#A588C9</color>
+    <color name="verdecito">#8AC691</color>
+
+    //colores de iconos de actis:
+    <color name="rojo_actis">#ff595e</color>
+    <color name="amarillo_actis">#ffca3a</color>
+    <color name="verde_actis">#8ac926</color>
+    <color name="azul_actis">#1982c4</color>
+    <color name="morado_actis">#6a4c93</color>
+
 </resources>

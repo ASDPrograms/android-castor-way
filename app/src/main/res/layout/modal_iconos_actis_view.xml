@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/border_sup_modal_imgs_actis"
+    android:padding="16dp"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:id="@+id/modalBottomImgsActi">
+
+    <View
+        android:layout_width="40dp"
+        android:layout_height="5dp"
+        android:background="@drawable/border_mover_modal_bottom"
+        android:layout_marginBottom="8dp"
+        android:layout_gravity="center"
+        />
+    <GridView
+        android:id="@+id/gridViewImages"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:numColumns="auto_fit"
+        android:columnWidth="80dp"
+        android:horizontalSpacing="8dp"
+        android:verticalSpacing="8dp"
+        android:padding="8dp"
+        android:gravity="center" />
+</LinearLayout>
