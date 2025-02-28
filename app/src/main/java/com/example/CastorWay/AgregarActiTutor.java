@@ -21,6 +21,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.BaseAdapter;
@@ -102,6 +103,7 @@ public class AgregarActiTutor extends AppCompatActivity {
     private GridView gridViewImages;
     private String imagenActiSelected = "";
     private int colorSeleccionado = Color.BLACK;
+
 
 
     @Override
@@ -959,8 +961,8 @@ public class AgregarActiTutor extends AppCompatActivity {
             valueNumRamitas = Integer.parseInt(numRamitas.getText().toString());
         }catch (Exception ex){
         }
-        if (!(valueNumRamitas >= 2 && valueNumRamitas <= 100) && valueNumRamitas != -1){
-            Toast.makeText(this, "Ingrese un número entre 2 y 100", Toast.LENGTH_SHORT).show();
+        if (!(valueNumRamitas >= 1 && valueNumRamitas <= 100) && valueNumRamitas != -1){
+            Toast.makeText(this, "Ingrese un número entre 1 y 100", Toast.LENGTH_SHORT).show();
             numRamitas.setText("");
         }
     }
@@ -970,7 +972,7 @@ public class AgregarActiTutor extends AppCompatActivity {
         //Se crea el modal al momento de hacer click en el botón
         Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.modal_cerrar_view_confirm);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.setCancelable(true);
 
         // Se obtienen los elementos del modal
@@ -1167,151 +1169,243 @@ public class AgregarActiTutor extends AppCompatActivity {
         }
     }
 
-    private void crearActividad(View view){
+    private void crearActividad(View view) {
+        // Validaciones iniciales
         String nombreHabito = nombreHabitInput.getText().toString().trim();
         String fechaInicial = txtFechaInicial.getText().toString().trim();
         String fechaFinal = txtFechaFinal.getText().toString().trim();
         String horaInicial = txtHoraInicial.getText().toString().trim();
-        String horaFinal=  txtHoraFinal.getText().toString().trim();
+        String horaFinal = txtHoraFinal.getText().toString().trim();
         String numeroRamitas = numRamitas.getText().toString().trim();
         String masInfo = txtMasInfo.getText().toString().trim();
 
-        boolean verifiColor = false;
-        if (colorSeleccionado == getResources().getColor(R.color.rojo_actis) ||
-                colorSeleccionado == getResources().getColor(R.color.amarillo_actis) ||
-                colorSeleccionado == getResources().getColor(R.color.verde_actis) ||
-                colorSeleccionado == getResources().getColor(R.color.azul_actis) ||
-                colorSeleccionado == getResources().getColor(R.color.morado_actis) ||
-                colorSeleccionado == getResources().getColor(R.color.black)) {
-            verifiColor = true;
-        }else{
-            verifiColor = false;
-        }
-
-        try{
-            int number = Integer.parseInt(numeroRamitas);
-            if(!(number >= 2 && number <= 100)){
-                Toast.makeText(this, "Ingrese un número de ramitas entre 2 y 100", Toast.LENGTH_SHORT).show();
-            }
-
-        }catch (Exception ex){
-            Toast.makeText(this, "Favor de completar todos los campos antes de crear", Toast.LENGTH_SHORT).show();
-        }
-
-        if(nombreHabito.isEmpty() || fechaInicial.isEmpty() || fechaInicial.contains("Seleccione")
+        if (nombreHabito.isEmpty() || fechaInicial.isEmpty() || fechaInicial.contains("Seleccione")
                 || fechaFinal.isEmpty() || fechaFinal.equals("-") || horaInicial.isEmpty()
                 || horaInicial.contains("Seleccione") || horaFinal.isEmpty()
                 || horaFinal.contains("Seleccione") || numeroRamitas.isEmpty()
-                || imagenActiSelected.isEmpty() || (verifiColor == false) || masInfo.isEmpty()){
+                || imagenActiSelected.isEmpty() || masInfo.isEmpty()) {
             Toast.makeText(this, "Favor de completar todos los campos antes de crear", Toast.LENGTH_SHORT).show();
-        }else{
-            Toast.makeText(this, "Todo completado", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
-            ApiService apiService = RetrofitClient.getApiService();
-            Call<List<Actividad>> call = apiService.getAllActividades();
-            call.enqueue(new Callback<List<Actividad>>() {
-                @Override
-                public void onResponse(Call<List<Actividad>> call, Response<List<Actividad>> response) {
-                    List<Actividad> actividades = response.body();
-                    if (actividades != null) {
-                        SharedPreferences preferences = getSharedPreferences("usrKitCuentaTutor", MODE_PRIVATE);
-                        int idKit = preferences.getInt("idKit", 0);
-                        Log.d("DEBUG", "IDKIT QUE SE TIENE: " + idKit);
-                        boolean hayTraslape = false;
-                        for (Actividad actividad : actividades) {
-                            Log.e("DEBUG", "Nombre: " + actividad.getNombreHabito());
-                            if(actividad.getIdKit() == idKit){
-                                String fechasBD = actividad.getFechasActividad();
-                                String fechas = String.valueOf(fechasBD);
-                                Log.d("DEBUG", "fechasBD: " + fechasBD);
-                                Log.d("DEBUG", "fechas: " + fechas);
+        int numRam;
+        try {
+            numRam = Integer.parseInt(numeroRamitas);
+            if (numRam < 1 || numRam > 100) {
+                Toast.makeText(this, "Ingrese un número de ramitas entre 1 y 100", Toast.LENGTH_SHORT).show();
+                return;
+            }
+        } catch (NumberFormatException ex) {
+            Toast.makeText(this, "Número de ramitas inválido", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
-                                String horaInicioBDParse = actividad.getHoraInicioHabito();
-                                String horaInicialBD = String.valueOf(horaInicioBDParse);
-                                Log.d("DEBUG", "horaInicioBDParse: " + horaInicioBDParse);
-                                Log.d("DEBUG", "horaInicialBD: " + horaInicialBD);
+        // Obtener idKit de SharedPreferences
+        SharedPreferences preferences = getSharedPreferences("usrKitCuentaTutor", MODE_PRIVATE);
+        int idKit = preferences.getInt("idKit", 0);
+        if (idKit == 0) {
+            Toast.makeText(this, "Error: No se pudo obtener el idKit", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
+        // Primera llamada: Obtener actividades existentes
+        ApiService apiService = RetrofitClient.getApiService();
+        apiService.getAllActividades().enqueue(new Callback<List<Actividad>>() {
+            @Override
+            public void onResponse(Call<List<Actividad>> call, Response<List<Actividad>> response) {
+                if (!response.isSuccessful() || response.body() == null) {
+                    Toast.makeText(AgregarActiTutor.this, "Error al obtener actividades", Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
-                                String horaFinBDParse = actividad.getHoraFinHabito();
-                                String horaFinalBD = String.valueOf(horaFinBDParse);
-                                Log.d("DEBUG", "horaInicialBD: " + horaFinBDParse);
-                                Log.d("DEBUG", "horaInicialBD: " + horaFinalBD);
+                boolean hayTraslape = false;
+                SimpleDateFormat formato12H = new SimpleDateFormat("hh:mm a", Locale.US);
+                SimpleDateFormat formato24H = new SimpleDateFormat("HH:mm", Locale.US);
+                Date inicioNueva = null, finNueva = null;
+                String horaInicioText = "", horaFinText = "";
+                try {
+                    // Primero convierte las horas a formato de 24 horas
+                    inicioNueva = formato24H.parse(formato24H.format(formato12H.parse(horaInicial)));
+                    finNueva = formato24H.parse(formato24H.format(formato12H.parse(horaFinal)));
 
+                    horaInicioText = formato24H.format(inicioNueva);
+                    horaFinText = formato24H.format(finNueva);
 
-                                String [] listaFechas= fechas.split(",");
-                                String [] listFechasSelected = fechasSeleccionadas.split(",");
-
-                                Log.d("DEBUG", "listafechas: " + listaFechas);
-                                Log.d("DEBUG", "listFechasSelected: " + listFechasSelected);
-
-
-                                for(String fecha : listaFechas){
-                                    for (String fechaSeleccionada : listFechasSelected) {
-                                        if (fecha.trim().equals(fechaSeleccionada.trim())) {
-
-                                            Log.d("DEBUG", "ENTRÓ AL IF");
-
-                                            SimpleDateFormat formato12H = new SimpleDateFormat("hh:mm a", Locale.US);
-                                            SimpleDateFormat formato24H = new SimpleDateFormat("HH:mm:ss", Locale.US);
-                                            try {
-                                                Date inicioBD = formato24H.parse(horaInicialBD);
-                                                Date finBD = formato24H.parse(horaFinalBD);
-                                                Date inicioNueva = formato24H.parse(formato24H.format(formato12H.parse(horaInicial)));
-                                                Date finNueva = formato24H.parse(formato24H.format(formato12H.parse(horaFinal)));
-
-                                                Log.d("HORAS", "Hora inicio BD: " + inicioBD);
-                                                Log.d("HORAS", "Hora fin BD: " + finBD);
-                                                Log.d("HORAS", "Hora inicio BD: " + inicioNueva);
-                                                Log.d("HORAS", "Hora fin: " + finNueva);
-
-                                                if ((inicioNueva.before(finBD) && inicioNueva.after(inicioBD)) ||
-                                                        (finNueva.after(inicioBD) && finNueva.before(finBD)) ||
-                                                        (inicioNueva.equals(inicioBD) || finNueva.equals(finBD)) ||
-                                                        (inicioNueva.before(inicioBD) && finNueva.after(finBD))) {
-                                                    hayTraslape = true;
-                                                }
+                    Log.d("HORAS", "Hora inicio Nueva: " + inicioNueva);
+                    Log.d("HORAS", "Hora fin Nueva: " + finNueva);
 
 
-                                            } catch (ParseException e) {
-                                                e.printStackTrace();
-                                            }
-                                        }
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                    Log.e("ERROR", "Error al convertir las horas", e);
+                }
+
+
+                for (Actividad actividad : response.body()) {
+                    if (actividad.getIdKit() == idKit) {
+                        for (String fecha : actividad.getFechasActividad().split(",")) {
+                            if (Arrays.asList(fechasSeleccionadas.split(",")).contains(fecha.trim())) {
+                                try {
+                                    Date inicioBD = formato24H.parse(actividad.getHoraInicioHabito());
+                                    Date finBD = formato24H.parse(actividad.getHoraFinHabito());
+
+                                    if ((inicioNueva.before(finBD) && inicioNueva.after(inicioBD)) ||
+                                            (finNueva.after(inicioBD) && finNueva.before(finBD)) ||
+                                            (inicioNueva.equals(inicioBD) || finNueva.equals(finBD)) ||
+                                            (inicioNueva.before(inicioBD) && finNueva.after(finBD))) {
+                                        hayTraslape = true;
+                                        break;
                                     }
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
                                 }
                             }
                         }
-                        if (hayTraslape) {
-                            Toast.makeText(AgregarActiTutor.this, "Error: Las horas seleccionadas se traslapan con otra actividad.", Toast.LENGTH_LONG).show();
-                        } else {
-                            ApiService apiService = RetrofitClient.getApiService();
-                            Call<List<Actividad>> call2 = apiService.getAllActividades();
-                            Actividad actividad = new Actividad();
-                            actividad.setNombreHabito(nombreHabito);
-
-                            String tipHabito = spinnerTiposHabit.getSelectedItem().toString();
-                            actividad.setTipoHabito(tipHabito);
-                            actividad.setNumRamitas(Integer.parseInt(numeroRamitas));
-                        }
                     }
                 }
-                @Override
-                public void onFailure(Call<List<Actividad>> call, Throwable t) {
 
+                if (hayTraslape) {
+                    runOnUiThread(() -> Toast.makeText(AgregarActiTutor.this, "Las horas se traslapan con otra actividad", Toast.LENGTH_LONG).show());
+                } else {
+                    obtenerIdCastorYCrearActividad(idKit, nombreHabito, fechaInicial, fechaFinal, horaInicioText, horaFinText, numRam, masInfo);
                 }
-            });
-        }
+            }
+
+            @Override
+            public void onFailure(Call<List<Actividad>> call, Throwable t) {
+                Log.e("API_ERROR", "Error al obtener actividades: " + t.getMessage());
+                Toast.makeText(AgregarActiTutor.this, "Error en la conexión con el servidor", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
-    private void jalarIntervalos(){
+    // Método separado para obtener el ID del Castor y luego crear la actividad
+    private void obtenerIdCastorYCrearActividad(int idKit, String nombreHabito, String fechaInicial, String fechaFinal, String horaInicial, String horaFinal, int numRamitas, String masInfo) {
+        ApiService apiService = RetrofitClient.getApiService();
+        apiService.getAllCastores().enqueue(new Callback<List<Castor>>() {
+            @Override
+            public void onResponse(Call<List<Castor>> call, Response<List<Castor>> response) {
+                if (!response.isSuccessful() || response.body() == null) {
+                    Toast.makeText(AgregarActiTutor.this, "Error al obtener el ID del Castor", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                SharedPreferences preferences = getSharedPreferences("User", MODE_PRIVATE);
+                String emailGuardado = preferences.getString("email", "");
+                int idCastor = -1;
+
+                for (Castor castor : response.body()) {
+                    if (castor.getEmail().equals(emailGuardado)) {
+                        idCastor = castor.getIdCastor();
+                        break;
+                    }
+                }
+
+                if (idCastor == -1) {
+                    Toast.makeText(AgregarActiTutor.this, "No se encontró el ID del Castor", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                String jalarIntervalos = jalarIntervalos();
+
+                Log.e("Actisss", "idKit: " + idKit);
+                Log.e("Actisss", "idCastor: " + idCastor);
+                Log.e("Actisss", "nombreHabito: " + nombreHabito);
+                Log.e("Actisss", "fechaInicial: " + fechaInicial);
+                Log.e("Actisss", "fechaFinal: " + fechaFinal);
+                Log.e("Actisss", "horaInicial: " + horaInicial);
+                Log.e("Actisss", "horaFinal: " + horaFinal);
+                Log.e("Actisss", "numRamitas: " + numRamitas);
+                Log.e("Actisss", "masInfo: " + masInfo);
+                Log.e("Actisss", "fechasSeleccionadas: " + fechasSeleccionadas);
+                Log.e("Actisss", "jalarIntervalos: " + jalarIntervalos);
+
+                Actividad actividad = new Actividad();
+                actividad.setIdKit(idKit);
+                actividad.setIdCastor(idCastor);
+                actividad.setNombreHabito(nombreHabito);
+                actividad.setDiaInicioHabito(fechaInicial);
+                actividad.setDiaMetaHabito(fechaFinal);
+                actividad.setHoraInicioHabito(horaInicial);
+                actividad.setHoraFinHabito(horaFinal);
+                actividad.setNumRamitas(numRamitas);
+                actividad.setInfoExtraHabito(masInfo);
+                actividad.setFechasActividad(fechasSeleccionadas);
+                actividad.setRepeticiones(jalarIntervalos);
+                actividad.setTipoHabito(spinnerTiposHabit.getSelectedItem().toString());
+
+                String colorH = String.format("#%06X", (0xFFFFFF & colorSeleccionado));
+                Log.e("Actisss", "colorH: " + colorH);
+
+                String codColorMandar = "";
+                if(colorH.equalsIgnoreCase("#ff595e")){
+                    codColorMandar = "rojo";
+                }else if(colorH.equalsIgnoreCase("#ffca3a")){
+                    codColorMandar = "amarillo";
+                }else if(colorH.equalsIgnoreCase("#8ac926")){
+                    codColorMandar = "verde";
+                }else if(colorH.equalsIgnoreCase("#1982c4")){
+                    codColorMandar = "azul";
+                }else if(colorH.equalsIgnoreCase("#6a4c93")){
+                    codColorMandar = "morado";
+                }else if(colorH.equalsIgnoreCase("#FF0000")){
+                    codColorMandar = "negro";
+                }
+                Log.e("Actisss", "codColorMandar: " + codColorMandar);
+
+
+                actividad.setColor(codColorMandar);
+
+                int index = imagenActiSelected.lastIndexOf("/");
+                String nombreImg = imagenActiSelected.substring(index + 1);
+
+                actividad.setRutaImagenHabito("../img/iconos_formularios/" + nombreImg);
+
+                apiService.createActividad(actividad).enqueue(new Callback<Actividad>() {
+                    @Override
+                    public void onResponse(Call<Actividad> call, Response<Actividad> response) {
+                        Toast.makeText(AgregarActiTutor.this, "Actividad creada con éxito", Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
+
+                    @Override
+                    public void onFailure(Call<Actividad> call, Throwable t) {
+                        Log.e("API_ERROR", "Error en la creación de actividad: " + t.getMessage());
+                        Toast.makeText(AgregarActiTutor.this, "Error en la conexión con el servidor", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure(Call<List<Castor>> call, Throwable t) {
+                Log.e("API_ERROR", "Error al obtener el ID del Castor: " + t.getMessage());
+            }
+        });
+    }
+
+    private String jalarIntervalos(){
+        List<String> intervalosSeleccionados = new ArrayList<>();
+
         boolean verifiCheckBoxesDiasSemana = false;
         CheckBox[] allCheckBoxes = {semanaDia1, semanaDia2, semanaDia3, semanaDia4, semanaDia5, semanaDia6, semanaDia7};
-        StringBuilder diasSeleccionadosStr = new StringBuilder();
-        List<String> selectedSemanaDias = new ArrayList<>();
         for (CheckBox checkBox : allCheckBoxes) {
             if (checkBox.isChecked()) {
                 verifiCheckBoxesDiasSemana = true;
-                diasSeleccionadosStr.append(checkBox.getText().toString());
-                selectedSemanaDias.add(checkBox.getText().toString());
+                if(checkBox.getText().toString().equals("L")){
+                    intervalosSeleccionados.add("Lunes");
+                }else if(checkBox.getText().toString().equals("M")){
+                    intervalosSeleccionados.add("Martes");
+                }else if(checkBox.getText().toString().equals("W")){
+                    intervalosSeleccionados.add("Miércoles");
+                }else if(checkBox.getText().toString().equals("J")){
+                    intervalosSeleccionados.add("Jueves");
+                }else if(checkBox.getText().toString().equals("V")){
+                    intervalosSeleccionados.add("Viernes");
+                }else if(checkBox.getText().toString().equals("S")){
+                    intervalosSeleccionados.add("Sábado");
+                }else if(checkBox.getText().toString().equals("D")){
+                    intervalosSeleccionados.add("Domingo");
+                }
             }
         }
 
@@ -1321,7 +1415,24 @@ public class AgregarActiTutor extends AppCompatActivity {
         for (RadioButton radioButton : allRadioButtonInterval) {
             if (radioButton.isChecked()) {
                 verifiRadioButtonInterval = true;
-                selectedIntervalo = radioButton.getText().toString();
+                if(radioButton.getText().toString().equals("2")){
+                    intervalosSeleccionados.add("Repetir cada 2");
+                }
+                else if(radioButton.getText().toString().equals("3")){
+                    intervalosSeleccionados.add("Repetir cada 3");
+                }
+                else if(radioButton.getText().toString().equals("4")){
+                    intervalosSeleccionados.add("Repetir cada 4");
+                }
+                else if(radioButton.getText().toString().equals("5")){
+                    intervalosSeleccionados.add("Repetir cada 5");
+                }
+                else if(radioButton.getText().toString().equals("6")){
+                    intervalosSeleccionados.add("Repetir cada 6");
+                }
+                else if(radioButton.getText().toString().equals("7")){
+                    intervalosSeleccionados.add("Repetir cada 7");
+                }
                 break;
             }
         }
@@ -1340,20 +1451,13 @@ public class AgregarActiTutor extends AppCompatActivity {
         for (CheckBox checkBox : allCheckBoxsDiaCalendar) {
             if (checkBox.isChecked()) {
                 verififiDiasCalendar = true;
-                selectedDiasCalendar.add(checkBox.getText().toString());
+                intervalosSeleccionados.add("Cada mes el dia " + checkBox.getText().toString());
             }
         }
 
+        String intervalosString = String.join(", ", intervalosSeleccionados);
 
-        if(verifiCheckBoxesDiasSemana){
-        }
-        else if(verifiRadioButtonInterval){
-
-        }
-        else if(verififiDiasCalendar){
-
-        }
-
+        return intervalosString;
     }
 
     //Clase para poder procesar las imagenes como svg y de assets

@@ -221,7 +221,7 @@
                                 android:layout_height="wrap_content"
                                 android:button="@null"
                                 android:background="@drawable/custom_radio_selector_acti"
-                                android:text="M"
+                                android:text="W"
                                 android:textColor="@drawable/custom_radio_selector_color_acti"
                                 android:gravity="center"
                                 android:checked="false"
