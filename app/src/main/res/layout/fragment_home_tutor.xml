@@ -1,14 +1,172 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+<LinearLayout
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".HomeFragmentTutor"
-    android:background="@color/azul_fondo">
+    android:background="@color/azul_fondo"
+    android:orientation="vertical"
+    tools:context=".HomeFragmentTutor">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Home Tutor" />
 
-</FrameLayout>
+
+       <LinearLayout
+           android:layout_width="match_parent"
+           android:layout_height="match_parent"
+           android:layout_margin="20dp"
+           android:orientation="vertical">
+
+
+           <LinearLayout
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+
+               android:layout_weight="1"
+               android:orientation="horizontal">
+
+
+               <TextView
+                   android:id="@+id/Hola"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:text="Hola, "
+                   android:fontFamily="@font/dongle_bold"
+                   android:textSize="50sp"
+                   android:textColor="#1A1A1A"/>
+
+               <TextView
+                   android:id="@+id/NameCastor"
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:text="Usuario"
+                   android:fontFamily="@font/dongle_bold"
+                   android:textSize="50sp"
+                   android:textColor="@color/aguita"/>
+
+
+           </LinearLayout>
+           <LinearLayout
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:layout_weight="1"
+               android:orientation="horizontal">
+               <TextView
+                   android:id="@+id/Bienvenido"
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:text="¡Bienvenido(a) de vuelta!"
+                   android:fontFamily="@font/gayathri_bold"
+                   android:textSize="25sp"
+                   android:lineHeight="40dp"
+                   android:textColor="#1A1A1A"/>
+
+           </LinearLayout>
+           <LinearLayout
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:layout_weight="1"
+               android:orientation="horizontal">
+
+               <ImageView
+                   android:layout_width="0dp"
+                   android:layout_height="match_parent"
+                   android:layout_weight="1"
+                   android:rotationY="180"
+                   android:src="@drawable/raudy"
+                   android:scaleType="fitCenter" />
+
+               <LinearLayout
+                   android:layout_width="0dp"
+                   android:layout_height="wrap_content"
+                   android:orientation="vertical"
+                   android:layout_weight="1"
+                   android:layout_marginLeft="15dp">
+                   <TextView
+                       android:layout_width="match_parent"
+                       android:layout_height="wrap_content"
+                       android:fontFamily="@font/gayathri_bold"
+                       android:text="Raudy dice"
+                       android:textAlignment="textEnd"
+                       android:textColor="#1A1A1A"
+                       android:textSize="25sp"
+                       android:layout_marginBottom="15dp"
+
+                       />
+                   <TextView
+
+                       android:layout_width="match_parent"
+                       android:layout_height="wrap_content"
+                       android:fontFamily="@font/dongle_bold"
+                       android:text="Frases de acuerdo al tipo de usuario(consejos,recomendaciones o motivación)"
+                       android:textAlignment="center"
+                       android:textColor="#1A1A1A"
+                       android:textSize="25sp"
+                       android:background="@drawable/border_raudy_consejo"
+                       android:breakStrategy="simple"
+                       android:lineHeight="35dp"
+                       android:padding="4dp"
+
+
+
+                       />
+
+               </LinearLayout>
+           </LinearLayout>
+           <LinearLayout
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:layout_weight="1">
+               <TextView
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:text="Accesos"
+                   android:textSize="35sp"
+                   android:textColor="@color/cafe_subtono"
+                   android:fontFamily="@font/dongle_bold"
+                   />
+           </LinearLayout>
+           <LinearLayout
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:layout_weight="1"
+               android:orientation="vertical"
+               android:minHeight="300dp"
+               >
+
+               <LinearLayout
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:layout_weight="1"
+                   android:background="@drawable/border_mover_modal_bottom"
+                   android:layout_marginBottom="15sp"
+
+                   >
+               </LinearLayout>
+               <LinearLayout
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:layout_weight="1"
+                   android:background="@drawable/border_mover_modal_bottom"
+                   >
+               </LinearLayout>
+               <LinearLayout
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content">
+                   <TextView
+                       android:layout_width="match_parent"
+                       android:layout_height="wrap_content"
+                       android:text="Mis Hijos"
+                       android:fontFamily="@font/dongle_bold"
+                       android:textColor=""/>
+
+               </LinearLayout>
+
+
+           </LinearLayout>
+
+
+       </LinearLayout>
+</LinearLayout>
+</ScrollView>
