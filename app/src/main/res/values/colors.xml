@@ -19,6 +19,9 @@
     <color name="hint_input">#8B8B8B</color>
     <color name="moradito">#A588C9</color>
     <color name="verdecito">#8AC691</color>
+    <color name="azulito_toast">#C1CEED</color>
+    <color name="verdecito_toast">#A2E5A8</color>
+    <color name="rojito_toast">#FF9696</color>
 
     //colores de iconos de actis:
     <color name="rojo_actis">#ff595e</color>

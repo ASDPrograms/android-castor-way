@@ -18,6 +18,7 @@ import android.text.Spanned;
 import android.text.TextWatcher;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,6 +39,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import android.widget.AdapterView;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -103,6 +105,7 @@ public class AgregarActiTutor extends AppCompatActivity {
     private GridView gridViewImages;
     private String imagenActiSelected = "";
     private int colorSeleccionado = Color.BLACK;
+    private int selectedPosition = 0;
 
 
 
@@ -143,7 +146,6 @@ public class AgregarActiTutor extends AppCompatActivity {
             spinnerTiposHabit.setPopupBackgroundResource(R.drawable.input_border);
             adapterTip.setDropDownViewResource(R.layout.dropdown_actis_nombre);
             spinnerTiposHabit.setAdapter(adapterTip);
-
 
             txtFechaInicial = findViewById(R.id.txtFechaInicial);
             txtFechaFinal = findViewById(R.id.txtFechaFinal);
@@ -201,17 +203,446 @@ public class AgregarActiTutor extends AppCompatActivity {
 
                 // Llenar datos del formulario según la opción seleccionada
                 switch (seleccion) {
-                    case "Opción 1":
-                        //campoDato1.setText("Dato personalizado para Opción 1");
-                        //campoDato2.setText("Otro dato para Opción 1");
+                    case "Comer frutas y verduras":
+                        try {
+                            //Inicio del código para mostrar el toast personalizado
+                            LayoutInflater inflater = getLayoutInflater();
+                            View layout = inflater.inflate(R.layout.toast_personalizado, null);
+
+                            //Inicio de código para cambiar elementos del toast personalizado
+
+                            //Se cambia la imágen
+                            ImageView icon = layout.findViewById(R.id.toast_icon);
+                            icon.setImageResource(R.drawable.img_tachuela);
+
+                            //Se cambia el texto
+                            TextView text = layout.findViewById(R.id.toast_text);
+                            text.setText("Se seleccionó Comer frutas y verduras");
+
+                            //Se cambia el color de fondo
+                            Drawable background = layout.getBackground();
+                            background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
+
+                            // Cambia color del texto
+                            text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
+
+                            //Fin del código que se encarga de cambiar los elementos del toast personalizado
+
+                            //Lo crea y lo pone en la parte de arriba del cel
+                            Toast toast = new Toast(getApplicationContext());
+                            toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
+                            toast.setDuration(Toast.LENGTH_LONG);
+                            toast.setView(layout);
+                            toast.show();
+                            //Fin del código para mostrar el toast personalizado
+
+
+                            //Inicio del código que cambia los valores dependiendo de lo que seleccione
+                            int nuevoNumero = 30;
+                            numRamitas.setText(String.valueOf(nuevoNumero));
+
+                            updateButtonImage("bxs-pear-verde.svg");
+                            circleColorElegidoIcon.setColorFilter(getResources().getColor(R.color.verde_actis), PorterDuff.Mode.SRC_IN);
+                            colorSeleccionado = ContextCompat.getColor(AgregarActiTutor.this, R.color.verde_actis);
+
+                            txtMasInfo.setText("Las frutas y verduras \uD83C\uDF4E\uD83E\uDD66 te ayudan a crecer fuerte y con mucha energía. Comerlas cada día es un regalo \uD83C\uDF81 para tu cuerpo, ¡sigue así! \uD83D\uDCAA");
+                            //Fin del código que cambia los valores dependiendo de lo que seleccione
+
+                        }catch (Exception ex){
+                            Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
                         break;
-                    case "Opción 2":
-                        //campoDato1.setText("Dato específico para Opción 2");
-                        //campoDato2.setText("Otro valor para Opción 2");
+                    case "Beber agua":
+                        try {
+                            //Inicio del código para mostrar el toast personalizado
+                            LayoutInflater inflater = getLayoutInflater();
+                            View layout = inflater.inflate(R.layout.toast_personalizado, null);
+
+                            //Inicio de código para cambiar elementos del toast personalizado
+
+                            //Se cambia la imágen
+                            ImageView icon = layout.findViewById(R.id.toast_icon);
+                            icon.setImageResource(R.drawable.img_tachuela);
+
+                            //Se cambia el texto
+                            TextView text = layout.findViewById(R.id.toast_text);
+                            text.setText("Se seleccionó Beber agua");
+
+                            //Se cambia el color de fondo
+                            Drawable background = layout.getBackground();
+                            background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
+
+                            // Cambia color del texto
+                            text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
+
+                            //Fin del código que se encarga de cambiar los elementos del toast personalizado
+
+                            //Lo crea y lo pone en la parte de arriba del cel
+                            Toast toast = new Toast(getApplicationContext());
+                            toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
+                            toast.setDuration(Toast.LENGTH_LONG);
+                            toast.setView(layout);
+                            toast.show();
+                            //Fin del código para mostrar el toast personalizado
+
+
+                            //Inicio del código que cambia los valores dependiendo de lo que seleccione
+                            int nuevoNumero = 20;
+                            numRamitas.setText(String.valueOf(nuevoNumero));
+
+                            updateButtonImage("bx-water-azul.svg");
+                            circleColorElegidoIcon.setColorFilter(getResources().getColor(R.color.azul_actis), PorterDuff.Mode.SRC_IN);
+                            colorSeleccionado = ContextCompat.getColor(AgregarActiTutor.this, R.color.azul_actis);
+
+                            txtMasInfo.setText("Tomar agua \uD83D\uDEB0 te mantiene fresco(a) ❄\uFE0F y con fuerzas para jugar \uD83C\uDF88, aprender \uD83D\uDCDA y hacer todo lo que te gusta. ¡Un vasito más y sigues adelante! \uD83D\uDC99");
+                            //Fin del código que cambia los valores dependiendo de lo que seleccione
+
+                        }catch (Exception ex){
+                            Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
                         break;
-                    case "Opción 3":
-                        //campoDato1.setText("Dato asignado para Opción 3");
-                        //campoDato2.setText("Otro valor para Opción 3");
+                    case "Hacer ejercicio":
+                        try {
+                            //Inicio del código para mostrar el toast personalizado
+                            LayoutInflater inflater = getLayoutInflater();
+                            View layout = inflater.inflate(R.layout.toast_personalizado, null);
+
+                            //Inicio de código para cambiar elementos del toast personalizado
+
+                            //Se cambia la imágen
+                            ImageView icon = layout.findViewById(R.id.toast_icon);
+                            icon.setImageResource(R.drawable.img_tachuela);
+
+                            //Se cambia el texto
+                            TextView text = layout.findViewById(R.id.toast_text);
+                            text.setText("Se seleccionó Hacer ejercicio");
+
+                            //Se cambia el color de fondo
+                            Drawable background = layout.getBackground();
+                            background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
+
+                            // Cambia color del texto
+                            text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
+
+                            //Fin del código que se encarga de cambiar los elementos del toast personalizado
+
+                            //Lo crea y lo pone en la parte de arriba del cel
+                            Toast toast = new Toast(getApplicationContext());
+                            toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
+                            toast.setDuration(Toast.LENGTH_LONG);
+                            toast.setView(layout);
+                            toast.show();
+                            //Fin del código para mostrar el toast personalizado
+
+
+                            //Inicio del código que cambia los valores dependiendo de lo que seleccione
+                            int nuevoNumero = 50;
+                            numRamitas.setText(String.valueOf(nuevoNumero));
+
+                            updateButtonImage("bx-dumbbell-rojo.svg");
+                            circleColorElegidoIcon.setColorFilter(getResources().getColor(R.color.rojo_actis), PorterDuff.Mode.SRC_IN);
+                            colorSeleccionado = ContextCompat.getColor(AgregarActiTutor.this, R.color.rojo_actis);
+
+                            txtMasInfo.setText("Moverse es genial para el cuerpo y la mente! \uD83C\uDFC3\u200D♀\uFE0F\uD83C\uDFB6 Saltar, correr o bailar te hará sentir con más energía ⚡ y alegría \uD83D\uDE0A. ¡Disfrútalo! \uD83C\uDF89");
+                            //Fin del código que cambia los valores dependiendo de lo que seleccione
+
+                        }catch (Exception ex){
+                            Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                        break;
+                    case "Mantener higiene personal":
+                        try {
+                            //Inicio del código para mostrar el toast personalizado
+                            LayoutInflater inflater = getLayoutInflater();
+                            View layout = inflater.inflate(R.layout.toast_personalizado, null);
+
+                            //Inicio de código para cambiar elementos del toast personalizado
+
+                            //Se cambia la imágen
+                            ImageView icon = layout.findViewById(R.id.toast_icon);
+                            icon.setImageResource(R.drawable.img_tachuela);
+
+                            //Se cambia el texto
+                            TextView text = layout.findViewById(R.id.toast_text);
+                            text.setText("Se seleccionó Mantener higiene personal");
+
+                            //Se cambia el color de fondo
+                            Drawable background = layout.getBackground();
+                            background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
+
+                            // Cambia color del texto
+                            text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
+
+                            //Fin del código que se encarga de cambiar los elementos del toast personalizado
+
+                            //Lo crea y lo pone en la parte de arriba del cel
+                            Toast toast = new Toast(getApplicationContext());
+                            toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
+                            toast.setDuration(Toast.LENGTH_LONG);
+                            toast.setView(layout);
+                            toast.show();
+                            //Fin del código para mostrar el toast personalizado
+
+
+                            //Inicio del código que cambia los valores dependiendo de lo que seleccione
+                            int nuevoNumero = 50;
+                            numRamitas.setText(String.valueOf(nuevoNumero));
+
+                            updateButtonImage("bxs-face-azul.svg");
+                            circleColorElegidoIcon.setColorFilter(getResources().getColor(R.color.azul_actis), PorterDuff.Mode.SRC_IN);
+                            colorSeleccionado = ContextCompat.getColor(AgregarActiTutor.this, R.color.azul_actis);
+
+                            txtMasInfo.setText("Cuidar tu higiene \uD83D\uDEC0 es una forma de quererte \uD83D\uDC96. Una ducha \uD83D\uDEBF, las manos limpias ✋\uD83E\uDDFC y dientes cepillados \uD83E\uDDB7 te hacen sentir bien y listo(a) para cualquier aventura! \uD83C\uDF0D");
+                            //Fin del código que cambia los valores dependiendo de lo que seleccione
+
+                        }catch (Exception ex){
+                            Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                        break;
+                    case "Dormir lo necesario":
+                        try {
+                            //Inicio del código para mostrar el toast personalizado
+                            LayoutInflater inflater = getLayoutInflater();
+                            View layout = inflater.inflate(R.layout.toast_personalizado, null);
+
+                            //Inicio de código para cambiar elementos del toast personalizado
+
+                            //Se cambia la imágen
+                            ImageView icon = layout.findViewById(R.id.toast_icon);
+                            icon.setImageResource(R.drawable.img_tachuela);
+
+                            //Se cambia el texto
+                            TextView text = layout.findViewById(R.id.toast_text);
+                            text.setText("Se seleccionó Dormir lo necesario");
+
+                            //Se cambia el color de fondo
+                            Drawable background = layout.getBackground();
+                            background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
+
+                            // Cambia color del texto
+                            text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
+
+                            //Fin del código que se encarga de cambiar los elementos del toast personalizado
+
+                            //Lo crea y lo pone en la parte de arriba del cel
+                            Toast toast = new Toast(getApplicationContext());
+                            toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
+                            toast.setDuration(Toast.LENGTH_LONG);
+                            toast.setView(layout);
+                            toast.show();
+                            //Fin del código para mostrar el toast personalizado
+
+
+                            //Inicio del código que cambia los valores dependiendo de lo que seleccione
+                            int nuevoNumero = 30;
+                            numRamitas.setText(String.valueOf(nuevoNumero));
+
+                            updateButtonImage("bxs-hotel-morado.svg");
+                            circleColorElegidoIcon.setColorFilter(getResources().getColor(R.color.morado_actis), PorterDuff.Mode.SRC_IN);
+                            colorSeleccionado = ContextCompat.getColor(AgregarActiTutor.this, R.color.morado_actis);
+
+                            txtMasInfo.setText("Dormir bien \uD83D\uDECC te ayuda a despertar \uD83C\uDF05 con energía ⚡ y listo(a) para un gran día. Descansa \uD83D\uDE0C, relájate \uD83C\uDF19 y deja que tus sueños ✨ te lleven a lugares maravillosos.");
+                            //Fin del código que cambia los valores dependiendo de lo que seleccione
+
+                        }catch (Exception ex){
+                            Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                        break;
+                    case "Elegir snacks saludables":
+                        try {
+                            //Inicio del código para mostrar el toast personalizado
+                            LayoutInflater inflater = getLayoutInflater();
+                            View layout = inflater.inflate(R.layout.toast_personalizado, null);
+
+                            //Inicio de código para cambiar elementos del toast personalizado
+
+                            //Se cambia la imágen
+                            ImageView icon = layout.findViewById(R.id.toast_icon);
+                            icon.setImageResource(R.drawable.img_tachuela);
+
+                            //Se cambia el texto
+                            TextView text = layout.findViewById(R.id.toast_text);
+                            text.setText("Se seleccionó Elegir snacks saludables");
+
+                            //Se cambia el color de fondo
+                            Drawable background = layout.getBackground();
+                            background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
+
+                            // Cambia color del texto
+                            text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
+
+                            //Fin del código que se encarga de cambiar los elementos del toast personalizado
+
+                            //Lo crea y lo pone en la parte de arriba del cel
+                            Toast toast = new Toast(getApplicationContext());
+                            toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
+                            toast.setDuration(Toast.LENGTH_LONG);
+                            toast.setView(layout);
+                            toast.show();
+                            //Fin del código para mostrar el toast personalizado
+
+
+                            //Inicio del código que cambia los valores dependiendo de lo que seleccione
+                            int nuevoNumero = 30;
+                            numRamitas.setText(String.valueOf(nuevoNumero));
+
+                            updateButtonImage("bxs-cookie-amarillo.svg");
+                            circleColorElegidoIcon.setColorFilter(getResources().getColor(R.color.amarillo_actis), PorterDuff.Mode.SRC_IN);
+                            colorSeleccionado = ContextCompat.getColor(AgregarActiTutor.this, R.color.amarillo_actis);
+
+                            txtMasInfo.setText("Elegir algo saludable \uD83C\uDF4E\uD83E\uDD5C para comer es una decisión muy inteligente \uD83E\uDDE0. Te ayuda a crecer \uD83D\uDCC8, a sentirte bien \uD83D\uDE0A y a seguir disfrutando el día \uD83C\uDF1E.");
+                            //Fin del código que cambia los valores dependiendo de lo que seleccione
+
+                        }catch (Exception ex){
+                            Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                        break;
+                    case "Seguir una rutina de higiene":
+                        try {
+                            //Inicio del código para mostrar el toast personalizado
+                            LayoutInflater inflater = getLayoutInflater();
+                            View layout = inflater.inflate(R.layout.toast_personalizado, null);
+
+                            //Inicio de código para cambiar elementos del toast personalizado
+
+                            //Se cambia la imágen
+                            ImageView icon = layout.findViewById(R.id.toast_icon);
+                            icon.setImageResource(R.drawable.img_tachuela);
+
+                            //Se cambia el texto
+                            TextView text = layout.findViewById(R.id.toast_text);
+                            text.setText("Se seleccionó Seguir una rutina de higiene");
+
+                            //Se cambia el color de fondo
+                            Drawable background = layout.getBackground();
+                            background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
+
+                            // Cambia color del texto
+                            text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
+
+                            //Fin del código que se encarga de cambiar los elementos del toast personalizado
+
+                            //Lo crea y lo pone en la parte de arriba del cel
+                            Toast toast = new Toast(getApplicationContext());
+                            toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
+                            toast.setDuration(Toast.LENGTH_LONG);
+                            toast.setView(layout);
+                            toast.show();
+                            //Fin del código para mostrar el toast personalizado
+
+
+                            //Inicio del código que cambia los valores dependiendo de lo que seleccione
+                            int nuevoNumero = 50;
+                            numRamitas.setText(String.valueOf(nuevoNumero));
+
+                            updateButtonImage("bxs-book-heart-rojo.svg");
+                            circleColorElegidoIcon.setColorFilter(getResources().getColor(R.color.rojo_actis), PorterDuff.Mode.SRC_IN);
+                            colorSeleccionado = ContextCompat.getColor(AgregarActiTutor.this, R.color.rojo_actis);
+
+                            txtMasInfo.setText("Tener una rutina para cuidar tu higiene \uD83D\uDEC1\uD83E\uDDB7 hace que cada día empiece y termine de la mejor manera \uD83C\uDF1F. Es un pequeño hábito que hace una gran diferencia! \uD83D\uDCAB");
+                            //Fin del código que cambia los valores dependiendo de lo que seleccione
+
+                        }catch (Exception ex){
+                            Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                        break;
+                    case "Preparar tu desayuno":
+                        try {
+                            //Inicio del código para mostrar el toast personalizado
+                            LayoutInflater inflater = getLayoutInflater();
+                            View layout = inflater.inflate(R.layout.toast_personalizado, null);
+
+                            //Inicio de código para cambiar elementos del toast personalizado
+
+                            //Se cambia la imágen
+                            ImageView icon = layout.findViewById(R.id.toast_icon);
+                            icon.setImageResource(R.drawable.img_tachuela);
+
+                            //Se cambia el texto
+                            TextView text = layout.findViewById(R.id.toast_text);
+                            text.setText("Se seleccionó Preparar tu desayuno");
+
+                            //Se cambia el color de fondo
+                            Drawable background = layout.getBackground();
+                            background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
+
+                            // Cambia color del texto
+                            text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
+
+                            //Fin del código que se encarga de cambiar los elementos del toast personalizado
+
+                            //Lo crea y lo pone en la parte de arriba del cel
+                            Toast toast = new Toast(getApplicationContext());
+                            toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
+                            toast.setDuration(Toast.LENGTH_LONG);
+                            toast.setView(layout);
+                            toast.show();
+                            //Fin del código para mostrar el toast personalizado
+
+
+                            //Inicio del código que cambia los valores dependiendo de lo que seleccione
+                            int nuevoNumero = 35;
+                            numRamitas.setText(String.valueOf(nuevoNumero));
+
+                            updateButtonImage("bxs-coffee-morado.svg");
+                            circleColorElegidoIcon.setColorFilter(getResources().getColor(R.color.morado_actis), PorterDuff.Mode.SRC_IN);
+                            colorSeleccionado = ContextCompat.getColor(AgregarActiTutor.this, R.color.morado_actis);
+
+                            txtMasInfo.setText("Comenzar el día con un desayuno hecho por ti \uD83E\uDD63\uD83E\uDD6A es un gran paso hacia la independencia \uD83D\uDCAA. Además, ¡sabe aún más rico cuando lo preparas con cariño! \uD83D\uDE0A✨");
+                            //Fin del código que cambia los valores dependiendo de lo que seleccione
+
+                        }catch (Exception ex){
+                            Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                        break;
+                    case "Cuidar tu piel":
+                        try {
+                            //Inicio del código para mostrar el toast personalizado
+                            LayoutInflater inflater = getLayoutInflater();
+                            View layout = inflater.inflate(R.layout.toast_personalizado, null);
+
+                            //Inicio de código para cambiar elementos del toast personalizado
+
+                            //Se cambia la imágen
+                            ImageView icon = layout.findViewById(R.id.toast_icon);
+                            icon.setImageResource(R.drawable.img_tachuela);
+
+                            //Se cambia el texto
+                            TextView text = layout.findViewById(R.id.toast_text);
+                            text.setText("Se seleccionó Cuidar tu piel");
+
+                            //Se cambia el color de fondo
+                            Drawable background = layout.getBackground();
+                            background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
+
+                            // Cambia color del texto
+                            text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
+
+                            //Fin del código que se encarga de cambiar los elementos del toast personalizado
+
+                            //Lo crea y lo pone en la parte de arriba del cel
+                            Toast toast = new Toast(getApplicationContext());
+                            toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
+                            toast.setDuration(Toast.LENGTH_LONG);
+                            toast.setView(layout);
+                            toast.show();
+                            //Fin del código para mostrar el toast personalizado
+
+
+                            //Inicio del código que cambia los valores dependiendo de lo que seleccione
+                            int nuevoNumero = 25;
+                            numRamitas.setText(String.valueOf(nuevoNumero));
+
+                            updateButtonImage("bxs-face-verde.svg");
+                            circleColorElegidoIcon.setColorFilter(getResources().getColor(R.color.verde_actis), PorterDuff.Mode.SRC_IN);
+                            colorSeleccionado = ContextCompat.getColor(AgregarActiTutor.this, R.color.verde_actis);
+
+                            txtMasInfo.setText("Tu piel es única y merece ser tratada con amor \uD83D\uDC96. Con solo unos minutos al día, puedes mantenerla fresca y saludable \uD83C\uDF1F. ¡Tu bienestar comienza con un pequeño gesto de cuidado! \uD83D\uDE0A");
+                            //Fin del código que cambia los valores dependiendo de lo que seleccione
+
+                        }catch (Exception ex){
+                            Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
                         break;
                     default:
                         // En caso de que se escriba algo manualmente o no coincida con las opciones
@@ -524,7 +955,35 @@ public class AgregarActiTutor extends AppCompatActivity {
 
             // Se verifica si la fecha seleccionada es anterior a la actual
             if (selectedCalendar.before(todayCalendar)) {
-                Toast.makeText(this, "No se puede seleccionar una fecha anterior a hoy", Toast.LENGTH_SHORT).show();
+
+                LayoutInflater inflater = getLayoutInflater();
+                View layout = inflater.inflate(R.layout.toast_personalizado, null);
+
+                //Inicio de código para cambiar elementos del toast personalizado
+
+                //Se cambia la imágen
+                ImageView icon = layout.findViewById(R.id.toast_icon);
+                icon.setImageResource(R.drawable.img_circ_tache_rojo);
+
+                //Se cambia el texto
+                TextView text = layout.findViewById(R.id.toast_text);
+                text.setText("No se puede seleccionar una fecha anterior a hoy");
+
+                //Se cambia el color de fondo
+                Drawable background = layout.getBackground();
+                background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.rojito_toast), PorterDuff.Mode.SRC_IN);
+
+                // Cambia color del texto
+                text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
+
+                //Fin del código que se encarga de cambiar los elementos del toast personalizado
+
+                //Lo crea y lo pone en la parte de arriba del cel
+                Toast toast = new Toast(getApplicationContext());
+                toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
+                toast.setDuration(Toast.LENGTH_LONG);
+                toast.setView(layout);
+                toast.show();
             } else {
                 // Se formatea la fecha correctamente (sin influir en la hora)
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
@@ -913,7 +1372,35 @@ public class AgregarActiTutor extends AppCompatActivity {
     private void openTimePickerFechaFinal(View view) {
         if (selectedStartTime == null) {
             // Si no se ha seleccionado la hora inicial, muestra un mensaje y no permite seleccionar la final
-            Toast.makeText(view.getContext(), "Por favor, selecciona primero la hora inicial", Toast.LENGTH_SHORT).show();
+            LayoutInflater inflater = getLayoutInflater();
+            View layout = inflater.inflate(R.layout.toast_personalizado, null);
+
+            //Inicio de código para cambiar elementos del toast personalizado
+
+            //Se cambia la imágen
+            ImageView icon = layout.findViewById(R.id.toast_icon);
+            icon.setImageResource(R.drawable.img_circ_tache_rojo);
+
+            //Se cambia el texto
+            TextView text = layout.findViewById(R.id.toast_text);
+            text.setText("Por favor, selecciona primero la hora inicial");
+
+            //Se cambia el color de fondo
+            Drawable background = layout.getBackground();
+            background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.rojito_toast), PorterDuff.Mode.SRC_IN);
+
+            // Cambia color del texto
+            text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
+
+            //Fin del código que se encarga de cambiar los elementos del toast personalizado
+
+            //Lo crea y lo pone en la parte de arriba del cel
+            Toast toast = new Toast(getApplicationContext());
+            toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
+            toast.setDuration(Toast.LENGTH_LONG);
+            toast.setView(layout);
+            toast.show();
+
             return;
         }
 
@@ -942,7 +1429,35 @@ public class AgregarActiTutor extends AppCompatActivity {
             // Verifica si la hora final es al menos 15 minutos después de la hora inicial
             long differenceInMillis = selectedEndTime.getTimeInMillis() - selectedStartTime.getTimeInMillis();
             if (differenceInMillis < 15 * 60 * 1000) {
-                Toast.makeText(view.getContext(), "La hora final debe ser al menos 15 minutos después de la hora inicial", Toast.LENGTH_SHORT).show();
+
+                LayoutInflater inflater = getLayoutInflater();
+                View layout = inflater.inflate(R.layout.toast_personalizado, null);
+
+                //Inicio de código para cambiar elementos del toast personalizado
+
+                //Se cambia la imágen
+                ImageView icon = layout.findViewById(R.id.toast_icon);
+                icon.setImageResource(R.drawable.img_circ_tache_rojo);
+
+                //Se cambia el texto
+                TextView text = layout.findViewById(R.id.toast_text);
+                text.setText("La hora final debe ser al menos 15 minutos después de la hora inicial");
+
+                //Se cambia el color de fondo
+                Drawable background = layout.getBackground();
+                background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.rojito_toast), PorterDuff.Mode.SRC_IN);
+
+                // Cambia color del texto
+                text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
+
+                //Fin del código que se encarga de cambiar los elementos del toast personalizado
+
+                //Lo crea y lo pone en la parte de arriba del cel
+                Toast toast = new Toast(getApplicationContext());
+                toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
+                toast.setDuration(Toast.LENGTH_LONG);
+                toast.setView(layout);
+                toast.show();
                 return;
             }
 
@@ -962,7 +1477,35 @@ public class AgregarActiTutor extends AppCompatActivity {
         }catch (Exception ex){
         }
         if (!(valueNumRamitas >= 1 && valueNumRamitas <= 100) && valueNumRamitas != -1){
-            Toast.makeText(this, "Ingrese un número entre 1 y 100", Toast.LENGTH_SHORT).show();
+
+            LayoutInflater inflater = getLayoutInflater();
+            View layout = inflater.inflate(R.layout.toast_personalizado, null);
+
+            //Inicio de código para cambiar elementos del toast personalizado
+
+            //Se cambia la imágen
+            ImageView icon = layout.findViewById(R.id.toast_icon);
+            icon.setImageResource(R.drawable.img_circ_tache_rojo);
+
+            //Se cambia el texto
+            TextView text = layout.findViewById(R.id.toast_text);
+            text.setText("Ingrese un número entre 1 y 100");
+
+            //Se cambia el color de fondo
+            Drawable background = layout.getBackground();
+            background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.rojito_toast), PorterDuff.Mode.SRC_IN);
+
+            // Cambia color del texto
+            text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
+
+            //Fin del código que se encarga de cambiar los elementos del toast personalizado
+
+            //Lo crea y lo pone en la parte de arriba del cel
+            Toast toast = new Toast(getApplicationContext());
+            toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
+            toast.setDuration(Toast.LENGTH_LONG);
+            toast.setView(layout);
+            toast.show();
             numRamitas.setText("");
         }
     }
@@ -1141,7 +1684,34 @@ public class AgregarActiTutor extends AppCompatActivity {
             dialog.show();
 
         }else{
-            Toast.makeText(this, "Primero se debe elegir una imagen.", Toast.LENGTH_SHORT).show();
+            LayoutInflater inflater = getLayoutInflater();
+            View layout = inflater.inflate(R.layout.toast_personalizado, null);
+
+            //Inicio de código para cambiar elementos del toast personalizado
+
+            //Se cambia la imágen
+            ImageView icon = layout.findViewById(R.id.toast_icon);
+            icon.setImageResource(R.drawable.img_circ_tache_rojo);
+
+            //Se cambia el texto
+            TextView text = layout.findViewById(R.id.toast_text);
+            text.setText("Primero se debe elegir una imagen.");
+
+            //Se cambia el color de fondo
+            Drawable background = layout.getBackground();
+            background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.rojito_toast), PorterDuff.Mode.SRC_IN);
+
+            // Cambia color del texto
+            text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
+
+            //Fin del código que se encarga de cambiar los elementos del toast personalizado
+
+            //Lo crea y lo pone en la parte de arriba del cel
+            Toast toast = new Toast(getApplicationContext());
+            toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
+            toast.setDuration(Toast.LENGTH_LONG);
+            toast.setView(layout);
+            toast.show();
         }
     }
 
@@ -1172,6 +1742,7 @@ public class AgregarActiTutor extends AppCompatActivity {
     private void crearActividad(View view) {
         // Validaciones iniciales
         String nombreHabito = nombreHabitInput.getText().toString().trim();
+        String selectedText = spinnerTiposHabit.getSelectedItem().toString();
         String fechaInicial = txtFechaInicial.getText().toString().trim();
         String fechaFinal = txtFechaFinal.getText().toString().trim();
         String horaInicial = txtHoraInicial.getText().toString().trim();
@@ -1183,8 +1754,33 @@ public class AgregarActiTutor extends AppCompatActivity {
                 || fechaFinal.isEmpty() || fechaFinal.equals("-") || horaInicial.isEmpty()
                 || horaInicial.contains("Seleccione") || horaFinal.isEmpty()
                 || horaFinal.contains("Seleccione") || numeroRamitas.isEmpty()
-                || imagenActiSelected.isEmpty() || masInfo.isEmpty()) {
-            Toast.makeText(this, "Favor de completar todos los campos antes de crear", Toast.LENGTH_SHORT).show();
+                || imagenActiSelected.isEmpty() || masInfo.isEmpty() || selectedText.equalsIgnoreCase("- Selecciona un tipo de hábito -")) {
+            LayoutInflater inflater = getLayoutInflater();
+            View layout = inflater.inflate(R.layout.toast_personalizado, null);
+
+            //Inicio de código para cambiar elementos del toast personalizado
+
+            //Se cambia la imágen
+            ImageView icon = layout.findViewById(R.id.toast_icon);
+            icon.setImageResource(R.drawable.img_circ_tache_rojo);
+
+            //Se cambia el texto
+            TextView text = layout.findViewById(R.id.toast_text);
+            text.setText("Favor de completar todos los campos antes de crear");
+
+            //Se cambia el color de fondo
+            Drawable background = layout.getBackground();
+            background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.rojito_toast), PorterDuff.Mode.SRC_IN);
+
+            // Cambia color del texto
+            text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
+
+            //Fin del código que se encarga de cambiar los elementos del toast personalizado
+            Toast toast = new Toast(getApplicationContext());
+            toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
+            toast.setDuration(Toast.LENGTH_LONG);
+            toast.setView(layout);
+            toast.show();
             return;
         }
 
@@ -1192,11 +1788,68 @@ public class AgregarActiTutor extends AppCompatActivity {
         try {
             numRam = Integer.parseInt(numeroRamitas);
             if (numRam < 1 || numRam > 100) {
-                Toast.makeText(this, "Ingrese un número de ramitas entre 1 y 100", Toast.LENGTH_SHORT).show();
+
+                LayoutInflater inflater = getLayoutInflater();
+                View layout = inflater.inflate(R.layout.toast_personalizado, null);
+
+                //Inicio de código para cambiar elementos del toast personalizado
+
+                //Se cambia la imágen
+                ImageView icon = layout.findViewById(R.id.toast_icon);
+                icon.setImageResource(R.drawable.img_circ_tache_rojo);
+
+                //Se cambia el texto
+                TextView text = layout.findViewById(R.id.toast_text);
+                text.setText("Ingrese un número de ramitas entre 1 y 100");
+
+                //Se cambia el color de fondo
+                Drawable background = layout.getBackground();
+                background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.rojito_toast), PorterDuff.Mode.SRC_IN);
+
+                // Cambia color del texto
+                text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
+
+                //Fin del código que se encarga de cambiar los elementos del toast personalizado
+
+                //Lo crea y lo pone en la parte de arriba del cel
+                Toast toast = new Toast(getApplicationContext());
+                toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
+                toast.setDuration(Toast.LENGTH_LONG);
+                toast.setView(layout);
+                toast.show();
                 return;
             }
         } catch (NumberFormatException ex) {
-            Toast.makeText(this, "Número de ramitas inválido", Toast.LENGTH_SHORT).show();
+
+            LayoutInflater inflater = getLayoutInflater();
+            View layout = inflater.inflate(R.layout.toast_personalizado, null);
+
+            //Inicio de código para cambiar elementos del toast personalizado
+
+            //Se cambia la imágen
+            ImageView icon = layout.findViewById(R.id.toast_icon);
+            icon.setImageResource(R.drawable.img_circ_tache_rojo);
+
+            //Se cambia el texto
+            TextView text = layout.findViewById(R.id.toast_text);
+            text.setText("Número de ramitas inválido");
+
+            //Se cambia el color de fondo
+            Drawable background = layout.getBackground();
+            background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.rojito_toast), PorterDuff.Mode.SRC_IN);
+
+            // Cambia color del texto
+            text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
+
+            //Fin del código que se encarga de cambiar los elementos del toast personalizado
+
+            //Lo crea y lo pone en la parte de arriba del cel
+            Toast toast = new Toast(getApplicationContext());
+            toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
+            toast.setDuration(Toast.LENGTH_LONG);
+            toast.setView(layout);
+            toast.show();
+
             return;
         }
 
@@ -1265,7 +1918,36 @@ public class AgregarActiTutor extends AppCompatActivity {
                 }
 
                 if (hayTraslape) {
-                    runOnUiThread(() -> Toast.makeText(AgregarActiTutor.this, "Las horas se traslapan con otra actividad", Toast.LENGTH_LONG).show());
+                    runOnUiThread(() -> {
+                        LayoutInflater inflater = getLayoutInflater();
+                        View layout = inflater.inflate(R.layout.toast_personalizado, null);
+
+                        //Inicio de código para cambiar elementos del toast personalizado
+
+                        //Se cambia la imágen
+                        ImageView icon = layout.findViewById(R.id.toast_icon);
+                        icon.setImageResource(R.drawable.img_circ_tache_rojo);
+
+                        //Se cambia el texto
+                        TextView text = layout.findViewById(R.id.toast_text);
+                        text.setText("Las horas se traslapan con otra actividad");
+
+                        //Se cambia el color de fondo
+                        Drawable background = layout.getBackground();
+                        background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.rojito_toast), PorterDuff.Mode.SRC_IN);
+
+                        // Cambia color del texto
+                        text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
+
+                        //Fin del código que se encarga de cambiar los elementos del toast personalizado
+
+                        //Lo crea y lo pone en la parte de arriba del cel
+                        Toast toast = new Toast(getApplicationContext());
+                        toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
+                        toast.setDuration(Toast.LENGTH_LONG);
+                        toast.setView(layout);
+                        toast.show();
+                    });
                 } else {
                     obtenerIdCastorYCrearActividad(idKit, nombreHabito, fechaInicial, fechaFinal, horaInicioText, horaFinText, numRam, masInfo);
                 }
@@ -1364,7 +2046,26 @@ public class AgregarActiTutor extends AppCompatActivity {
                 apiService.createActividad(actividad).enqueue(new Callback<Actividad>() {
                     @Override
                     public void onResponse(Call<Actividad> call, Response<Actividad> response) {
-                        Toast.makeText(AgregarActiTutor.this, "Actividad creada con éxito", Toast.LENGTH_SHORT).show();
+
+                        LayoutInflater inflater = getLayoutInflater();
+                        View layout = inflater.inflate(R.layout.toast_personalizado, null);
+
+                        ImageView icon = layout.findViewById(R.id.toast_icon);
+                        icon.setImageResource(R.drawable.img_circ_palomita_verde);
+
+                        TextView text = layout.findViewById(R.id.toast_text);
+                        text.setText("Actividad creada con éxito");
+
+                        Drawable background = layout.getBackground();
+                        background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.verdecito_toast), PorterDuff.Mode.SRC_IN);
+
+                        text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
+
+                        Toast toast = new Toast(getApplicationContext());
+                        toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
+                        toast.setDuration(Toast.LENGTH_LONG);
+                        toast.setView(layout);
+                        toast.show();
                         finish();
                     }
 
