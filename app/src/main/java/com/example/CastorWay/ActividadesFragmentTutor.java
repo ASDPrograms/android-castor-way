@@ -298,6 +298,13 @@ public class ActividadesFragmentTutor extends Fragment {
 
                                         btnEditActi.setOnClickListener(v1 -> {
                                             //Aquí va lo que pasa cuando quiere editar el modal
+                                            SharedPreferences preferences = requireContext().getSharedPreferences("actividadSelected", Context.MODE_PRIVATE);
+                                            SharedPreferences.Editor editor = preferences.edit();
+                                            editor.putInt("idActividad", actividad.getIdActividad());
+                                            editor.apply();
+
+                                            Intent intent = new Intent(requireActivity(), EditarActividad.class);
+                                            startActivity(intent);
                                         });
 
                                         //Aquí se abre el modal que confirma borrar la acti cuando da click en el boton de borrar acti
