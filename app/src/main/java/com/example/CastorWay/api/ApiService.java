@@ -3,6 +3,7 @@ package com.example.castorway.api;
 import com.example.castorway.modelsDB.Actividad;
 import com.example.castorway.modelsDB.Castor;
 import com.example.castorway.modelsDB.Kit;
+import com.example.castorway.modelsDB.Premios;
 
 import java.util.List;
 
@@ -39,4 +40,17 @@ public interface  ApiService{
 
     @DELETE("tablaActividad")
     Call<Void> deleteActividad(@Query("idActividad") int idActividad);
+
+    //Premios:
+    @GET("tablaPremios")
+    Call<List<Premios>> getAllPremios();
+
+    @POST("tablaPremios")
+    Call<Premios> createPremio(@Body Premios premios);
+
+    @PUT("tablaPremios")
+    Call<Premios> updatePremios(@Body Premios premios);
+
+    @DELETE("tablaPremios")
+    Call<Void> deletePremio(@Query("idPremio") int idPremio);
 }

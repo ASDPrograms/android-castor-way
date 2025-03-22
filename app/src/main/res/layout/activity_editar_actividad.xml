@@ -1352,12 +1352,12 @@
                         android:clickable="true"
                         android:inputType="number"
                         android:fontFamily="@font/dongle_bold"
-                        android:backgroundTint="@color/azulito_juerte"
+                        android:backgroundTint="@color/cafe_subtono"
                         android:textSize="25sp"
                         android:layout_gravity="center"
                         android:gravity="center"
                         android:textColor="@color/white"
-                        android:text="Crear Actividad"></Button>
+                        android:text="Editar Actividad"></Button>
                 </LinearLayout>
             </LinearLayout>
 

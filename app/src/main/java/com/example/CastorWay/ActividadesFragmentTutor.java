@@ -292,6 +292,13 @@ public class ActividadesFragmentTutor extends Fragment {
                                         TextView txtTipoHabito = view.findViewById(R.id.txtTipoHabito);
                                         ImageView imgActiModal = view.findViewById(R.id.imgActividad);
                                         TextView numRamitasModal = view.findViewById(R.id.numRamitas);
+                                        ImageView btnVerMasInfoActi = view.findViewById(R.id.btnVerMasInfoActi);
+
+                                        //Aquí va lo que pasa cuando quiere ver más información de la acti:
+                                        btnVerMasInfoActi.setOnClickListener(v1 -> {
+                                            Intent intent = new Intent(requireActivity(), VerMasInfoActi.class);
+                                            startActivity(intent);
+                                        });
 
                                         LinearLayout btnEditActi = view.findViewById(R.id.layout_btn_edit_acti);
                                         LinearLayout btnBorrarActi = view.findViewById(R.id.layout_btn_borrar_acti);
