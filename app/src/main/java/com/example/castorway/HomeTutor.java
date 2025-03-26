@@ -58,6 +58,30 @@ public class HomeTutor extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_tutor);
 
+        //Al abrir intentar recibir el valor de modal trás actividad creada
+        String fragmentName = getIntent().getStringExtra("fragmentActiCrear");
+
+        if (fragmentName != null) {
+            // Cargar el fragmento correspondiente
+            Fragment fragment = null;
+
+            switch (fragmentName) {
+                case "ActividadesFragmentTutor":
+                    fragment = new ActividadesFragmentTutor();
+                    break;
+            }
+
+            // Si se recibe un fragmento válido, lo mostramos
+            if (fragment != null) {
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.frame_container, fragment); // Asegúrate de tener un contenedor adecuado
+                transaction.commit();
+            }
+        }
+
+        HorizontalScrollView userScrollView = findViewById(R.id.userScrollView);
+        userScrollView.setVisibility(View.GONE);
+
         SharedPreferences preferences = getSharedPreferences("User", Context.MODE_PRIVATE);
         String email = preferences.getString("email", null);
 
@@ -118,6 +142,27 @@ public class HomeTutor extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
+        String fragmentName = getIntent().getStringExtra("fragmentActiCrear");
+
+        if (fragmentName != null) {
+            // Cargar el fragmento correspondiente
+            Fragment fragment = null;
+
+            switch (fragmentName) {
+                case "ActividadesFragmentTutor":
+                    fragment = new ActividadesFragmentTutor();
+                    break;
+            }
+
+            // Si se recibe un fragmento válido, lo mostramos
+            if (fragment != null) {
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.frame_container, fragment); // Asegúrate de tener un contenedor adecuado
+                transaction.commit();
+            }
+        }
+
         confirmExistUsrKit();
     }
     private void actuInfoTopNav(){

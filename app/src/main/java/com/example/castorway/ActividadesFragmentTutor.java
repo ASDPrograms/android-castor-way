@@ -1,16 +1,23 @@
 package com.example.castorway;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.PictureDrawable;
 import android.os.Bundle;
 import android.app.Activity;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -285,6 +292,54 @@ public class ActividadesFragmentTutor extends Fragment {
                                         TextView txtTipoHabito = view.findViewById(R.id.txtTipoHabito);
                                         ImageView imgActiModal = view.findViewById(R.id.imgActividad);
                                         TextView numRamitasModal = view.findViewById(R.id.numRamitas);
+                                        ImageView btnVerMasInfoActi = view.findViewById(R.id.btnVerMasInfoActi);
+
+                                        //Aquí va lo que pasa cuando quiere ver más información de la acti:
+                                        btnVerMasInfoActi.setOnClickListener(v1 -> {
+                                            Intent intent = new Intent(requireActivity(), VerMasInfoActi.class);
+                                            startActivity(intent);
+                                        });
+
+                                        LinearLayout btnEditActi = view.findViewById(R.id.layout_btn_edit_acti);
+                                        LinearLayout btnBorrarActi = view.findViewById(R.id.layout_btn_borrar_acti);
+
+                                        btnEditActi.setOnClickListener(v1 -> {
+                                            //Aquí va lo que pasa cuando quiere editar el modal
+                                            SharedPreferences preferences = requireContext().getSharedPreferences("actividadSelected", Context.MODE_PRIVATE);
+                                            SharedPreferences.Editor editor = preferences.edit();
+                                            editor.putInt("idActividad", actividad.getIdActividad());
+                                            editor.apply();
+
+                                            Intent intent = new Intent(requireActivity(), EditarActividad.class);
+                                            startActivity(intent);
+                                        });
+
+                                        //Aquí se abre el modal que confirma borrar la acti cuando da click en el boton de borrar acti
+                                        btnBorrarActi.setOnClickListener(v1 -> {
+                                            Dialog modalBorrar = new Dialog(requireContext());
+                                            View viewBorrar = getLayoutInflater().inflate(R.layout.modal_cerrar_view_confirm, null);
+                                            modalBorrar.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                            modalBorrar.setContentView(viewBorrar);
+
+                                            TextView txtDialogTitle = viewBorrar.findViewById(R.id.txtDialogTitle);
+                                            TextView txtDialogMessage = viewBorrar.findViewById(R.id.txtDialogMessage);
+                                            Button btnCerrarModal = viewBorrar.findViewById(R.id.btnCerrarModal);
+                                            Button btnConfirm = viewBorrar.findViewById(R.id.btnConfirm);
+
+                                            btnConfirm.setOnClickListener(v3 -> {
+                                                modalBorrar.dismiss();
+                                                modal.dismiss();
+                                                borrarActividad(actividad.getIdActividad());
+
+                                            });
+
+
+                                            txtDialogTitle.setText("¡Atención!");
+                                            txtDialogMessage.setText("Estás a punto de borrar el hábito: " + "'"+actividad.getNombreHabito() + "'" + " si aceptas no se podrá deshacer la acción.");
+
+                                            btnCerrarModal.setOnClickListener(v2 -> modalBorrar.dismiss());
+                                            modalBorrar.show();
+                                        });
 
                                         String nomHabito = String.valueOf(actividad.getNombreHabito());
                                         String tipHabit = String.valueOf(actividad.getTipoHabito());
@@ -314,6 +369,10 @@ public class ActividadesFragmentTutor extends Fragment {
                                         imgActiModal.setImageDrawable(drawable2);
                                         modal.show();
 
+                                        SharedPreferences preferences = requireContext().getSharedPreferences("actividadSelected", Context.MODE_PRIVATE);
+                                        SharedPreferences.Editor editor = preferences.edit();
+                                        editor.putInt("idActividad", actividad.getIdActividad());
+                                        editor.apply();
                                     });
                                     //Fin de la lógica de desplegar modal
 
@@ -472,5 +531,61 @@ public class ActividadesFragmentTutor extends Fragment {
             }
         }
         return fechas;
+    }
+
+    //Método para borrar la actividad seleccionada en el botón:
+    private void borrarActividad(int idActividad){
+        ApiService apiService = RetrofitClient.getApiService();
+        Call<Void> call = apiService.deleteActividad(idActividad);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+
+                    //Inicio del código para mostrar el toast personalizado
+                    LayoutInflater inflater = getLayoutInflater();
+                    View layout = inflater.inflate(R.layout.toast_personalizado, null);
+
+                    //Inicio de código para cambiar elementos del toast personalizado
+
+                    //Se cambia la imágen
+                    ImageView icon = layout.findViewById(R.id.toast_icon);
+                    icon.setImageResource(R.drawable.btn_borrar_acti_rojo);
+
+                    //Se cambia el texto
+                    TextView text = layout.findViewById(R.id.toast_text);
+                    text.setText("Actividad eliminada con éxito");
+
+                    //Se cambia el color de fondo
+                    Drawable background = layout.getBackground();
+                    background.setColorFilter(ContextCompat.getColor(requireContext(), R.color.rojito_toast), PorterDuff.Mode.SRC_IN);
+
+                    // Cambia color del texto
+                    text.setTextColor(ContextCompat.getColor(requireContext(), R.color.black));
+
+                    //Fin del código que se encarga de cambiar los elementos del toast personalizado
+
+                    //Lo crea y lo pone en la parte de arriba del cel
+                    Toast toast = new Toast(requireContext());
+                    toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
+                    toast.setDuration(Toast.LENGTH_LONG);
+                    toast.setView(layout);
+                    toast.show();
+                    //Fin del código para mostrar el toast personalizado
+
+                    FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+                    transaction.replace(R.id.frame_container, new ActividadesFragmentTutor()); // Reemplaza con tu fragmento específico
+                    transaction.commit();
+
+                } else {
+                    Toast.makeText(requireContext(), "Ocurrió un error", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+
+            }
+        });
     }
 }
