@@ -474,6 +474,133 @@ public class EditarActividad extends AppCompatActivity {
                                 if(intervalos.contains("Domingo")){
                                     semanaDia7.setChecked(true);
                                 }
+                            }else if(intervalos.contains("Repetir cada")){
+                                //El linearlayout que se enseña dependiendo de las repeticiones que se tengan
+                                linearLayDiasSemana.setVisibility(View.GONE);
+                                linearLayIntervalos.setVisibility(View.VISIBLE);
+                                linearLayDiasMes.setVisibility(View.GONE);
+                                linLayCeckBxCadaDia.setVisibility(View.GONE);
+                                txtOptTipFechaSelected.setText("Intervalos cada ... días");
+
+                                if(intervalos.contains("Repetir cada 2")){
+                                    intervalo2.setChecked(true);
+                                }
+                                else if(intervalos.contains("Repetir cada 3")){
+                                    intervalo3.setChecked(true);
+                                }
+                                else if(intervalos.contains("Repetir cada 4")){
+                                    intervalo4.setChecked(true);
+                                }
+                                else if(intervalos.contains("Repetir cada 5")){
+                                    intervalo5.setChecked(true);
+                                }
+                                else if(intervalos.contains("Repetir cada 6")){
+                                    intervalo6.setChecked(true);
+                                }
+                                else if(intervalos.contains("Repetir cada 7")){
+                                    intervalo7.setChecked(true);
+                                }
+                            }else if(intervalos.contains("Cada mes el dia")){
+                                //El linearlayout que se enseña dependiendo de las repeticiones que se tengan
+                                linearLayDiasMes.setVisibility(View.VISIBLE);
+                                linearLayDiasSemana.setVisibility(View.GONE);
+                                linearLayIntervalos.setVisibility(View.GONE);
+                                linLayCeckBxCadaDia.setVisibility(View.GONE);
+                                txtOptTipFechaSelected.setText("Mensual");
+
+                                if(intervalos.contains("Cada mes el dia 1")){
+                                    diaCalendar1.setChecked(true);
+                                }
+                                if(intervalos.contains("Cada mes el dia 2")){
+                                    diaCalendar2.setChecked(true);
+                                }
+                                if(intervalos.contains("Cada mes el dia 3")){
+                                    diaCalendar3.setChecked(true);
+                                }
+                                if(intervalos.contains("Cada mes el dia 4")){
+                                    diaCalendar4.setChecked(true);
+                                }
+                                if(intervalos.contains("Cada mes el dia 5")){
+                                    diaCalendar5.setChecked(true);
+                                }
+                                if(intervalos.contains("Cada mes el dia 6")){
+                                    diaCalendar6.setChecked(true);
+                                }
+                                if(intervalos.contains("Cada mes el dia 7")){
+                                    diaCalendar7.setChecked(true);
+                                }
+                                if(intervalos.contains("Cada mes el dia 8")){
+                                    diaCalendar8.setChecked(true);
+                                }
+                                if(intervalos.contains("Cada mes el dia 9")){
+                                    diaCalendar9.setChecked(true);
+                                }
+                                if(intervalos.contains("Cada mes el dia 10")){
+                                    diaCalendar10.setChecked(true);
+                                }
+                                if(intervalos.contains("Cada mes el dia 11")){
+                                    diaCalendar11.setChecked(true);
+                                }
+                                if(intervalos.contains("Cada mes el dia 12")){
+                                    diaCalendar12.setChecked(true);
+                                }
+                                if(intervalos.contains("Cada mes el dia 13")){
+                                    diaCalendar13.setChecked(true);
+                                }
+                                if(intervalos.contains("Cada mes el dia 14")){
+                                    diaCalendar14.setChecked(true);
+                                }
+                                if(intervalos.contains("Cada mes el dia 15")){
+                                    diaCalendar15.setChecked(true);
+                                }
+                                if(intervalos.contains("Cada mes el dia 16")){
+                                    diaCalendar16.setChecked(true);
+                                }
+                                if(intervalos.contains("Cada mes el dia 17")){
+                                    diaCalendar17.setChecked(true);
+                                }
+                                if(intervalos.contains("Cada mes el dia 18")){
+                                    diaCalendar18.setChecked(true);
+                                }
+                                if(intervalos.contains("Cada mes el dia 19")){
+                                    diaCalendar19.setChecked(true);
+                                }
+                                if(intervalos.contains("Cada mes el dia 20")){
+                                    diaCalendar20.setChecked(true);
+                                }
+                                if(intervalos.contains("Cada mes el dia 21")){
+                                    diaCalendar21.setChecked(true);
+                                }
+                                if(intervalos.contains("Cada mes el dia 22")){
+                                    diaCalendar22.setChecked(true);
+                                }
+                                if(intervalos.contains("Cada mes el dia 23")){
+                                    diaCalendar23.setChecked(true);
+                                }
+                                if(intervalos.contains("Cada mes el dia 24")){
+                                    diaCalendar24.setChecked(true);
+                                }
+                                if(intervalos.contains("Cada mes el dia 25")){
+                                    diaCalendar25.setChecked(true);
+                                }
+                                if(intervalos.contains("Cada mes el dia 26")){
+                                    diaCalendar26.setChecked(true);
+                                }
+                                if(intervalos.contains("Cada mes el dia 27")){
+                                    diaCalendar27.setChecked(true);
+                                }
+                                if(intervalos.contains("Cada mes el dia 28")){
+                                    diaCalendar28.setChecked(true);
+                                }
+                                if(intervalos.contains("Cada mes el dia 29")){
+                                    diaCalendar29.setChecked(true);
+                                }
+                                if(intervalos.contains("Cada mes el dia 30")){
+                                    diaCalendar30.setChecked(true);
+                                }
+                                if(intervalos.contains("Cada mes el dia 31")){
+                                    diaCalendar31.setChecked(true);
+                                }
                             }
 
                             //Cambiar horas
@@ -1805,7 +1932,7 @@ public class EditarActividad extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Actividad> call, Throwable t) {
-
+                Toast.makeText(EditarActividad.this, "Ocurrió un error, inténtelo de nuevo más tarde.", Toast.LENGTH_SHORT).show();
             }
         });
     }
