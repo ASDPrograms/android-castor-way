@@ -54,3 +54,4 @@ public interface  ApiService{
     @DELETE("tablaPremios")
     Call<Void> deletePremio(@Query("idPremio") int idPremio);
 }
+

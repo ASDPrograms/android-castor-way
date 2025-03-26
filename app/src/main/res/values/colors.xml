@@ -20,6 +20,10 @@
     <color name="hint_input">#8B8B8B</color>
     <color name="moradito">#A588C9</color>
     <color name="verdecito">#8AC691</color>
+    <color name="azulito_toast">#C1CEED</color>
+    <color name="verdecito_toast">#A2E5A8</color>
+    <color name="rojito_toast">#FF9696</color>
+    <color name="azul_toast_bienvenido">#CFDEFF</color>
 
     //colores de iconos de actis:
     <color name="rojo_actis">#ff595e</color>
@@ -27,5 +31,11 @@
     <color name="verde_actis">#8ac926</color>
     <color name="azul_actis">#1982c4</color>
     <color name="morado_actis">#6a4c93</color>
+
+    //colores de fondo de estatus de actis:
+    <color name="amarillo_estatus_fondo">#FFD274</color>
+
+    //colores de texto de estatus de actis:
+    <color name="amarillo_estatus_texto">#BC8E1B</color>
 
 </resources>

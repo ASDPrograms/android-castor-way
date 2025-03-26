@@ -5,6 +5,7 @@
 
 
     <string-array name="opciones">
+        <item>- Selecciona un tipo de hábito -</item>
         <item>Salud</item>
         <item>Productividad</item>
         <item>Personales</item>

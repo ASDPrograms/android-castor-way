@@ -2,8 +2,6 @@ package com.example.castorway;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -265,3 +263,4 @@ public class HomeFragmentTutor extends Fragment {
         contenedorPremioMasCostoso.addView(vistaPremio);
     }
 }
+

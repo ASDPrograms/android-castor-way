@@ -1,0 +1,19 @@
+<!-- progress_bar.xml -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Fondo de la barra (color sólido) -->
+    <item android:id="@android:id/background">
+        <shape>
+            <solid android:color="@color/white"/>
+            <corners android:radius="10dp"/>
+        </shape>
+    </item>
+
+    <!-- Barra de progreso (imagen) -->
+    <item android:id="@android:id/progress">
+            <!-- Imagen de fondo de la barra de progreso -->
+        <bitmap
+            android:src="@drawable/fondo_barra_progreso_agua"
+            android:gravity="center_horizontal|fill_vertical"
+            android:tileMode="clamp"/>
+    </item>
+</layer-list>

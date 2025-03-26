@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_centerHorizontal="true"
+    android:background="@drawable/img_burbuja_text"
+    android:layout_margin="20dp"
+    android:paddingRight="20dp"
+    android:paddingLeft="20dp"
+    android:paddingTop="20dp"
+    android:orientation="vertical"
+    android:elevation="8dp"
+    android:id="@+id/layoutModalMasInfo">
+    <ScrollView
+        android:id="@+id/scrollModalMasInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fillViewport="true"
+        >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/txtTitulo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/dongle_bold"
+                android:text="Tu tutor me encargó decirte algo con respecto a esta actividad:"
+                android:textSize="32sp"
+                android:lineHeight="23dp"
+                android:textStyle="bold"
+                android:textColor="@color/cafe_subtono"
+                android:gravity="center_horizontal"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"/>
+
+            <TextView
+                android:id="@+id/txtDescripcion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" Aquí está la información"
+                android:textSize="18sp"
+                android:lineHeight="22dp"
+                android:textColor="#333333"
+                android:fontFamily="@font/gayathri_bold"
+                android:gravity="center_horizontal"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="4dp"/>
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

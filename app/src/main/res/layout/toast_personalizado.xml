@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="@drawable/borde_toast_personalizado"
+    android:padding="10dp"
+    android:elevation="6dp"
+    android:layout_gravity="center"
+    android:gravity="center_vertical"
+    android:minHeight="60dp">
+
+    <!-- Imagen en la izquierda -->
+    <ImageView
+        android:id="@+id/toast_icon"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/img_tachuela"
+        android:layout_marginRight="10dp" />
+
+    <!-- Texto en el centro -->
+    <TextView
+        android:id="@+id/toast_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Mensajito personalizado"
+        android:textColor="@color/black"
+        android:fontFamily="@font/gayathri_bold"
+        android:textSize="17sp"
+        android:maxLines="2"
+        android:ellipsize="end"/>
+</LinearLayout>
