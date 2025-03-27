@@ -2,10 +2,13 @@ package com.example.castorway;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -24,6 +27,7 @@ import android.widget.TextView;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -41,10 +45,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class VerMasInfoActi extends AppCompatActivity {
-
-    ImageView btnSalirAddActi;
-    TextView titNombreActi, txtTipoHabito, txtHoras, txtFechas, numRamitas;
-    ImageView btnBurbujaMasInfo, imgRaudy;
+    TextView titNombreActi, txtTipoHabito, txtHoras, txtFechas, numRamitas, txtDiasCompletados,txtEstatusActi;
+    ImageView btnBurbujaMasInfo, imgRaudy, imgPlantaDiasProg, btnSalirAddActi, btnComprAvance;
+    LinearLayout linLayEstatusActi;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +56,11 @@ public class VerMasInfoActi extends AppCompatActivity {
         setContentView(R.layout.activity_ver_mas_info);
 
         btnSalirAddActi = findViewById(R.id.btnSalirAddActi);
-        btnSalirAddActi.setOnClickListener(v1 -> mostrarModalCerrarView("¡Atención!", "Si das click en aceptar saldrás del formulario y no se guardará la información ingresada."));
+        btnSalirAddActi.setOnClickListener(v -> {
+            Intent intent = new Intent(VerMasInfoActi.this, HomeTutor.class);
+            intent.putExtra("fragmentActiCrear", "ActividadesFragmentTutor");
+            startActivity(intent);
+        });
 
         //declaración de elementos que van a establecer su valor para que se vea la info
         titNombreActi = findViewById(R.id.titNombreActi);
@@ -61,9 +68,16 @@ public class VerMasInfoActi extends AppCompatActivity {
         txtHoras = findViewById(R.id.txtHoras);
         txtFechas = findViewById(R.id.txtFechas);
         numRamitas = findViewById(R.id.numRamitas);
+        txtDiasCompletados = findViewById(R.id.txtDiasCompletados);
+        imgPlantaDiasProg = findViewById(R.id.imgPlantaDiasProg);
+        txtEstatusActi = findViewById(R.id.txtEstatusActi);
+        linLayEstatusActi = findViewById(R.id.linLayEstatusActi);
+        btnComprAvance = findViewById(R.id.btnComprAvance);
+        btnComprAvance.setOnClickListener(v -> {
+
+        });
 
         establecerValores();
-
 
         btnBurbujaMasInfo = findViewById(R.id.btnBurbujaMasInfo);
         imgRaudy = findViewById(R.id.imgRaudy);
@@ -78,9 +92,13 @@ public class VerMasInfoActi extends AppCompatActivity {
         });
 
     }
+
     @Override
     public void onBackPressed() {
-        mostrarModalCerrarView("¡Atención!", "Estás por salir, si das click en aceptar saldrás y no se actualizará la actividad con los nuevos datos.");
+        super.onBackPressed();
+        Intent intent = new Intent(VerMasInfoActi.this, HomeTutor.class);
+        intent.putExtra("fragmentActiCrear", "ActividadesFragmentTutor");
+        startActivity(intent);
     }
     private void showBubbleDialog() {
 
@@ -157,39 +175,6 @@ public class VerMasInfoActi extends AppCompatActivity {
             }
         });
     }
-    private void mostrarModalCerrarView(String titulo, String mensaje) {
-        //Se crea el modal al momento de hacer click en el botón
-        Dialog dialog = new Dialog(this);
-        dialog.setContentView(R.layout.modal_cerrar_view_confirm);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialog.setCancelable(true);
-
-        // Se obtienen los elementos del modal
-        TextView txtTitle = dialog.findViewById(R.id.txtDialogTitle);
-        TextView txtMessage = dialog.findViewById(R.id.txtDialogMessage);
-        Button btnClose = dialog.findViewById(R.id.btnCerrarModal);
-        Button btnConfirm = dialog.findViewById(R.id.btnConfirm);
-
-        // Asignar valores personalizados
-        txtTitle.setText(titulo);
-        txtMessage.setText(mensaje);
-
-        btnConfirm.setOnClickListener(v -> {
-            dialog.dismiss();
-            finish();
-        });
-
-        btnClose.setOnClickListener(v -> {
-            dialog.dismiss();
-            getSupportFragmentManager().beginTransaction()
-                    .addToBackStack(null)
-                    .commit();
-
-        });
-
-        // Mostrar el modal
-        dialog.show();
-    }
 
     private void establecerValores(){
         ApiService apiService = RetrofitClient.getApiService();
@@ -231,6 +216,66 @@ public class VerMasInfoActi extends AppCompatActivity {
                             //ramitas del hábito:
                             String numeroRamitas = String.valueOf(actividad.getNumRamitas());
                             numRamitas.setText(numeroRamitas + " ramitas");
+
+                            //número de días completados
+                            String diasCompletados = String.valueOf(actividad.getDiasCompletados());
+                            txtDiasCompletados.setText(diasCompletados);
+                            int numDiasComple = Integer.parseInt(diasCompletados);
+
+                            if(numDiasComple == 0){
+                                Drawable imgPlanta = ContextCompat.getDrawable(VerMasInfoActi.this, R.drawable.img_semilla);
+                                imgPlantaDiasProg.setImageDrawable(imgPlanta);
+                                int color = ContextCompat.getColor(VerMasInfoActi.this, R.color.cafe_ramita);
+                                txtDiasCompletados.setTextColor(color);
+                            }else if(numDiasComple > 0 && numDiasComple <= 5){
+                                Drawable imgPlanta = ContextCompat.getDrawable(VerMasInfoActi.this, R.drawable.img_planta_1);
+                                imgPlantaDiasProg.setImageDrawable(imgPlanta);
+                            }else if(numDiasComple > 5 && numDiasComple <= 10){
+                                Drawable imgPlanta = ContextCompat.getDrawable(VerMasInfoActi.this, R.drawable.img_planta_2);
+                                imgPlantaDiasProg.setImageDrawable(imgPlanta);
+                            }
+                            else if(numDiasComple > 10 && numDiasComple <= 15) {
+                                Drawable imgPlanta = ContextCompat.getDrawable(VerMasInfoActi.this, R.drawable.img_planta_3);
+                                imgPlantaDiasProg.setImageDrawable(imgPlanta);
+                            }
+                            else if(numDiasComple > 15 && numDiasComple <= 21){
+                                Drawable imgPlanta = ContextCompat.getDrawable(VerMasInfoActi.this, R.drawable.img_planta_4);
+                                imgPlantaDiasProg.setImageDrawable(imgPlanta);
+                            }
+
+                            // estatus de la acti:
+                            String estadosActi = String.valueOf(actividad.getEstadosActi());
+
+                            String[] estadosActiArray = estadosActi.split(",");
+
+                            boolean todosSonDos = true;
+                            for (String valor : estadosActiArray) {
+                                if (Integer.parseInt(valor) != 2) {
+                                    todosSonDos = false;
+                                    break;
+                                }
+                            }
+
+                            int colorEstatusTxt = 0;
+                            int colorEstatusFondo = 0;
+                            String txtEstatus = "";
+
+                            if(todosSonDos){
+                                colorEstatusTxt = ContextCompat.getColor(VerMasInfoActi.this, R.color.verde_estatus_texto);
+                                colorEstatusFondo = ContextCompat.getColor(VerMasInfoActi.this, R.color.verde_estatus_fondo);
+                                txtEstatus = "Completada";
+                            }else{
+                                colorEstatusTxt = ContextCompat.getColor(VerMasInfoActi.this, R.color.amarillo_estatus_texto);
+                                colorEstatusFondo = ContextCompat.getColor(VerMasInfoActi.this, R.color.amarillo_estatus_fondo);
+                                txtEstatus = "En proceso";
+                            }
+
+                            Drawable drawable = ContextCompat.getDrawable(VerMasInfoActi.this, R.drawable.border_estatus_acti);
+                            drawable.setColorFilter(colorEstatusFondo, PorterDuff.Mode.SRC_IN);
+
+                            linLayEstatusActi.setBackground(drawable);
+                            txtEstatusActi.setTextColor(colorEstatusTxt);
+                            txtEstatusActi.setText(txtEstatus);
                         }
                     }
                 }

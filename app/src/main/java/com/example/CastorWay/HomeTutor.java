@@ -76,6 +76,7 @@ public class HomeTutor extends AppCompatActivity {
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 transaction.replace(R.id.frame_container, fragment); // Asegúrate de tener un contenedor adecuado
                 transaction.commit();
+
             }
         }
 
@@ -149,22 +150,56 @@ public class HomeTutor extends AppCompatActivity {
             // Cargar el fragmento correspondiente
             Fragment fragment = null;
 
+            ImageView iconToSelect = null; // Variable para saber qué icono seleccionar
+
             switch (fragmentName) {
                 case "ActividadesFragmentTutor":
                     fragment = new ActividadesFragmentTutor();
+                    iconToSelect = iconActividades; // Ícono de actividades
+                    break;
+                case "HomeFragmentTutor":
+                    fragment = new HomeFragmentTutor();
+                    iconToSelect = iconHome; // Ícono de inicio
                     break;
             }
 
-            // Si se recibe un fragmento válido, lo mostramos
             if (fragment != null) {
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.frame_container, fragment); // Asegúrate de tener un contenedor adecuado
+                transaction.replace(R.id.frame_container, fragment);
                 transaction.commit();
+
+                // Seleccionar el ícono correspondiente visualmente
+                if (iconToSelect != null) {
+                    selectIcon(iconToSelect);
+                }
             }
+
         }
 
         confirmExistUsrKit();
     }
+    //para cuando cierra la app (el activity de hometutor)
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        limpiarSesionModalActis();
+    }
+
+    //    para cuando no está en primer plano
+    //    @Override
+    //    protected void onStop() {
+    //        super.onStop();
+    //        limpiarSesionModalActis();
+    //    }
+
+    private void limpiarSesionModalActis(){
+        SharedPreferences preferences = getSharedPreferences("sesionModalActis", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.clear();
+        editor.apply();
+    }
+
+
     private void actuInfoTopNav(){
         ApiService apiService = RetrofitClient.getApiService();
         Call<List<Castor>> call = apiService.getAllCastores();

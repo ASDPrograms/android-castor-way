@@ -1,5 +1,7 @@
 package com.example.castorway;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -16,6 +18,8 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -149,7 +153,211 @@ public class ActividadesFragmentTutor extends Fragment {
             }
         });
         actuNumActis();
+
+        //Se intenta desplegar el modal con la info de la sesión al abrir la acti:
     }
+
+    private void desplegarModal(View view) {
+        try {
+            ApiService apiService = RetrofitClient.getApiService();
+            Call<List<Actividad>> call = apiService.getAllActividades();
+            call.enqueue(new Callback<List<Actividad>>() {
+                @Override
+                public void onResponse(Call<List<Actividad>> call, Response<List<Actividad>> response) {
+                    List<Actividad> actividades = response.body();
+
+                    if (actividades != null) {
+                        Log.e("DEBUG", "Hay actis");
+                        SharedPreferences sharedPreferences = requireContext().getSharedPreferences("actividadSelected", Context.MODE_PRIVATE);
+                        for (Actividad actividad : actividades) {
+                            int idActividad = sharedPreferences.getInt("idActividad", 0);
+                            Log.e("DEBUG", "Id acti: " + idActividad);
+                            if(actividad.getIdActividad() == idActividad){
+                                Log.e("PAVER", "SIPAPI 5");
+                                desplModalConDatosActi(actividad);
+                            }
+                        }
+                    }
+
+                }
+
+                @Override
+                public void onFailure(Call<List<Actividad>> call, Throwable t) {
+                    // Verificar que el fragmento aún está agregado antes de acceder a los recursos
+                    if (isAdded()) {
+                        try {
+                            Context context = requireContext(); // Usar requireContext() ya que es más seguro
+                            Log.e("ERROR", "Fallo en la API: " + t.getMessage());
+                        } catch (Exception e) {
+                            Log.e("ERROR", "Error en el fragmento: " + e.getMessage());
+                        }
+                    }
+                }
+            });
+        } catch (Exception e) {
+            Log.e("MiFragment", "Error al intentar mostrar el modal: " + e.getMessage());
+        }
+    }
+
+
+    private void desplModalConDatosActi(Actividad actividad){
+        View view = getLayoutInflater().inflate(R.layout.bottom_modal_view, null);
+
+        BottomSheetDialog modal = new BottomSheetDialog(requireContext());
+        View modalView = getLayoutInflater().inflate(R.layout.bottom_modal_view, null);
+        modal.setContentView(modalView);
+
+
+        ImageView imgActividad = view.findViewById(R.id.imgActividad);
+
+        String imgBd = actividad.getRutaImagenHabito();
+        Log.d("DEBUG", "valor ruta imagen: " + imgBd);
+
+        String imageName = doesImageExist(requireContext(), imgBd);
+        if (imageName != null) {
+            InputStream inputStream = null;
+            String assetPath = "img/img_actividades/" + imageName;
+            Log.d("DEBUG", "Intentando abrir archivo: " + assetPath);
+
+            try {
+                inputStream = requireContext().getAssets().open(assetPath);
+                Log.d("DEBUG", "InputStream abierto correctamente.");
+
+                SVG svg = SVG.getFromInputStream(inputStream);
+                if (svg != null) {
+                    Drawable drawable = new PictureDrawable(svg.renderToPicture());
+                    imgActividad.setImageDrawable(drawable);
+                    Log.d("DEBUG", "Imagen SVG cargada correctamente.");
+                } else {
+                    Log.e("DEBUG", "Error al crear el objeto SVG.");
+                }
+                inputStream.close();
+            } catch (IOException | SVGParseException e) {
+                Log.e("DEBUG", "Error al cargar el archivo SVG: " + e.getMessage());
+            }
+        } else {
+            Log.e("DEBUG", "Error al encontrar la ruta de la imagen");
+        }
+
+
+        modal.setOnDismissListener(dialog -> {
+            if (isAdded() && getActivity() != null) {
+                SharedPreferences sharedPreferencesCerrar = requireContext().getSharedPreferences("sesionModalActis", MODE_PRIVATE);
+                SharedPreferences.Editor editorCerrar = sharedPreferencesCerrar.edit();
+                editorCerrar.putBoolean("sesion_activa", false);
+                editorCerrar.apply();
+            }
+        });
+
+        TextView txtTitle = modalView.findViewById(R.id.txtTitle);
+        TextView txtTipoHabito = modalView.findViewById(R.id.txtTipoHabito);
+        ImageView imgActiModal = modalView.findViewById(R.id.imgActividad);
+        TextView numRamitasModal = modalView.findViewById(R.id.numRamitas);
+        ImageView btnVerMasInfoActi = modalView.findViewById(R.id.btnVerMasInfoActi);
+
+        btnVerMasInfoActi.setOnClickListener(v1 -> {
+            if (isAdded()) {
+                Intent intent = new Intent(requireActivity(), VerMasInfoActi.class);
+                startActivity(intent);
+            }
+        });
+
+        LinearLayout btnEditActi = modalView.findViewById(R.id.layout_btn_edit_acti);
+        LinearLayout btnBorrarActi = modalView.findViewById(R.id.layout_btn_borrar_acti);
+
+        btnEditActi.setOnClickListener(v1 -> {
+            if (isAdded()) {
+                SharedPreferences preferences = requireContext().getSharedPreferences("actividadSelected", MODE_PRIVATE);
+                SharedPreferences.Editor editor2 = preferences.edit();
+                editor2.putInt("idActividad", actividad.getIdActividad());
+                editor2.apply();
+
+                Intent intent = new Intent(requireActivity(), EditarActividad.class);
+                startActivity(intent);
+            }
+        });
+
+        btnBorrarActi.setOnClickListener(v1 -> {
+            if (isAdded()) {
+                Dialog modalBorrar = new Dialog(requireContext());
+                View viewBorrar = getLayoutInflater().inflate(R.layout.modal_cerrar_view_confirm, null);
+                modalBorrar.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                modalBorrar.setContentView(viewBorrar);
+
+                TextView txtDialogTitle = viewBorrar.findViewById(R.id.txtDialogTitle);
+                TextView txtDialogMessage = viewBorrar.findViewById(R.id.txtDialogMessage);
+                Button btnCerrarModal = viewBorrar.findViewById(R.id.btnCerrarModal);
+                Button btnConfirm = viewBorrar.findViewById(R.id.btnConfirm);
+
+                btnConfirm.setOnClickListener(v3 -> {
+                    modalBorrar.dismiss();
+                    modal.dismiss();
+                    borrarActividad(actividad.getIdActividad());
+                });
+
+                txtDialogTitle.setText("¡Atención!");
+                txtDialogMessage.setText("Estás a punto de borrar el hábito: " + "'"+actividad.getNombreHabito() + "'" + " si aceptas no se podrá deshacer la acción.");
+
+                btnCerrarModal.setOnClickListener(v2 -> modalBorrar.dismiss());
+                modalBorrar.show();
+            }
+        });
+
+        String nomHabito = String.valueOf(actividad.getNombreHabito());
+        String tipHabit = String.valueOf(actividad.getTipoHabito());
+        int numeroRamitas = actividad.getNumRamitas();
+        String strgNumRamitas = String.valueOf(numeroRamitas);
+
+        txtTitle.setText(nomHabito);
+        txtTipoHabito.setText(tipHabit);
+        numRamitasModal.setText(strgNumRamitas + " ramitas");
+
+        String imageName2 = doesImageExist(requireContext(), imgBd);
+        if (imageName2 != null) {
+            try (InputStream inputStream3 = requireContext().getAssets().open("img/img_actividades/" + imageName2)) {
+                SVG svg = SVG.getFromInputStream(inputStream3);
+                Drawable drawable2 = new PictureDrawable(svg.renderToPicture());
+                imgActiModal.setImageDrawable(drawable2);
+            } catch (IOException | SVGParseException e) {
+                Log.e("DEBUG", "Error al cargar imagen SVG: " + e.getMessage());
+            }
+        }
+        modal.show();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        // Verificar si el fragmento está adjunto y si el contexto está disponible
+        if (isAdded() && getContext() != null) {
+            Log.e("PAVER", "SIPAPI 1");
+
+            SharedPreferences sharedPreferences = getContext().getSharedPreferences("sesionModalActis", Context.MODE_PRIVATE);
+            boolean isModalOpened = sharedPreferences.getBoolean("sesion_activa", false);
+
+            Log.e("PAVER", "estado modal: " + isModalOpened);
+
+            if(isModalOpened){
+                // Asegurarse de que la vista del fragmento esté disponible
+                if (getView() != null) {
+                    Log.e("PAVER", "SIPAPI 3");
+
+                    // Mostrar el modal en el hilo principal usando un Handler
+                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Log.e("PAVER", "SIPAPI 4");
+                            desplegarModal(getView());
+                        }
+                    });
+                }
+            }
+        }else{
+            Log.e("PAVER", "NOPAPI");
+        }
+    }
+
     private void alternarVisibActis(LinearLayout contenedor) {
         // Aquí se va alternando la visibilidad de los contenedores de las actividades
         Log.d("DEBUG", "Botón CLICKEADO");
@@ -179,7 +387,7 @@ public class ActividadesFragmentTutor extends Fragment {
     }
     //Esta función verifica que haya almenos un usuario de hijo seleccionado
     private int confirmUsrKitSeleccionado(){
-        SharedPreferences sharedPreferences = requireContext().getSharedPreferences("usrKitCuentaTutor", Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = requireContext().getSharedPreferences("usrKitCuentaTutor", MODE_PRIVATE);
         int idKit = sharedPreferences.getInt("idKit", 0);
         if(idKit == 0){
             layout_esta_semana.setVisibility(View.GONE);
@@ -249,7 +457,7 @@ public class ActividadesFragmentTutor extends Fragment {
                                         Log.d("DEBUG", "Intentando abrir archivo: " + assetPath);
 
                                         try {
-                                            inputStream = getContext().getAssets().open(assetPath);
+                                            inputStream = requireContext().getAssets().open(assetPath);
                                             Log.d("DEBUG", "InputStream abierto correctamente.");
 
                                             // Crear un objeto SVG desde el InputStream
@@ -282,10 +490,23 @@ public class ActividadesFragmentTutor extends Fragment {
                                     //Esta es la lógica del botón de "Ir" de cada acti que despliega la información de cada acti en la parte inferior
                                     //de la pantalla, se tiene que inflar el xml del diseño y sustituir valores
                                     btn_ir.setOnClickListener(v -> {
+                                        //Sesión para que se despliegue la acti seleccionada el editar, recargar, abrir, etc.
+                                        SharedPreferences sharedPreferences = requireContext().getSharedPreferences("sesionModalActis", MODE_PRIVATE);
+                                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                                        editor.putBoolean("sesion_activa", true);
+                                        editor.apply();
 
                                         BottomSheetDialog modal = new BottomSheetDialog(requireContext());
                                         View view = getLayoutInflater().inflate(R.layout.bottom_modal_view, null);
                                         modal.setContentView(view);
+
+                                        modal.setOnDismissListener(dialog -> {
+                                            // Aquí se cambia el valor de la sesión cuando se cierra
+                                            SharedPreferences sharedPreferencesCerrar = requireContext().getSharedPreferences("sesionModalActis", MODE_PRIVATE);
+                                            SharedPreferences.Editor editorCerrar = sharedPreferencesCerrar.edit();
+                                            editorCerrar.putBoolean("sesion_activa", false);
+                                            editorCerrar.apply();
+                                        });
 
                                         // Obtener referencias de los elementos
                                         TextView txtTitle = view.findViewById(R.id.txtTitle);
@@ -305,10 +526,10 @@ public class ActividadesFragmentTutor extends Fragment {
 
                                         btnEditActi.setOnClickListener(v1 -> {
                                             //Aquí va lo que pasa cuando quiere editar el modal
-                                            SharedPreferences preferences = requireContext().getSharedPreferences("actividadSelected", Context.MODE_PRIVATE);
-                                            SharedPreferences.Editor editor = preferences.edit();
-                                            editor.putInt("idActividad", actividad.getIdActividad());
-                                            editor.apply();
+                                            SharedPreferences preferences = requireContext().getSharedPreferences("actividadSelected", MODE_PRIVATE);
+                                            SharedPreferences.Editor editor2 = preferences.edit();
+                                            editor2.putInt("idActividad", actividad.getIdActividad());
+                                            editor2.apply();
 
                                             Intent intent = new Intent(requireActivity(), EditarActividad.class);
                                             startActivity(intent);
@@ -355,7 +576,7 @@ public class ActividadesFragmentTutor extends Fragment {
                                         String assetPath2 = "img/img_actividades/" + imageName2;
                                         InputStream inputStream3 = null;
                                         try {
-                                            inputStream3 = getContext().getAssets().open(assetPath2);
+                                            inputStream3 = requireContext().getAssets().open(assetPath2);
                                         } catch (IOException e) {
                                             throw new RuntimeException(e);
                                         }
@@ -369,10 +590,10 @@ public class ActividadesFragmentTutor extends Fragment {
                                         imgActiModal.setImageDrawable(drawable2);
                                         modal.show();
 
-                                        SharedPreferences preferences = requireContext().getSharedPreferences("actividadSelected", Context.MODE_PRIVATE);
-                                        SharedPreferences.Editor editor = preferences.edit();
-                                        editor.putInt("idActividad", actividad.getIdActividad());
-                                        editor.apply();
+                                        SharedPreferences preferences = requireContext().getSharedPreferences("actividadSelected", MODE_PRIVATE);
+                                        SharedPreferences.Editor editor3 = preferences.edit();
+                                        editor3.putInt("idActividad", actividad.getIdActividad());
+                                        editor3.apply();
                                     });
                                     //Fin de la lógica de desplegar modal
 
