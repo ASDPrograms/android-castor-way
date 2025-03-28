@@ -9,20 +9,26 @@ import android.graphics.Point;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AlertDialog;
@@ -74,7 +80,28 @@ public class VerMasInfoActi extends AppCompatActivity {
         linLayEstatusActi = findViewById(R.id.linLayEstatusActi);
         btnComprAvance = findViewById(R.id.btnComprAvance);
         btnComprAvance.setOnClickListener(v -> {
+            Dialog dialog = new Dialog(this);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setContentView(R.layout.modal_progreso_total);
+            dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
 
+            LinearLayout linearLayout = dialog.findViewById(R.id.containerModalProgress);
+
+            GradientDrawable drawable = new GradientDrawable();
+            drawable.setShape(GradientDrawable.RECTANGLE);
+            drawable.setCornerRadius(40);
+            drawable.setColor(Color.TRANSPARENT);
+
+            linearLayout.setBackground(drawable);
+
+            ImageView cerrarModalProgTotal = dialog.findViewById(R.id.cerrarModalProgTotal);
+            cerrarModalProgTotal.setOnClickListener(v1 -> {
+                dialog.dismiss();
+            });
+
+            obtenerDatosProgresoTotal(dialog);
+
+            dialog.show();
         });
 
         establecerValores();
@@ -100,6 +127,122 @@ public class VerMasInfoActi extends AppCompatActivity {
         intent.putExtra("fragmentActiCrear", "ActividadesFragmentTutor");
         startActivity(intent);
     }
+
+    private void obtenerDatosProgresoTotal(Dialog dialog) {
+        ApiService apiService = RetrofitClient.getApiService();
+        Call<List<Actividad>> call = apiService.getAllActividades();
+
+        // Realizamos la llamada Retrofit
+        call.enqueue(new Callback<List<Actividad>>() {
+            @Override
+            public void onResponse(Call<List<Actividad>> call, Response<List<Actividad>> response) {
+                if (response.body() != null) {
+                    List<Actividad> actividades = response.body();
+
+                    // Obtener el contenedor y el ProgressBar
+                    LinearLayout containerLayoutProgress = dialog.findViewById(R.id.linearLayoutContElementsProgress);
+                    ProgressBar progressBarVert = dialog.findViewById(R.id.vertical_progressbar);
+                    ScrollView scrollViewProgress = dialog.findViewById(R.id.scrollViewProgress);
+                    FrameLayout imagesContainer = dialog.findViewById(R.id.imagesContainer);
+
+                    // Verifica que el ProgressBar y el contenedor no sean nulos
+                    if (progressBarVert != null && containerLayoutProgress != null) {
+                        // Obtenemos el alto del LinearLayout contenedor
+                        int containerHeight = containerLayoutProgress.getHeight();
+                        Log.d("DEBUG", "Altura del contenedor: " + containerHeight);
+
+                        // Si la altura del contenedor es 0, salimos
+                        if (containerHeight == 0) {
+                            Log.e("ERROR", "La altura del contenedor es 0");
+                            return;
+                        }
+
+                        // Calcular el nuevo alto para el ProgressBar (420% de la altura)
+                        int newHeight = (int) (containerHeight * 4.2); // 420%
+                        Log.d("DEBUG", "Nuevo alto para ProgressBar: " + newHeight);
+
+                        // Establece el nuevo alto para el ProgressBar
+                        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) progressBarVert.getLayoutParams();
+                        params.height = newHeight;
+                        progressBarVert.setLayoutParams(params);
+
+
+                        // Accede a las preferencias compartidas para obtener el id de la actividad
+                        SharedPreferences sharedPreferences = getSharedPreferences("actividadSelected", Context.MODE_PRIVATE);
+                        int idActividad = sharedPreferences.getInt("idActividad", 0);
+
+                        //ya que se estableció el alto del linearlayout, se recorre el scrollview hasta abajo
+                        scrollViewProgress.post(() -> scrollViewProgress.fullScroll(ScrollView.FOCUS_DOWN));
+
+                        // Iteramos sobre las actividades y obtenemos la correcta
+                        // Iteramos sobre las actividades y obtenemos la correcta
+                        for (Actividad actividad : actividades) {
+                            if (actividad.getIdActividad() == idActividad) {
+                                // Calculamos el progreso en base a los días completados
+                                int numDiasComple = actividad.getDiasCompletados();
+                                Log.d("DEBUG", "Días completados: " + numDiasComple);
+
+                                // Establecemos el progreso del ProgressBar
+                                progressBarVert.setProgress(numDiasComple * 100 / 21);
+
+                                // Posición Y en porcentaje de las hojas
+                                LayoutInflater inflater = LayoutInflater.from(VerMasInfoActi.this);
+                                for (int i = 1; i <= 21; i++) {
+                                    // Inflamos el diseño del LinearLayout
+                                    LinearLayout progressItemLayout = (LinearLayout) inflater.inflate(R.layout.diseno_hojas_progreso_actis, imagesContainer, false);
+
+                                    ImageView imageView = progressItemLayout.findViewById(R.id.progress_item_image);
+                                    TextView textView = progressItemLayout.findViewById(R.id.progress_item_text);
+
+                                    textView.setText(String.valueOf(i));
+
+                                    int finalI = i;
+                                    imageView.setOnClickListener(v -> {
+                                        mostrarModalPorDiaActi(finalI);
+                                    });
+
+                                    //para que el 1 esté hasta abajo y el 21 hasta arriba
+                                    int topMargin = 0;
+                                   if(i == 21){
+                                       topMargin = 0;
+                                   }else{
+                                       float posicionY = 100 - (i * 100 / 21);
+                                       topMargin = (int) (posicionY * newHeight / 100) - 40;
+                                   }
+
+                                    // Usamos FrameLayout.LayoutParams para asegurar la compatibilidad con el FrameLayout
+                                    FrameLayout.LayoutParams params2 = new FrameLayout.LayoutParams(
+                                            FrameLayout.LayoutParams.WRAP_CONTENT,
+                                            FrameLayout.LayoutParams.WRAP_CONTENT
+                                    );
+                                    params2.topMargin = topMargin;
+                                    params2.gravity = Gravity.CENTER_HORIZONTAL;
+
+                                    // Asignamos el FrameLayout.LayoutParams al progressItemLayout
+                                    progressItemLayout.setLayoutParams(params2);
+
+                                    // Agregamos el layout inflado al FrameLayout (imagesContainer)
+                                    imagesContainer.addView(progressItemLayout);
+                                }
+                                break;
+                            }
+                        }
+
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Actividad>> call, Throwable t) {
+                Log.e("ERROR", "Falló la obtención de datos de progreso", t);
+            }
+        });
+    }
+
+    private void mostrarModalPorDiaActi(int numDia){
+        Toast.makeText(this, "numDia: " + numDia, Toast.LENGTH_SHORT).show();
+    }
+
     private void showBubbleDialog() {
 
         ApiService apiService = RetrofitClient.getApiService();
@@ -222,23 +365,23 @@ public class VerMasInfoActi extends AppCompatActivity {
                             txtDiasCompletados.setText(diasCompletados);
                             int numDiasComple = Integer.parseInt(diasCompletados);
 
-                            if(numDiasComple == 0){
+                            if(numDiasComple >= 0 && numDiasComple < 5){
                                 Drawable imgPlanta = ContextCompat.getDrawable(VerMasInfoActi.this, R.drawable.img_semilla);
                                 imgPlantaDiasProg.setImageDrawable(imgPlanta);
                                 int color = ContextCompat.getColor(VerMasInfoActi.this, R.color.cafe_ramita);
                                 txtDiasCompletados.setTextColor(color);
-                            }else if(numDiasComple > 0 && numDiasComple <= 5){
+                            }else if(numDiasComple >= 5 && numDiasComple < 10){
                                 Drawable imgPlanta = ContextCompat.getDrawable(VerMasInfoActi.this, R.drawable.img_planta_1);
                                 imgPlantaDiasProg.setImageDrawable(imgPlanta);
-                            }else if(numDiasComple > 5 && numDiasComple <= 10){
+                            }else if(numDiasComple >= 10 && numDiasComple < 15){
                                 Drawable imgPlanta = ContextCompat.getDrawable(VerMasInfoActi.this, R.drawable.img_planta_2);
                                 imgPlantaDiasProg.setImageDrawable(imgPlanta);
                             }
-                            else if(numDiasComple > 10 && numDiasComple <= 15) {
+                            else if(numDiasComple >= 15 && numDiasComple < 20) {
                                 Drawable imgPlanta = ContextCompat.getDrawable(VerMasInfoActi.this, R.drawable.img_planta_3);
                                 imgPlantaDiasProg.setImageDrawable(imgPlanta);
                             }
-                            else if(numDiasComple > 15 && numDiasComple <= 21){
+                            else if(numDiasComple == 21){
                                 Drawable imgPlanta = ContextCompat.getDrawable(VerMasInfoActi.this, R.drawable.img_planta_4);
                                 imgPlantaDiasProg.setImageDrawable(imgPlanta);
                             }

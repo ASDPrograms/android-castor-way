@@ -157,6 +157,7 @@ public class ActividadesFragmentTutor extends Fragment {
         //Se intenta desplegar el modal con la info de la sesión al abrir la acti:
     }
 
+
     private void desplegarModal(View view) {
         try {
             ApiService apiService = RetrofitClient.getApiService();
