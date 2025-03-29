@@ -1,6 +1,8 @@
 package com.example.castorway;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
@@ -128,9 +130,16 @@ public class LoadingActivityStart extends AppCompatActivity {
             }
         }, 500);
     }
-
+    private void limpiarSesionModalActis(){
+        SharedPreferences preferences = getSharedPreferences("sesionModalActis", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.clear();
+        editor.apply();
+    }
 
     private void goToNextActivity() {
+        //limpia la sesión por si se quedó abierta
+        limpiarSesionModalActis();
         // Después de la carga exitosa, puedes redirigir al usuario
 
         //Inicio del código para mostrar el toast personalizado
