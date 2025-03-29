@@ -6,13 +6,16 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -23,6 +26,7 @@ import android.widget.ImageView;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -76,6 +80,7 @@ public class HomeTutor extends AppCompatActivity {
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 transaction.replace(R.id.frame_container, fragment); // Asegúrate de tener un contenedor adecuado
                 transaction.commit();
+
             }
         }
 
@@ -138,6 +143,7 @@ public class HomeTutor extends AppCompatActivity {
         //declaración de xml y funcionalidad del botón que despliega los hijos disponibles
         btnDesplegar = findViewById(R.id.btnDesplegar);
         btnDesplegar.setOnClickListener(this::desplListUsrsKit);
+
     }
     @Override
     protected void onResume() {
@@ -149,22 +155,55 @@ public class HomeTutor extends AppCompatActivity {
             // Cargar el fragmento correspondiente
             Fragment fragment = null;
 
+            ImageView iconToSelect = null; // Variable para saber qué icono seleccionar
+
             switch (fragmentName) {
                 case "ActividadesFragmentTutor":
                     fragment = new ActividadesFragmentTutor();
+                    iconToSelect = iconActividades; // Ícono de actividades
+                    break;
+                case "HomeFragmentTutor":
+                    fragment = new HomeFragmentTutor();
+                    iconToSelect = iconHome; // Ícono de inicio
                     break;
             }
 
-            // Si se recibe un fragmento válido, lo mostramos
             if (fragment != null) {
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.frame_container, fragment); // Asegúrate de tener un contenedor adecuado
+                transaction.replace(R.id.frame_container, fragment);
                 transaction.commit();
+
+                // Seleccionar el ícono correspondiente visualmente
+                if (iconToSelect != null) {
+                    selectIcon(iconToSelect);
+                }
             }
+
         }
 
         confirmExistUsrKit();
     }
+    //para cuando cierra la app (el activity de hometutor)
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        limpiarSesionModalActis();
+    }
+
+    //@Override
+    //    protected void onStop() {
+    //        super.onStop();
+    //        limpiarSesionModalActis();
+    //    }
+
+    private void limpiarSesionModalActis(){
+        SharedPreferences preferences = getSharedPreferences("sesionModalActis", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.clear();
+        editor.apply();
+    }
+
+
     private void actuInfoTopNav(){
         ApiService apiService = RetrofitClient.getApiService();
         Call<List<Castor>> call = apiService.getAllCastores();
@@ -428,12 +467,42 @@ public class HomeTutor extends AppCompatActivity {
                                         final Kit finalKit = kit;
                                         int idKit = kit.getIdKit();
                                         usuarioLayout.setOnClickListener(v -> {
+                                            limpiarSesionModalActis();
+
                                             SharedPreferences sharedPreferences = getSharedPreferences("usrKitCuentaTutor", MODE_PRIVATE);
                                             SharedPreferences.Editor editor = sharedPreferences.edit();
                                             editor.putInt("idKit", idKit);
                                             editor.apply();
-                                            Toast.makeText(HomeTutor.this, "Usuario seleccionado: " + kit.getNombreUsuario(), Toast.LENGTH_SHORT).show();
 
+                                            //Inicio del código para mostrar el toast personalizado
+                                            LayoutInflater inflater = getLayoutInflater();
+                                            View layout = inflater.inflate(R.layout.toast_personalizado, null);
+
+                                            //Inicio de código para cambiar elementos del toast personalizado
+
+                                            //Se cambia la imágen
+                                            ImageView icon = layout.findViewById(R.id.toast_icon);
+                                            icon.setImageResource(R.drawable.icn_user_gris);
+
+                                            //Se cambia el texto
+                                            TextView text = layout.findViewById(R.id.toast_text);
+                                            text.setText("Usuario seleccionado: " + kit.getNombreUsuario());
+
+                                            //Se cambia el color de fondo
+                                            Drawable background = layout.getBackground();
+                                            background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azul_toast_bienvenido), PorterDuff.Mode.SRC_IN);
+
+                                            // Cambia color del texto
+                                            text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
+
+                                            //Fin del código que se encarga de cambiar los elementos del toast personalizado
+
+                                            //Lo crea y lo pone en la parte de arriba del cel
+                                            Toast toast = new Toast(getApplicationContext());
+                                            toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
+                                            toast.setDuration(Toast.LENGTH_LONG);
+                                            toast.setView(layout);
+                                            toast.show();
 
                                             //Ya que se selecciona un usr Kit se actualiza el fragment para que jale la info de ese hijo
                                             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();

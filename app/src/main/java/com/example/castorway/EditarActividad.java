@@ -757,7 +757,9 @@ public class EditarActividad extends AppCompatActivity {
 
         btnConfirm.setOnClickListener(v -> {
             dialog.dismiss();
-            finish();
+            Intent intent = new Intent(EditarActividad.this, HomeTutor.class);
+            intent.putExtra("fragmentActiCrear", "ActividadesFragmentTutor");
+            startActivity(intent);
         });
 
         btnClose.setOnClickListener(v -> {

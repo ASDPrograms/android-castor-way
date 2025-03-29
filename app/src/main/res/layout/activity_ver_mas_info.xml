@@ -95,10 +95,12 @@
                 android:gravity="end"
                 android:layout_marginRight="40dp">
                 <LinearLayout
+                    android:id="@+id/linLayEstatusActi"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/border_estatus_acti">
                     <TextView
+                        android:id="@+id/txtEstatusActi"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="En proceso"
@@ -228,6 +230,7 @@
                             android:layout_weight="1"
                             android:gravity="center|end">
                             <ImageView
+                                android:id="@+id/imgPlantaDiasProg"
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:src="@drawable/img_planta_1"
@@ -239,6 +242,7 @@
                             android:layout_height="wrap_content"
                             android:gravity="center">
                             <TextView
+                                android:id="@+id/txtDiasCompletados"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textSize="40sp"
@@ -319,6 +323,7 @@
                android:layout_marginRight="40dp"
                android:gravity="center">
                <ImageView
+                   android:id="@+id/btnComprAvance"
                    android:layout_width="match_parent"
                    android:layout_height="wrap_content"
                    android:src="@drawable/btn_comprobar_avance"

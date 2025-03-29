@@ -33,8 +33,10 @@
 
     //colores de fondo de estatus de actis:
     <color name="amarillo_estatus_fondo">#FFD274</color>
+    <color name="verde_estatus_fondo">#66BD6E</color>
 
     //colores de texto de estatus de actis:
     <color name="amarillo_estatus_texto">#BC8E1B</color>
+    <color name="verde_estatus_texto">#328324</color>
 
 </resources>
