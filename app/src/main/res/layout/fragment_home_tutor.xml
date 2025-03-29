@@ -135,12 +135,14 @@
                 >
 
                 <LinearLayout
+                    android:id="@+id/contenedorActividades"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="@drawable/border_mover_modal_bottom"
                     android:layout_marginBottom="15sp"
                     android:minHeight="130dp"
+                    android:orientation="vertical"
                     >
 
                 </LinearLayout>
@@ -174,7 +176,7 @@
                    />
 
                 <LinearLayout
-                    android:id="@+id/userContainer"
+                    android:id="@+id/useritoContainer"
                     android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"

@@ -29,6 +29,8 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/dongle_bold"
             android:text="Pelota"
+            android:maxLines="1"
+            android:ellipsize="end"
             android:textColor="#1A1A1A"
             android:textSize="35sp"
             android:maxHeight="60dp"/>

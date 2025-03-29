@@ -21,7 +21,6 @@
         android:layout_height="wrap_content"
         android:text="Nombre del Hijo"
         android:textSize="25sp"
-
         android:fontFamily="@font/dongle_bold"
         android:textColor="#1A1A1A" />
 </LinearLayout>
