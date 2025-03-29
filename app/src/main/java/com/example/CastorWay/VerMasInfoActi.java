@@ -10,6 +10,7 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
+import android.media.Image;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -41,6 +42,7 @@ import androidx.core.view.WindowInsetsCompat;
 import com.example.castorway.api.ApiService;
 import com.example.castorway.modelsDB.Actividad;
 import com.example.castorway.retrofit.RetrofitClient;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import org.w3c.dom.Text;
 
@@ -224,10 +226,63 @@ public class VerMasInfoActi extends AppCompatActivity {
                                     // Agregamos el layout inflado al FrameLayout (imagesContainer)
                                     imagesContainer.addView(progressItemLayout);
                                 }
+
+                                FrameLayout.LayoutParams params3 = new FrameLayout.LayoutParams(
+                                        FrameLayout.LayoutParams.WRAP_CONTENT,
+                                        FrameLayout.LayoutParams.WRAP_CONTENT
+                                );
+
+                                //los íconos de las plantas en los lados a la barra de progreso
+                                //se declaran para que se encuentren en la posición que deben de acuerdo al tamaño
+                                //de la barra de progreso
+
+                                ImageView img_planta_prog_1 = dialog.findViewById(R.id.img_planta_prog_1);
+                                ImageView img_planta_prog_2 = dialog.findViewById(R.id.img_planta_prog_2);
+                                ImageView img_planta_prog_3 = dialog.findViewById(R.id.img_planta_prog_3);
+                                ImageView img_planta_prog_4 = dialog.findViewById(R.id.img_planta_prog_4);
+
+                                float posicionYUno = 100 - (4 * 100 / 21);
+                                int topMarginUno = (int) (posicionYUno * newHeight / 100) - 40;
+                                FrameLayout.LayoutParams paramsPlanta1 = new FrameLayout.LayoutParams(
+                                        FrameLayout.LayoutParams.WRAP_CONTENT,
+                                        FrameLayout.LayoutParams.WRAP_CONTENT
+                                );
+                                paramsPlanta1.topMargin = topMarginUno;
+                                paramsPlanta1.gravity = Gravity.CENTER_HORIZONTAL;
+                                img_planta_prog_1.setLayoutParams(paramsPlanta1);
+
+                                float posicionYDos = 100 - (9 * 100 / 21);
+                                int topMarginDos = (int) (posicionYDos * newHeight / 100) - 40;
+                                FrameLayout.LayoutParams paramsPlanta2 = new FrameLayout.LayoutParams(
+                                        FrameLayout.LayoutParams.WRAP_CONTENT,
+                                        FrameLayout.LayoutParams.WRAP_CONTENT
+                                );
+                                paramsPlanta2.topMargin = topMarginDos;
+                                paramsPlanta2.gravity = Gravity.CENTER_HORIZONTAL;
+                                img_planta_prog_2.setLayoutParams(paramsPlanta2);
+
+                                float posicionYTres = 100 - (14 * 100 / 21);
+                                int topMarginTres = (int) (posicionYTres * newHeight / 100) - 40;
+                                FrameLayout.LayoutParams paramsPlanta3 = new FrameLayout.LayoutParams(
+                                        FrameLayout.LayoutParams.WRAP_CONTENT,
+                                        FrameLayout.LayoutParams.WRAP_CONTENT
+                                );
+                                paramsPlanta3.topMargin = topMarginTres;
+                                paramsPlanta3.gravity = Gravity.CENTER_HORIZONTAL;
+                                img_planta_prog_3.setLayoutParams(paramsPlanta3);
+
+                                float posicionYCuatro = 100 - (20 * 100 / 21);
+                                int topMarginCuatro = (int) (posicionYCuatro * newHeight / 100) - 40;
+                                FrameLayout.LayoutParams paramsPlanta4 = new FrameLayout.LayoutParams(
+                                        FrameLayout.LayoutParams.WRAP_CONTENT,
+                                        FrameLayout.LayoutParams.WRAP_CONTENT
+                                );
+                                paramsPlanta4.topMargin = topMarginCuatro;
+                                paramsPlanta4.gravity = Gravity.CENTER_HORIZONTAL;
+                                img_planta_prog_4.setLayoutParams(paramsPlanta4);
                                 break;
                             }
                         }
-
                     }
                 }
             }
@@ -240,7 +295,40 @@ public class VerMasInfoActi extends AppCompatActivity {
     }
 
     private void mostrarModalPorDiaActi(int numDia){
-        Toast.makeText(this, "numDia: " + numDia, Toast.LENGTH_SHORT).show();
+        ApiService apiService = RetrofitClient.getApiService();
+        Call<List<Actividad>> call = apiService.getAllActividades();
+
+        // Realizamos la llamada Retrofit
+        call.enqueue(new Callback<List<Actividad>>() {
+            @Override
+            public void onResponse(Call<List<Actividad>> call, Response<List<Actividad>> response) {
+                List<Actividad> actividades = response.body();
+
+                if (actividades != null) {
+                    Log.e("DEBUG", "Hay actis");
+                    SharedPreferences sharedPreferences = getSharedPreferences("actividadSelected", Context.MODE_PRIVATE);
+                    for (Actividad actividad : actividades) {
+                        int idActividad = sharedPreferences.getInt("idActividad", 0);
+                        Log.e("DEBUG", "Id acti: " + idActividad);
+                        if (actividad.getIdActividad() == idActividad) {
+
+                            //Se infla y crea el modal que sale del fondo, para cada día de la acti
+                            View view = LayoutInflater.from(VerMasInfoActi.this).inflate(R.layout.bottom_modal_cada_dia_acti, null);
+                            BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(VerMasInfoActi.this);
+                            bottomSheetDialog.setContentView(view);
+
+                            bottomSheetDialog.show();
+                            break;
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Actividad>> call, Throwable t) {
+
+            }
+        });
     }
 
     private void showBubbleDialog() {

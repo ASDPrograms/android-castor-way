@@ -78,10 +78,27 @@
                             android:gravity="center">
                             <LinearLayout
                                 android:layout_width="0dp"
-                                android:layout_height="wrap_content"
+                                android:layout_height="match_parent"
                                 android:layout_weight="1"
                                 android:gravity="center_horizontal"
                                 android:orientation="vertical">
+                                <FrameLayout
+                                    android:id="@+id/imagesLeftContainer"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent">
+                                    <ImageView
+                                        android:id="@+id/img_planta_prog_1"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:src="@drawable/img_planta_prog_1">
+                                    </ImageView>
+                                    <ImageView
+                                        android:id="@+id/img_planta_prog_3"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:src="@drawable/img_planta_prog_3">
+                                    </ImageView>
+                                </FrameLayout>
                             </LinearLayout>
                             <LinearLayout
                                 android:layout_width="0dp"
@@ -120,10 +137,27 @@
                             </LinearLayout>
                             <LinearLayout
                                 android:layout_width="0dp"
-                                android:layout_height="wrap_content"
+                                android:layout_height="match_parent"
                                 android:layout_weight="1"
                                 android:gravity="center_horizontal"
                                 android:orientation="vertical">
+                                <FrameLayout
+                                    android:id="@+id/imagesRightContainer"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent">
+                                    <ImageView
+                                        android:id="@+id/img_planta_prog_2"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:src="@drawable/img_planta_prog_2">
+                                    </ImageView>
+                                    <ImageView
+                                        android:id="@+id/img_planta_prog_4"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:src="@drawable/img_planta_prog_4">
+                                    </ImageView>
+                                </FrameLayout>
                             </LinearLayout>
                         </LinearLayout>
                     </ScrollView>
