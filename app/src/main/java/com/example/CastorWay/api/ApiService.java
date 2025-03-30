@@ -4,6 +4,7 @@ import com.example.castorway.modelsDB.Actividad;
 import com.example.castorway.modelsDB.Castor;
 import com.example.castorway.modelsDB.Kit;
 import com.example.castorway.modelsDB.Premios;
+import com.example.castorway.modelsDB.RelPrem;
 
 import java.util.List;
 
@@ -53,4 +54,11 @@ public interface  ApiService{
 
     @DELETE("tablaPremios")
     Call<Void> deletePremio(@Query("idPremio") int idPremio);
+
+    //relPrem:
+    @GET("tablaRelPrem")
+    Call<List<RelPrem>> getAllRelPrem();
+    
+    @POST("tablaRelPrem")
+    Call<RelPrem> createRelPrem(@Body RelPrem relprem);
 }
