@@ -4,10 +4,12 @@ import static android.content.Context.MODE_PRIVATE;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +19,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -424,11 +427,29 @@ public class HomeFragmentTutor extends Fragment {
             return;
         }
 
+        // Limpiar las vistas existentes
         contenedorActividades.removeAllViews();
         LayoutInflater inflater = LayoutInflater.from(requireContext());
 
         int maxActividades = 2;
+        Log.d("MainActivity", "Máximo número de actividades a mostrar: " + maxActividades);
+        if (actividades == null || actividades.isEmpty()) {
 
+            Log.d("MainActivity", "No hay actividades disponibles.");
+            TextView mensajeNoActividades = new TextView(requireContext());
+            mensajeNoActividades.setText("No hay actividades para este kit");
+            mensajeNoActividades.setTextSize(35);
+            mensajeNoActividades.setTypeface(ResourcesCompat.getFont(requireContext(), R.font.dongle_bold));
+            mensajeNoActividades.setTextColor(Color.WHITE);
+            mensajeNoActividades.setPadding(16, 16, 16, 16);
+            mensajeNoActividades.setGravity(Gravity.CENTER);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.MATCH_PARENT);
+            mensajeNoActividades.setLayoutParams(params);
+            contenedorActividades.addView(mensajeNoActividades);
+            return;
+        }
         for (int i = 0; i < actividades.size(); i++) {
             if (i >= maxActividades) {
                 Log.d("MainActivity", "Se ha alcanzado el límite de actividades a mostrar.");
@@ -440,48 +461,60 @@ public class HomeFragmentTutor extends Fragment {
 
             View actividadView = inflater.inflate(R.layout.item_actividad_home, contenedorActividades, false);
 
+            // Asignar los elementos de la vista
             TextView txtNombreActividad = actividadView.findViewById(R.id.txtHijoActividad);
             TextView txtEstadoActividad = actividadView.findViewById(R.id.txtaActProceso);
             ImageView imgActividad = actividadView.findViewById(R.id.imgActividad);
             TextView txtHoraActividad = actividadView.findViewById(R.id.txtaActHora);
             LinearLayout LinearPrin = actividadView.findViewById(R.id.LinearPrin);
+
+            // Configuración del listener de clic
             LinearPrin.setOnClickListener(view -> {
-                SharedPreferences prefences12= requireContext().getSharedPreferences("actividadSelect", MODE_PRIVATE);
-                SharedPreferences.Editor editor= preferences.edit();
+                Log.d("MainActivity", "Clic en actividad con id: " + actividad.getIdActividad());
+
+                SharedPreferences preferences= requireContext().getSharedPreferences("actividadSelected", MODE_PRIVATE);
+                SharedPreferences.Editor editor = preferences.edit();
                 editor.putInt("idActividad", actividad.getIdActividad());
                 editor.apply();
+                Log.d("MainActivity", "idActividad guardado en SharedPreferences: " + actividad.getIdActividad());
 
-                SharedPreferences sharedPreferencesCerrar= requireContext().getSharedPreferences("sesionModalActis", MODE_PRIVATE);
-                SharedPreferences.Editor editorcerrar= sharedPreferencesCerrar.edit();
-                editor.putBoolean("sesion activa", false);
+                SharedPreferences sharedPreferencesCerrar = requireContext().getSharedPreferences("sesionModalActis", MODE_PRIVATE);
+                SharedPreferences.Editor editorcerrar = sharedPreferencesCerrar.edit();
+                editorcerrar.putBoolean("sesion_activa", true);
                 editorcerrar.apply();
+                Log.d("MainActivity", "Estado de sesión activado en SharedPreferences.");
 
+                // Cambiar de fragmento
                 Fragment nuevoFragment = new ActividadesFragmentTutor();
                 FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
                 FragmentTransaction transaction = fragmentManager.beginTransaction();
-                transaction.replace(R.id.frame_container, new ActividadesFragmentTutor());
+                transaction.replace(R.id.frame_container, nuevoFragment);
                 transaction.addToBackStack(null);
                 transaction.commit();
-
-
+                Log.d("MainActivity", "Fragment de ActividadesFragmentTutor reemplazado.");
             });
 
-
+            // Configuración de la hora de la actividad
             String horaInicio = actividad.getHoraInicioHabito();
             String horaFinaliza = actividad.getHoraFinHabito();
-            horaInicio = horaInicio.substring(0, 5);
-            horaFinaliza = horaFinaliza.substring(0, 5);
+            if (horaInicio != null && horaFinaliza != null) {
+                horaInicio = horaInicio.substring(0, 5);
+                horaFinaliza = horaFinaliza.substring(0, 5);
 
-            Log.d("MainActivity", "Hora de inicio de la actividad: " + horaInicio);
-            Log.d("MainActivity", "Hora de finalización de la actividad: " + horaFinaliza);
+                Log.d("MainActivity", "Hora de inicio de la actividad: " + horaInicio);
+                Log.d("MainActivity", "Hora de finalización de la actividad: " + horaFinaliza);
+            }
 
+            // Establecer hora en el TextView
             String textoActividad = actividad.getNombreHabito();
             txtNombreActividad.setText(textoActividad);
             if (horaInicio != null && !horaInicio.isEmpty() && horaFinaliza != null && !horaFinaliza.isEmpty()) {
                 String horaCompleta = horaInicio + " - " + horaFinaliza;
-                txtHoraActividad.setText(horaCompleta); // Establecer la hora en el TextView de la hora
+                txtHoraActividad.setText(horaCompleta); // Establecer la hora en el TextView
                 Log.d("MainActivity", "Hora mostrada en el TextView: " + horaCompleta);
             }
+
+            // Determinar el estado de la actividad
             String estado = "En proceso";
             String[] estadosArray = actividad.getEstadosActi().split(",");
 
@@ -504,6 +537,7 @@ public class HomeFragmentTutor extends Fragment {
                 txtEstadoActividad.setText(estado);
             }
 
+            // Configurar la imagen de la actividad
             String rutaImagen = actividad.getRutaImagenHabito();
             Log.d("MainActivity", "Ruta de imagen: " + rutaImagen);
             int resId = requireContext().getResources().getIdentifier(rutaImagen, "drawable", requireContext().getPackageName());
@@ -515,11 +549,13 @@ public class HomeFragmentTutor extends Fragment {
                 Log.d("MainActivity", "No se encontró la imagen en los recursos.");
             }
 
+            // Agregar la vista al contenedor
             contenedorActividades.addView(actividadView);
         }
 
         Log.d("MainActivity", "Se han mostrado hasta " + maxActividades + " actividades.");
     }
+
 
     private void filtrarActividadesPorKit(List<Actividad> actividades) {
         SharedPreferences preferences = getActivity().getSharedPreferences("usrKitCuentaTutor", MODE_PRIVATE);
@@ -536,13 +572,6 @@ public class HomeFragmentTutor extends Fragment {
                 actividadesFiltradas.add(actividad);
             }
         }
-
-        if (actividadesFiltradas.isEmpty()) {
-            Log.d("MainActivity", "No hay actividades asignadas al idKit: " + idKit);
-        } else {
-            Log.d("MainActivity", "Actividades filtradas para el idKit: " + actividadesFiltradas.size());
-        }
-
         mostrarActividadesEnContenedor(actividadesFiltradas);
     }
 
