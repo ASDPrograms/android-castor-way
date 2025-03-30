@@ -55,9 +55,12 @@ public interface ApiService {
     @DELETE("tablaPremios")
     Call<Void> deletePremio(@Query("idPremio") int idPremio);
 
-    @GET("tablarelPrem")
-    Call<List<RelPrem>> getAllRelPrem();
 
-    @POST("tablarelPrem")
-    Call<RelPrem> createRelPrem(@Body RelPrem relPrem);
+    //relPrem:
+    @GET("tablaRelPrem")
+    Call<List<RelPrem>> getAllRelPrem();
+    
+    @POST("tablaRelPrem")
+    Call<RelPrem> createRelPrem(@Body RelPrem relprem);
+
 }
