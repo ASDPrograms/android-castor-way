@@ -4,6 +4,7 @@ import static android.content.Context.MODE_PRIVATE;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -205,7 +206,6 @@ public class HomeFragmentTutor extends Fragment {
                 Response<List<Premios>> response = apiService.getAllPremios().execute();
                 return response.isSuccessful() ? response.body() : Collections.emptyList();
             } catch (IOException e) {
-                Log.e("fetchRecompensa", "Error al obtener premios", e);
                 return Collections.emptyList();
             }
         });
@@ -215,7 +215,6 @@ public class HomeFragmentTutor extends Fragment {
                 Response<List<RelPrem>> response = apiService.getAllRelPrem().execute();
                 return response.isSuccessful() ? response.body() : Collections.emptyList();
             } catch (IOException e) {
-                Log.e("fetchRecompensa", "Error al obtener relaciones", e);
                 return Collections.emptyList();
             }
         });
@@ -286,17 +285,6 @@ public class HomeFragmentTutor extends Fragment {
         mensajeNoPremios.setLayoutParams(params);
         contenedorPremioMasCostoso.addView(mensajeNoPremios);
     }
-
-
-
-    private Premios obtenerPremioPorId(int idPremio, List<Premios> premios) {
-        for (Premios premio : premios) {
-            if (premio.getIdPremio() == idPremio) {
-                return premio;
-            }
-        }
-        return null;
-    }
     private void mostrarPremio(Premios premio) {
         if (!isAdded() || contenedorPremioMasCostoso == null) return;
 
@@ -312,19 +300,17 @@ public class HomeFragmentTutor extends Fragment {
         Button boton = vistaPremio.findViewById(R.id.verMas);
 
         boton.setOnClickListener(view -> {
-            // Animar el botón al hacer clic (efecto de escalado)
+
             animarBoton(boton);
 
-            // Usamos un Handler para retrasar la transición al fragmento
             new Handler().postDelayed(() -> {
-                // Lógica para cambiar de fragmento
                 Fragment nuevoFragment = new RecompensasFragmentTutor();
                 FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
                 FragmentTransaction transaction = fragmentManager.beginTransaction();
                 transaction.replace(R.id.frame_container, nuevoFragment);
                 transaction.addToBackStack(null);
                 transaction.commit();
-            }, 500);  // Retraso de 200 ms (tiempo de la animación)
+            }, 500);
         });
 
         txtHijoPremio.setText(premio.getNombrePremio());
@@ -333,63 +319,47 @@ public class HomeFragmentTutor extends Fragment {
         txtPremRam.setText(premio.getCostoPremio() + " ramitas");
 
         String imgBd = premio.getRutaImagenHabito();
-        Log.d("DEBUG", "valor ruta imágen: " + imgBd);
 
         String imageName = doesImageExist(requireContext(), imgBd);
         if (imageName != null) {
             InputStream inputStream = null;
-            String assetPath = "img/img-premios/" + imageName; // Asegúrate de que la ruta esté correcta
-            Log.d("DEBUG", "Intentando abrir archivo: " + assetPath);
+            String assetPath = "img/Iconos-recompensas/" + imageName;
 
             try {
                 inputStream = requireContext().getAssets().open(assetPath);
-                Log.d("DEBUG", "InputStream abierto correctamente.");
 
-                // Crear un objeto SVG desde el InputStream
                 SVG svg = SVG.getFromInputStream(inputStream);
                 if (svg != null) {
-                    // Convertir el SVG a un Drawable y mostrarlo
                     Drawable drawable = new PictureDrawable(svg.renderToPicture());
                     imgPremio.setImageDrawable(drawable);
-                    Log.d("DEBUG", "Imagen SVG cargada correctamente.");
                 } else {
-                    Log.e("DEBUG", "Error al crear el objeto SVG.");
                 }
-                Log.d("DEBUG", "InputStream cerrado.");
             } catch (IOException | SVGParseException e) {
-                Log.e("DEBUG", "Error al cargar el archivo SVG: " + e.getMessage());
             }
         } else {
-            Log.e("DEBUG", "Error al encontrar la ruta de la imagen");
         }
-       
+
 
 
         contenedorPremioMasCostoso.removeAllViews();
         contenedorPremioMasCostoso.addView(vistaPremio);
     }
 
-    // Mover la animación del botón fuera de mostrarPremio
     private void animarBoton(Button boton) {
-        // Crear animación de escala
         ObjectAnimator scaleX = ObjectAnimator.ofFloat(boton, "scaleX", 1f, 1.1f); // Aumenta el tamaño en X
         ObjectAnimator scaleY = ObjectAnimator.ofFloat(boton, "scaleY", 1f, 1.1f); // Aumenta el tamaño en Y
 
-        // Duración de la animación
         scaleX.setDuration(150);
         scaleY.setDuration(150);
 
-        // Revertir la animación después de un pequeño retraso
         scaleX.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
-                // Volver al tamaño original después de la animación
                 ObjectAnimator.ofFloat(boton, "scaleX", 1.1f, 1f).setDuration(150).start();
                 ObjectAnimator.ofFloat(boton, "scaleY", 1.1f, 1f).setDuration(150).start();
             }
         });
 
-        // Iniciar la animación
         scaleX.start();
         scaleY.start();
     }
@@ -397,7 +367,6 @@ public class HomeFragmentTutor extends Fragment {
     private void fetchActividades() {
         ApiService apiService = RetrofitClient.getApiService();
 
-        // Llamada inmediata sin bloquear la UI
         apiService.getAllActividades().enqueue(new Callback<List<Actividad>>() {
             @Override
             public void onResponse(Call<List<Actividad>> call, Response<List<Actividad>> response) {
@@ -421,14 +390,12 @@ public class HomeFragmentTutor extends Fragment {
 
             @Override
             public void onFailure(Call<List<Actividad>> call, Throwable t) {
-                Log.e("fetchActividades", "Error al obtener actividades", t);
             }
         });
     }
     private void mostrarMensajeSeleccionarIdKitAct() {
         if (contenedorActividades == null) return;
 
-        // Limpiar cualquier vista previa
         contenedorActividades.removeAllViews();
 
         TextView mensajeSeleccionarIdKit = new TextView(requireContext());
@@ -445,23 +412,29 @@ public class HomeFragmentTutor extends Fragment {
         contenedorActividades.addView(mensajeSeleccionarIdKit);
     }
 
-    private List<Actividad> ordenarActividadesPorHora(List<Actividad> actividades) {
-        // Ordenar las actividades de más pronto a más tarde según la hora de inicio
-        Collections.sort(actividades, new Comparator<Actividad>() {
+    private void animarLinear(View view) {
+        ObjectAnimator scaleX = ObjectAnimator.ofFloat(view, "scaleX", 1f, 1.1f);
+        ObjectAnimator scaleY = ObjectAnimator.ofFloat(view, "scaleY", 1f, 1.1f);
+
+        scaleX.setDuration(150);
+        scaleY.setDuration(150);
+
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.playTogether(scaleX, scaleY);
+
+        animatorSet.addListener(new AnimatorListenerAdapter() {
             @Override
-            public int compare(Actividad a1, Actividad a2) {
-                String horaInicio1 = a1.getHoraInicioHabito();
-                String horaInicio2 = a2.getHoraInicioHabito();
-                if (horaInicio1 == null || horaInicio2 == null) return 0;
-                return horaInicio1.compareTo(horaInicio2);
+            public void onAnimationEnd(Animator animation) {
+                ObjectAnimator.ofFloat(view, "scaleX", 1.1f, 1f).setDuration(150).start();
+                ObjectAnimator.ofFloat(view, "scaleY", 1.1f, 1f).setDuration(150).start();
             }
         });
-        return actividades;
+        animatorSet.start();
     }
+
 
     private void mostrarActividadesEnContenedor(List<Actividad> actividades) {
 
-        // Limpiar las vistas existentes
         contenedorActividades.removeAllViews();
         LayoutInflater inflater = LayoutInflater.from(requireContext());
 
@@ -509,12 +482,17 @@ public class HomeFragmentTutor extends Fragment {
                 SharedPreferences.Editor editorcerrar = sharedPreferencesCerrar.edit();
                 editorcerrar.putBoolean("sesion_activa", true);
                 editorcerrar.apply();
-                Fragment nuevoFragment = new ActividadesFragmentTutor();
-                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
-                FragmentTransaction transaction = fragmentManager.beginTransaction();
-                transaction.replace(R.id.frame_container, nuevoFragment);
-                transaction.addToBackStack(null);
-                transaction.commit();
+
+                animarLinear(LinearPrin);
+
+                new Handler().postDelayed(() -> {
+                    Fragment nuevoFragment = new ActividadesFragmentTutor();
+                    FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+                    FragmentTransaction transaction = fragmentManager.beginTransaction();
+                    transaction.replace(R.id.frame_container, nuevoFragment);
+                    transaction.addToBackStack(null);
+                    transaction.commit();
+                }, 500);
             });
 
             String horaInicio = actividad.getHoraInicioHabito();
@@ -553,65 +531,33 @@ public class HomeFragmentTutor extends Fragment {
             }
 
             String imgBd = actividad.getRutaImagenHabito();
-            Log.d("DEBUG", "valor ruta imágen: " + imgBd);
-
             String imageName = doesImageExist(requireContext(), imgBd);
             if (imageName != null) {
                 InputStream inputStream = null;
-                String assetPath = "img/img_actividades/" + imageName; // Asegúrate de que la ruta esté correcta
-                Log.d("DEBUG", "Intentando abrir archivo: " + assetPath);
-
+                String assetPath = "img/img_actividades/" + imageName;
                 try {
                     inputStream = requireContext().getAssets().open(assetPath);
-                    Log.d("DEBUG", "InputStream abierto correctamente.");
-
-                    // Crear un objeto SVG desde el InputStream
                     SVG svg = SVG.getFromInputStream(inputStream);
                     if (svg != null) {
-                        // Convertir el SVG a un Drawable y mostrarlo
                         Drawable drawable = new PictureDrawable(svg.renderToPicture());
                         imgActividad.setImageDrawable(drawable);
-                        Log.d("DEBUG", "Imagen SVG cargada correctamente.");
                     } else {
-                        Log.e("DEBUG", "Error al crear el objeto SVG.");
                     }
-                    Log.d("DEBUG", "InputStream cerrado.");
                 } catch (IOException | SVGParseException e) {
-                    Log.e("DEBUG", "Error al cargar el archivo SVG: " + e.getMessage());
                 }
             } else {
-                Log.e("DEBUG", "Error al encontrar la ruta de la imagen");
             }
             //Fin del código de cargar imágen svg desde asset
 
             contenedorActividades.addView(actividadView);
         }
     }
-    private void filtrarActividadesPorKit(List<Actividad> actividades) {
-        SharedPreferences preferences = getActivity().getSharedPreferences("usrKitCuentaTutor", MODE_PRIVATE);
-        int idKit = preferences.getInt("idKit", 0);
-
-        if (idKit == 0) {
-            Log.d("MainActivity", "No se encontró un idKit válido en las preferencias");
-            return;
-        }
-
-        List<Actividad> actividadesFiltradas = new ArrayList<>();
-        for (Actividad actividad : actividades) {
-            if (actividad.getIdKit() == idKit) {
-                actividadesFiltradas.add(actividad);
-            }
-        }
-        mostrarActividadesEnContenedor(actividadesFiltradas);
-    }
 
     public static String doesImageExist(Context context, String inputPath) {
-        // Se obtiene solo el nombre del archivo desde la ruta
         String fileName = extractFileName(inputPath);
         return fileName;
     }
     private static String extractFileName(String path) {
-        // Eliminar la parte de la ruta antes del nombre del archivo
         int lastSlash = path.lastIndexOf('/');
         if (lastSlash != -1) {
             path = path.substring(lastSlash + 1);

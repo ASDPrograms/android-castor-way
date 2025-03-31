@@ -120,7 +120,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Accesos"
+                    android:text="Actividades"
                     android:textSize="45sp"
                     android:textColor="@color/cafe_subtono"
                     android:fontFamily="@font/dongle_bold"
@@ -140,11 +140,24 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="@drawable/border_mover_modal_bottom"
-                    android:layout_marginBottom="15sp"
+
                     android:minHeight="130dp"
                     android:orientation="vertical"
                     >
 
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Premios"
+                        android:textSize="45sp"
+                        android:textColor="@color/amarillo_actis"
+                        android:fontFamily="@font/dongle_bold"
+                        />
                 </LinearLayout>
                 <LinearLayout
                     android:id="@+id/contenedorPremioMasCostoso"

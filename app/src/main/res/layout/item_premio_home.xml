@@ -1,13 +1,13 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:padding="8dp"
+    android:padding="5dp"
     android:background="@drawable/border_hijos"
     android:layout_margin="10dp"
     android:id="@+id/LinearPrinP">
 
+    <!-- Imagen del premio -->
     <ImageView
         android:id="@+id/imgPremioMasCostoso"
         android:layout_width="0dp"
@@ -15,34 +15,39 @@
         android:layout_weight="0.3"
         android:src="@drawable/icon_reloj_azul"
         android:contentDescription="Imagen del Premio"
-        android:layout_marginEnd="8dp" />
+        android:layout_marginEnd="8dp"
+        android:padding="5dp"/>
+
+    <!-- Contenedor vertical con detalles del premio -->
     <LinearLayout
         android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_weight="0.7"
         android:orientation="vertical">
+
+        <!-- Título del premio -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-        <TextView
-            android:id="@+id/txtHijoPremio"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/dongle_bold"
-            android:text="Pelota"
-            android:maxLines="1"
-            android:ellipsize="end"
-            android:textColor="#1A1A1A"
-            android:textSize="35sp"
-            android:maxHeight="60dp"/>
-    </LinearLayout>
+            <TextView
+                android:id="@+id/txtHijoPremio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/dongle_bold"
+                android:text="Pelota"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:textColor="#1A1A1A"
+                android:textSize="35sp"
+                android:maxHeight="60dp"/>
+        </LinearLayout>
 
+        <!-- Nivel y categoría del premio -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
             <TextView
-
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Nivel : "
@@ -57,13 +62,14 @@
                 android:textSize="15sp"
                 android:fontFamily="@font/gayathri_bold"
                 android:textColor="@android:color/black" />
-          </LinearLayout>
+        </LinearLayout>
+
+        <!-- Categoría -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
             <TextView
-
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Categoría : "
@@ -79,18 +85,20 @@
                 android:fontFamily="@font/gayathri_bold"
                 android:textColor="@android:color/black" />
         </LinearLayout>
+
+        <!-- Ramitas y botón -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:maxHeight="200dp"> <!-- Establecer maxHeight aquí -->
             <ImageView
                 android:layout_width="0dp"
                 android:layout_height="48dp"
                 android:layout_weight="0.2"
                 android:src="@drawable/img_ramita"
                 android:contentDescription="Imagen de ramitas"
-                android:padding="2dp"
-                />
+                android:padding="2dp"/>
             <TextView
                 android:id="@+id/txtPremRam"
                 android:layout_weight="0.1"
@@ -102,11 +110,10 @@
                 android:textColor="@color/cafe_ramita"
                 android:gravity="center_vertical"
                 android:lineHeight="5dp"/>
-
             <Button
                 android:id="@+id/verMas"
                 android:layout_width="0dp"
-                android:layout_height="48dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="0.7"
                 android:layout_gravity="center"
                 android:backgroundTint="@color/gricecito"
@@ -118,9 +125,7 @@
                 android:layout_marginLeft="10dp"
                 android:gravity="center"
                 android:textColor="@android:color/black"/>
-
-
         </LinearLayout>
 
-       </LinearLayout>
+    </LinearLayout>
 </LinearLayout>
