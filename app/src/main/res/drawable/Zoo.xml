@@ -1,16 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<document version="1.7">
+<document android:version="1.7"
+    xmlns:android="http://schemas.android.com/apk/res/android">
   <objects>
-    <object id="1" gen="0">
+    <object android:id="1" android:gen="0">
       <dict>
-        <entry key="Type">
+        <entry android:key="Type">
           <name>Catalog</name>
         </entry>
-        <entry key="Version">
+        <entry android:key="Version">
           <name>1.7</name>
         </entry>
-        <entry key="Pages">
-          <ref id="3" gen="0" />
+        <entry android:key="Pages">
+          <ref android:id="3" gen="0" />
         </entry>
         <entry key="Outlines">
           <ref id="2" gen="0" />
