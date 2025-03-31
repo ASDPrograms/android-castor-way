@@ -13,7 +13,7 @@
         android:id="@+id/imgActividad"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="0.3"
+        android:layout_weight="0.25"
         android:src="@drawable/icon_reloj_azul"
         android:contentDescription="Imagen de la actividad"
         android:layout_marginEnd="8dp" />
@@ -44,10 +44,10 @@
             <TextView
                 android:id="@+id/txtaActHora"
                 android:layout_width="0dp"
-                android:layout_weight="0.6"
+                android:layout_weight="0.5"
                 android:layout_height="wrap_content"
                 android:text="00:00 - 00:00"
-                android:textSize="15sp"
+                android:textSize="17sp"
                 android:maxLines="1"
                 android:ellipsize="end"
                 android:fontFamily="@font/gayathri_bold"
@@ -64,7 +64,7 @@
                 android:ellipsize="end"
                 android:background="@drawable/border_act_proce_home"
                 android:fontFamily="@font/dongle_bold"
-                android:textColor="@color/amarillo_actis"
+                android:textColor="@color/amarillo_estatus_texto"
                 android:gravity="center"/>
         </LinearLayout>
     </LinearLayout>

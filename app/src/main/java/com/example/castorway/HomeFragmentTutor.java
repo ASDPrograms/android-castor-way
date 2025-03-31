@@ -2,9 +2,14 @@ package com.example.castorway;
 
 import static android.content.Context.MODE_PRIVATE;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.PictureDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -13,6 +18,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -24,6 +30,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.caverock.androidsvg.SVG;
+import com.caverock.androidsvg.SVGParseException;
 import com.example.castorway.api.ApiService;
 import com.example.castorway.modelsDB.Actividad;
 import com.example.castorway.modelsDB.Castor;
@@ -31,15 +39,23 @@ import com.example.castorway.modelsDB.Kit;
 import com.example.castorway.modelsDB.Premios;
 import com.example.castorway.modelsDB.RelPrem;
 import com.example.castorway.retrofit.RetrofitClient;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -53,6 +69,7 @@ public class HomeFragmentTutor extends Fragment {
     private LinearLayout contenedorPremioMasCostoso;
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
     private final Handler handler = new Handler(Looper.getMainLooper());
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -137,38 +154,6 @@ public class HomeFragmentTutor extends Fragment {
         }
     }
 
-    private void actualizarDatosRapido() {
-        executorService.execute(() -> {
-            ApiService apiService = RetrofitClient.getApiService();
-            String email = preferences.getString("email", "");
-
-            Call<List<Castor>> callCastores = apiService.getAllCastores();
-            callCastores.enqueue(new Callback<List<Castor>>() {
-                @Override
-                public void onResponse(Call<List<Castor>> call, Response<List<Castor>> response) {
-                    if (!isAdded() || response.body() == null) return;
-
-                    List<Castor> castores = response.body();
-                    String codPresa = null;
-
-                    for (Castor castor : castores) {
-                        if (castor.getEmail().equalsIgnoreCase(email)) {
-                            codPresa = castor.getCodPresa();
-                            break;
-                        }
-                    }
-
-                    if (codPresa != null) {
-                        obtenerHijosRapido(codPresa);
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<List<Castor>> call, Throwable t) {
-                }
-            });
-        });
-    }
 
     private void obtenerHijosRapido(String codPresa) {
         ApiService apiService = RetrofitClient.getApiService();
@@ -214,125 +199,97 @@ public class HomeFragmentTutor extends Fragment {
 
     private void fetchRecompensaMasCostosa() {
         ApiService apiService = RetrofitClient.getApiService();
-        Call<List<Premios>> callPremios = apiService.getAllPremios();
 
-        callPremios.enqueue(new Callback<List<Premios>>() {
-            @Override
-            public void onResponse(Call<List<Premios>> call, Response<List<Premios>> response) {
-                if (!isAdded() || response.body() == null) {
-                    Log.d("MainActivity", "La respuesta de premios es nula o no se añadió el fragmento");
-                    return;
-                }
-
-                List<Premios> premios = response.body();
-                Log.d("MainActivity", "Premios obtenidos: " + premios.size());
-
-                // Pasamos la lista de premios a la función obtenerPremioMayorCosto
-                Premios premioMax = obtenerPremioMayorCosto(premios);
-
-                if (premioMax != null) {
-                    mostrarPremio(premioMax);
-                } else {
-                    Log.d("MainActivity", "No se encontró un premio con estado 0");
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Premios>> call, Throwable t) {
-                Log.d("MainActivity", "Error al obtener premios: " + t.getMessage());
-            }
-        });
-    }
-
-    private Premios obtenerPremioMayorCosto(List<Premios> premios) {
-
-        SharedPreferences preferences = getActivity().getSharedPreferences("usrKitCuentaTutor", MODE_PRIVATE);
-        int idKit = preferences.getInt("idKit", 0);
-
-        // Verificamos si idKit no es 0 (es decir, si se encuentra en la sesión)
-        if (idKit == 0) {
-            Log.d("MainActivity", "No se encontró un idKit válido en las preferencias");
-            return null;
-        }
-
-
-        ApiService apiServiceRelPrem = RetrofitClient.getApiService();
-        Call<List<RelPrem>> callRelPrem = apiServiceRelPrem.getAllRelPrem();
-
-        final List<Premios> premiosDisponibles = new ArrayList<>();
-        callRelPrem.enqueue(new Callback<List<RelPrem>>() {
-            @Override
-            public void onResponse(Call<List<RelPrem>> call, Response<List<RelPrem>> response) {
-                if (response.isSuccessful()) {
-                    if (response.body() != null) {
-                        List<RelPrem> relPremList = response.body();
-                        Log.d("MainActivity", "Número de relaciones obtenidas: " + relPremList.size());
-
-                        // Filtramos las relaciones que correspondan al idKit
-                        for (RelPrem relPrem : relPremList) {
-                            if (relPrem.getIdKit() == idKit) {
-                                premiosDisponibles.add(obtenerPremioPorId(relPrem.getIdPremio(), premios));
-                            }
-                        }
-
-                        // Si no se han agregado premios disponibles
-                        if (premiosDisponibles.isEmpty()) {
-                            Log.d("MainActivity", "No se encontraron premios para el idKit: " + idKit);
-                        } else {
-                            Log.d("MainActivity", "Premios disponibles para el idKit: " + premiosDisponibles.size());
-                        }
-
-                        // Filtramos los premios con estado 0
-                        List<Premios> premiosConEstado0 = new ArrayList<>();
-                        for (Premios premio : premiosDisponibles) {
-                            if (premio.getEstadoPremio() == 0) {
-                                premiosConEstado0.add(premio);
-                            }
-                        }
-
-                        // Si no hay premios con estado 0
-                        if (premiosConEstado0.isEmpty()) {
-                            Log.d("MainActivity", "No se encontraron premios con estado 0");
-                        } else {
-                            Log.d("MainActivity", "Premios con estado 0: " + premiosConEstado0.size());
-                        }
-
-                        // Ahora encontramos el premio de mayor costo
-                        Premios premioMayorCosto = null;
-                        double costoMaximo = -1;
-                        for (Premios premio : premiosConEstado0) {
-                            if (premio.getCostoPremio() > costoMaximo) {
-                                costoMaximo = premio.getCostoPremio();
-                                premioMayorCosto = premio;
-                            }
-                        }
-
-                        // Si encontramos un premio válido, lo mostramos
-                        if (premioMayorCosto != null) {
-                            Log.d("MainActivity", "Premio de mayor costo: " + premioMayorCosto.getNombrePremio());
-                            mostrarPremio(premioMayorCosto);
-                        } else {
-                            Log.d("MainActivity", "No se encontró un premio con estado 0");
-                        }
-                    } else {
-                        Log.d("MainActivity", "La respuesta de relaciones es nula");
-                    }
-                } else {
-                    Log.d("MainActivity", "La respuesta de relaciones no fue exitosa: " + response.code());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<RelPrem>> call, Throwable t) {
-                Log.d("MainActivity", "Error al obtener relaciones entre kit y premios: " + t.getMessage());
+        CompletableFuture<List<Premios>> premiosFuture = CompletableFuture.supplyAsync(() -> {
+            try {
+                Response<List<Premios>> response = apiService.getAllPremios().execute();
+                return response.isSuccessful() ? response.body() : Collections.emptyList();
+            } catch (IOException e) {
+                Log.e("fetchRecompensa", "Error al obtener premios", e);
+                return Collections.emptyList();
             }
         });
 
-        return null;
+        CompletableFuture<List<RelPrem>> relPremFuture = CompletableFuture.supplyAsync(() -> {
+            try {
+                Response<List<RelPrem>> response = apiService.getAllRelPrem().execute();
+                return response.isSuccessful() ? response.body() : Collections.emptyList();
+            } catch (IOException e) {
+                Log.e("fetchRecompensa", "Error al obtener relaciones", e);
+                return Collections.emptyList();
+            }
+        });
+
+        CompletableFuture.allOf(premiosFuture, relPremFuture).thenRun(() -> {
+            List<Premios> premios = premiosFuture.join();
+            List<RelPrem> relPremList = relPremFuture.join();
+
+            if (!isAdded()) return;
+
+            SharedPreferences preferences = getActivity().getSharedPreferences("usrKitCuentaTutor", MODE_PRIVATE);
+            int idKit = preferences.getInt("idKit", 0);
+            if (idKit == 0) {
+                requireActivity().runOnUiThread(() -> mostrarMensajeSeleccionarIdKit());
+                return;
+            }
+            Map<Integer, Premios> premiosMap = premios.stream()
+                    .collect(Collectors.toMap(Premios::getIdPremio, premio -> premio));
+            Premios premioMayorCosto = relPremList.stream()
+                    .filter(relPrem -> relPrem.getIdKit() == idKit)
+                    .map(relPrem -> premiosMap.get(relPrem.getIdPremio()))
+                    .filter(premio -> premio != null && premio.getEstadoPremio() == 0)
+                    .max(Comparator.comparingDouble(Premios::getCostoPremio))
+                    .orElse(null);
+
+            requireActivity().runOnUiThread(() -> {
+                if (premioMayorCosto != null) {
+                    mostrarPremio(premioMayorCosto);
+                } else {
+                    mostrarMensajeNoPremios();
+                }
+            });
+        });
     }
+    private void mostrarMensajeSeleccionarIdKit() {
+        if (!isAdded() || contenedorPremioMasCostoso == null) return;
+
+        contenedorPremioMasCostoso.removeAllViews();
+
+        TextView mensajeSeleccionarIdKit = new TextView(requireContext());
+        mensajeSeleccionarIdKit.setText("Seleccione primero un Kit");
+        mensajeSeleccionarIdKit.setTextSize(35);
+        mensajeSeleccionarIdKit.setTypeface(ResourcesCompat.getFont(requireContext(), R.font.dongle_bold));
+        mensajeSeleccionarIdKit.setTextColor(Color.WHITE);
+        mensajeSeleccionarIdKit.setPadding(16, 16, 16, 16);
+        mensajeSeleccionarIdKit.setGravity(Gravity.CENTER);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT);
+        mensajeSeleccionarIdKit.setLayoutParams(params);
+        contenedorPremioMasCostoso.addView(mensajeSeleccionarIdKit);
+    }
+    private void mostrarMensajeNoPremios() {
+        if (!isAdded() || contenedorPremioMasCostoso == null) return;
+
+        contenedorPremioMasCostoso.removeAllViews();
+
+        TextView mensajeNoPremios = new TextView(requireContext());
+        mensajeNoPremios.setText("No hay Premios para este kit");
+        mensajeNoPremios.setTextSize(35);
+        mensajeNoPremios.setTypeface(ResourcesCompat.getFont(requireContext(), R.font.dongle_bold));
+        mensajeNoPremios.setTextColor(Color.WHITE);
+        mensajeNoPremios.setPadding(16, 16, 16, 16);
+        mensajeNoPremios.setGravity(Gravity.CENTER);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT);
+        mensajeNoPremios.setLayoutParams(params);
+        contenedorPremioMasCostoso.addView(mensajeNoPremios);
+    }
+
+
 
     private Premios obtenerPremioPorId(int idPremio, List<Premios> premios) {
-        // Buscar el premio por su id en la lista de premios
         for (Premios premio : premios) {
             if (premio.getIdPremio() == idPremio) {
                 return premio;
@@ -340,7 +297,6 @@ public class HomeFragmentTutor extends Fragment {
         }
         return null;
     }
-
     private void mostrarPremio(Premios premio) {
         if (!isAdded() || contenedorPremioMasCostoso == null) return;
 
@@ -353,51 +309,140 @@ public class HomeFragmentTutor extends Fragment {
         TextView txtPremRam = vistaPremio.findViewById(R.id.txtPremRam);
         ImageView imgPremio = vistaPremio.findViewById(R.id.imgPremioMasCostoso);
 
+        Button boton = vistaPremio.findViewById(R.id.verMas);
+
+        boton.setOnClickListener(view -> {
+            // Animar el botón al hacer clic (efecto de escalado)
+            animarBoton(boton);
+
+            // Usamos un Handler para retrasar la transición al fragmento
+            new Handler().postDelayed(() -> {
+                // Lógica para cambiar de fragmento
+                Fragment nuevoFragment = new RecompensasFragmentTutor();
+                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+                FragmentTransaction transaction = fragmentManager.beginTransaction();
+                transaction.replace(R.id.frame_container, nuevoFragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }, 500);  // Retraso de 200 ms (tiempo de la animación)
+        });
+
         txtHijoPremio.setText(premio.getNombrePremio());
         txtPremNivel.setText(premio.getNivelPremio());
         txtPremCat.setText(premio.getCategoriaPremio());
         txtPremRam.setText(premio.getCostoPremio() + " ramitas");
 
-        // Obtener la imagen de la ruta almacenada en la base de datos
-        String rutaImagen = premio.getRutaImagenHabito();  // Usamos el campo rutaImagenHabito
+        String imgBd = premio.getRutaImagenHabito();
+        Log.d("DEBUG", "valor ruta imágen: " + imgBd);
 
-        // Convertir la ruta de la imagen a un ID de recurso
-        int resId = requireContext().getResources().getIdentifier(rutaImagen, "drawable", requireContext().getPackageName());
+        String imageName = doesImageExist(requireContext(), imgBd);
+        if (imageName != null) {
+            InputStream inputStream = null;
+            String assetPath = "img/img-premios/" + imageName; // Asegúrate de que la ruta esté correcta
+            Log.d("DEBUG", "Intentando abrir archivo: " + assetPath);
 
-        if (resId != 0) {
-            imgPremio.setImageResource(resId);
+            try {
+                inputStream = requireContext().getAssets().open(assetPath);
+                Log.d("DEBUG", "InputStream abierto correctamente.");
+
+                // Crear un objeto SVG desde el InputStream
+                SVG svg = SVG.getFromInputStream(inputStream);
+                if (svg != null) {
+                    // Convertir el SVG a un Drawable y mostrarlo
+                    Drawable drawable = new PictureDrawable(svg.renderToPicture());
+                    imgPremio.setImageDrawable(drawable);
+                    Log.d("DEBUG", "Imagen SVG cargada correctamente.");
+                } else {
+                    Log.e("DEBUG", "Error al crear el objeto SVG.");
+                }
+                Log.d("DEBUG", "InputStream cerrado.");
+            } catch (IOException | SVGParseException e) {
+                Log.e("DEBUG", "Error al cargar el archivo SVG: " + e.getMessage());
+            }
         } else {
-            imgPremio.setImageResource(R.drawable.icon_reloj_azul); // Imagen por defecto si no se encuentra
+            Log.e("DEBUG", "Error al encontrar la ruta de la imagen");
         }
+       
+
 
         contenedorPremioMasCostoso.removeAllViews();
         contenedorPremioMasCostoso.addView(vistaPremio);
     }
 
+    // Mover la animación del botón fuera de mostrarPremio
+    private void animarBoton(Button boton) {
+        // Crear animación de escala
+        ObjectAnimator scaleX = ObjectAnimator.ofFloat(boton, "scaleX", 1f, 1.1f); // Aumenta el tamaño en X
+        ObjectAnimator scaleY = ObjectAnimator.ofFloat(boton, "scaleY", 1f, 1.1f); // Aumenta el tamaño en Y
+
+        // Duración de la animación
+        scaleX.setDuration(150);
+        scaleY.setDuration(150);
+
+        // Revertir la animación después de un pequeño retraso
+        scaleX.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                // Volver al tamaño original después de la animación
+                ObjectAnimator.ofFloat(boton, "scaleX", 1.1f, 1f).setDuration(150).start();
+                ObjectAnimator.ofFloat(boton, "scaleY", 1.1f, 1f).setDuration(150).start();
+            }
+        });
+
+        // Iniciar la animación
+        scaleX.start();
+        scaleY.start();
+    }
 
     private void fetchActividades() {
         ApiService apiService = RetrofitClient.getApiService();
-        Call<List<Actividad>> callActividades = apiService.getAllActividades();
 
-        callActividades.enqueue(new Callback<List<Actividad>>() {
+        // Llamada inmediata sin bloquear la UI
+        apiService.getAllActividades().enqueue(new Callback<List<Actividad>>() {
             @Override
             public void onResponse(Call<List<Actividad>> call, Response<List<Actividad>> response) {
                 if (!isAdded() || response.body() == null) return;
 
-                List<Actividad> actividades = response.body();
-                Log.d("MainActivity", "Actividades obtenidas: " + actividades.size());
+                SharedPreferences preferences = getActivity().getSharedPreferences("usrKitCuentaTutor", MODE_PRIVATE);
+                int idKit = preferences.getInt("idKit", 0);
+                if (idKit == 0) {
+                    requireActivity().runOnUiThread(() -> mostrarMensajeSeleccionarIdKitAct());
+                    return;
+                }
 
-                // Ordenar actividades por hora de inicio
-                actividades = ordenarActividadesPorHora(actividades);
+                List<Actividad> actividades = response.body().stream()
+                        .filter(actividad -> actividad.getIdKit() == idKit)
+                        .sorted(Comparator.comparing(Actividad::getHoraInicioHabito, Comparator.nullsLast(String::compareTo)))
+                        .collect(Collectors.toList());
 
-                filtrarActividadesPorKit(actividades);
+
+                requireActivity().runOnUiThread(() -> mostrarActividadesEnContenedor(actividades));
             }
 
             @Override
             public void onFailure(Call<List<Actividad>> call, Throwable t) {
-                Log.d("MainActivity", "Error al obtener actividades: " + t.getMessage());
+                Log.e("fetchActividades", "Error al obtener actividades", t);
             }
         });
+    }
+    private void mostrarMensajeSeleccionarIdKitAct() {
+        if (contenedorActividades == null) return;
+
+        // Limpiar cualquier vista previa
+        contenedorActividades.removeAllViews();
+
+        TextView mensajeSeleccionarIdKit = new TextView(requireContext());
+        mensajeSeleccionarIdKit.setText("Seleccione primero un Kit");
+        mensajeSeleccionarIdKit.setTextSize(35);
+        mensajeSeleccionarIdKit.setTypeface(ResourcesCompat.getFont(requireContext(), R.font.dongle_bold));
+        mensajeSeleccionarIdKit.setTextColor(Color.WHITE);
+        mensajeSeleccionarIdKit.setPadding(16, 16, 16, 16);
+        mensajeSeleccionarIdKit.setGravity(Gravity.CENTER);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT);
+        mensajeSeleccionarIdKit.setLayoutParams(params);
+        contenedorActividades.addView(mensajeSeleccionarIdKit);
     }
 
     private List<Actividad> ordenarActividadesPorHora(List<Actividad> actividades) {
@@ -407,12 +452,7 @@ public class HomeFragmentTutor extends Fragment {
             public int compare(Actividad a1, Actividad a2) {
                 String horaInicio1 = a1.getHoraInicioHabito();
                 String horaInicio2 = a2.getHoraInicioHabito();
-
-                Log.d("MainActivity", "Comparando horas: " + horaInicio1 + " y " + horaInicio2);
-
                 if (horaInicio1 == null || horaInicio2 == null) return 0;
-
-                // Suponiendo que las horas están en formato "HH:mm"
                 return horaInicio1.compareTo(horaInicio2);
             }
         });
@@ -420,22 +460,14 @@ public class HomeFragmentTutor extends Fragment {
     }
 
     private void mostrarActividadesEnContenedor(List<Actividad> actividades) {
-        Log.d("MainActivity", "Mostrando actividades en el contenedor...");
-
-        if (!isAdded() || contenedorActividades == null) {
-            Log.d("MainActivity", "El contenedor de actividades no está disponible o el fragmento no está agregado.");
-            return;
-        }
 
         // Limpiar las vistas existentes
         contenedorActividades.removeAllViews();
         LayoutInflater inflater = LayoutInflater.from(requireContext());
 
         int maxActividades = 2;
-        Log.d("MainActivity", "Máximo número de actividades a mostrar: " + maxActividades);
         if (actividades == null || actividades.isEmpty()) {
 
-            Log.d("MainActivity", "No hay actividades disponibles.");
             TextView mensajeNoActividades = new TextView(requireContext());
             mensajeNoActividades.setText("No hay actividades para este kit");
             mensajeNoActividades.setTextSize(35);
@@ -452,69 +484,53 @@ public class HomeFragmentTutor extends Fragment {
         }
         for (int i = 0; i < actividades.size(); i++) {
             if (i >= maxActividades) {
-                Log.d("MainActivity", "Se ha alcanzado el límite de actividades a mostrar.");
                 break;
             }
 
             Actividad actividad = actividades.get(i);
-            Log.d("MainActivity", "Procesando actividad: " + actividad.getNombreHabito());
 
             View actividadView = inflater.inflate(R.layout.item_actividad_home, contenedorActividades, false);
 
-            // Asignar los elementos de la vista
             TextView txtNombreActividad = actividadView.findViewById(R.id.txtHijoActividad);
             TextView txtEstadoActividad = actividadView.findViewById(R.id.txtaActProceso);
             ImageView imgActividad = actividadView.findViewById(R.id.imgActividad);
             TextView txtHoraActividad = actividadView.findViewById(R.id.txtaActHora);
             LinearLayout LinearPrin = actividadView.findViewById(R.id.LinearPrin);
 
-            // Configuración del listener de clic
+
             LinearPrin.setOnClickListener(view -> {
-                Log.d("MainActivity", "Clic en actividad con id: " + actividad.getIdActividad());
 
                 SharedPreferences preferences= requireContext().getSharedPreferences("actividadSelected", MODE_PRIVATE);
                 SharedPreferences.Editor editor = preferences.edit();
                 editor.putInt("idActividad", actividad.getIdActividad());
                 editor.apply();
-                Log.d("MainActivity", "idActividad guardado en SharedPreferences: " + actividad.getIdActividad());
 
                 SharedPreferences sharedPreferencesCerrar = requireContext().getSharedPreferences("sesionModalActis", MODE_PRIVATE);
                 SharedPreferences.Editor editorcerrar = sharedPreferencesCerrar.edit();
                 editorcerrar.putBoolean("sesion_activa", true);
                 editorcerrar.apply();
-                Log.d("MainActivity", "Estado de sesión activado en SharedPreferences.");
-
-                // Cambiar de fragmento
                 Fragment nuevoFragment = new ActividadesFragmentTutor();
                 FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
                 FragmentTransaction transaction = fragmentManager.beginTransaction();
                 transaction.replace(R.id.frame_container, nuevoFragment);
                 transaction.addToBackStack(null);
                 transaction.commit();
-                Log.d("MainActivity", "Fragment de ActividadesFragmentTutor reemplazado.");
             });
 
-            // Configuración de la hora de la actividad
             String horaInicio = actividad.getHoraInicioHabito();
             String horaFinaliza = actividad.getHoraFinHabito();
             if (horaInicio != null && horaFinaliza != null) {
                 horaInicio = horaInicio.substring(0, 5);
                 horaFinaliza = horaFinaliza.substring(0, 5);
-
-                Log.d("MainActivity", "Hora de inicio de la actividad: " + horaInicio);
-                Log.d("MainActivity", "Hora de finalización de la actividad: " + horaFinaliza);
             }
 
-            // Establecer hora en el TextView
             String textoActividad = actividad.getNombreHabito();
             txtNombreActividad.setText(textoActividad);
             if (horaInicio != null && !horaInicio.isEmpty() && horaFinaliza != null && !horaFinaliza.isEmpty()) {
                 String horaCompleta = horaInicio + " - " + horaFinaliza;
-                txtHoraActividad.setText(horaCompleta); // Establecer la hora en el TextView
-                Log.d("MainActivity", "Hora mostrada en el TextView: " + horaCompleta);
+                txtHoraActividad.setText(horaCompleta);
             }
 
-            // Determinar el estado de la actividad
             String estado = "En proceso";
             String[] estadosArray = actividad.getEstadosActi().split(",");
 
@@ -531,32 +547,46 @@ public class HomeFragmentTutor extends Fragment {
                 estado = "Completado";
             }
 
-            Log.d("MainActivity", "Estado de la actividad: " + estado);
 
             if (!estado.equals("Completado")) {
                 txtEstadoActividad.setText(estado);
             }
 
-            // Configurar la imagen de la actividad
-            String rutaImagen = actividad.getRutaImagenHabito();
-            Log.d("MainActivity", "Ruta de imagen: " + rutaImagen);
-            int resId = requireContext().getResources().getIdentifier(rutaImagen, "drawable", requireContext().getPackageName());
+            String imgBd = actividad.getRutaImagenHabito();
+            Log.d("DEBUG", "valor ruta imágen: " + imgBd);
 
-            if (resId != 0) {
-                Log.d("MainActivity", "Imagen encontrada, cargando recurso: " + resId);
-                imgActividad.setImageResource(resId);
+            String imageName = doesImageExist(requireContext(), imgBd);
+            if (imageName != null) {
+                InputStream inputStream = null;
+                String assetPath = "img/img_actividades/" + imageName; // Asegúrate de que la ruta esté correcta
+                Log.d("DEBUG", "Intentando abrir archivo: " + assetPath);
+
+                try {
+                    inputStream = requireContext().getAssets().open(assetPath);
+                    Log.d("DEBUG", "InputStream abierto correctamente.");
+
+                    // Crear un objeto SVG desde el InputStream
+                    SVG svg = SVG.getFromInputStream(inputStream);
+                    if (svg != null) {
+                        // Convertir el SVG a un Drawable y mostrarlo
+                        Drawable drawable = new PictureDrawable(svg.renderToPicture());
+                        imgActividad.setImageDrawable(drawable);
+                        Log.d("DEBUG", "Imagen SVG cargada correctamente.");
+                    } else {
+                        Log.e("DEBUG", "Error al crear el objeto SVG.");
+                    }
+                    Log.d("DEBUG", "InputStream cerrado.");
+                } catch (IOException | SVGParseException e) {
+                    Log.e("DEBUG", "Error al cargar el archivo SVG: " + e.getMessage());
+                }
             } else {
-                Log.d("MainActivity", "No se encontró la imagen en los recursos.");
+                Log.e("DEBUG", "Error al encontrar la ruta de la imagen");
             }
+            //Fin del código de cargar imágen svg desde asset
 
-            // Agregar la vista al contenedor
             contenedorActividades.addView(actividadView);
         }
-
-        Log.d("MainActivity", "Se han mostrado hasta " + maxActividades + " actividades.");
     }
-
-
     private void filtrarActividadesPorKit(List<Actividad> actividades) {
         SharedPreferences preferences = getActivity().getSharedPreferences("usrKitCuentaTutor", MODE_PRIVATE);
         int idKit = preferences.getInt("idKit", 0);
@@ -573,6 +603,20 @@ public class HomeFragmentTutor extends Fragment {
             }
         }
         mostrarActividadesEnContenedor(actividadesFiltradas);
+    }
+
+    public static String doesImageExist(Context context, String inputPath) {
+        // Se obtiene solo el nombre del archivo desde la ruta
+        String fileName = extractFileName(inputPath);
+        return fileName;
+    }
+    private static String extractFileName(String path) {
+        // Eliminar la parte de la ruta antes del nombre del archivo
+        int lastSlash = path.lastIndexOf('/');
+        if (lastSlash != -1) {
+            path = path.substring(lastSlash + 1);
+        }
+        return path;
     }
 
 

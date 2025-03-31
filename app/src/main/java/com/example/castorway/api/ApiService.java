@@ -61,6 +61,6 @@ public interface ApiService {
     Call<List<RelPrem>> getAllRelPrem();
     
     @POST("tablaRelPrem")
-    Call<RelPrem> createRelPrem(@Body RelPrem relprem);
+    Call<RelPrem> createRelPrem(@Body RelPrem relPrem);
 
 }

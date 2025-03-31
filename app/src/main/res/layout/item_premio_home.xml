@@ -5,7 +5,8 @@
     android:orientation="horizontal"
     android:padding="8dp"
     android:background="@drawable/border_hijos"
-    android:layout_margin="10dp">
+    android:layout_margin="10dp"
+    android:id="@+id/LinearPrinP">
 
     <ImageView
         android:id="@+id/imgPremioMasCostoso"
@@ -84,35 +85,41 @@
             android:orientation="horizontal">
             <ImageView
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.1"
+                android:layout_height="48dp"
+                android:layout_weight="0.2"
                 android:src="@drawable/img_ramita"
                 android:contentDescription="Imagen de ramitas"
                 android:padding="2dp"
                 />
             <TextView
                 android:id="@+id/txtPremRam"
-                android:layout_weight="0.2"
+                android:layout_weight="0.1"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="48dp"
                 android:text="200 ramitas "
                 android:textSize="25sp"
                 android:fontFamily="@font/dongle_bold"
                 android:textColor="@color/cafe_ramita"
                 android:gravity="center_vertical"
                 android:lineHeight="5dp"/>
-            <TextView
 
-
+            <Button
+                android:id="@+id/verMas"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.3"
+                android:layout_height="48dp"
+                android:layout_weight="0.7"
+                android:layout_gravity="center"
+                android:backgroundTint="@color/gricecito"
+                android:elevation="4dp"
+                android:padding="2dp"
                 android:text="Ver más"
-                android:background="@drawable/border_vermas"
-                android:textSize="20sp"
                 android:fontFamily="@font/dongle_bold"
-                android:textColor="@android:color/black"
-                android:gravity="center"/>
+                android:textSize="25sp"
+                android:layout_marginLeft="10dp"
+                android:gravity="center"
+                android:textColor="@android:color/black"/>
+
+
         </LinearLayout>
 
        </LinearLayout>
