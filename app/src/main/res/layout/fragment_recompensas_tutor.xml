@@ -1,83 +1,120 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/azul_fondo"
+    android:orientation="vertical"
+    tools:context=".RecompensasFragmentTutor">
+
+    <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/azul_fondo"
+        android:layout_height="wrap_content"
+        android:text="Recompensas"
+        android:fontFamily="@font/dongle_bold"
+        android:textSize="50sp"
+        android:textColor="#1A1A1A"
+        android:gravity="left"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"/>
+
+    <!-- Contenedor del banner -->
+    <LinearLayout
+        android:id="@+id/Banner"
+        android:layout_width="match_parent"
+        android:layout_height="130dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="20dp"
+        android:orientation="horizontal"
+        android:padding="10dp"
+        android:gravity="bottom">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Premios Reclamados"
+            android:fontFamily="@font/gayathri_bold"
+            android:textSize="25sp"
+            android:textColor="#1A1A1A"
+            android:layout_weight="0.7"/>
+
+        <ImageView
+            android:id="@+id/flecha_iz"
+            android:layout_width="0dp"
+            android:layout_height="36dp"
+            android:src="@drawable/flecha_iz"
+            android:layout_weight="0.06"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginEnd="15dp"/>
+
+        <ImageView
+            android:id="@+id/flecha_de"
+            android:layout_width="0dp"
+            android:layout_height="36dp"
+            android:src="@drawable/flecha_de"
+            android:layout_weight="0.06"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"/>
+    </LinearLayout>
+
+    <!-- Contenedor principal -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.8"
         android:orientation="vertical"
-        tools:context=".RecompensasFragmentTutor">
-        <LinearLayout
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp">
+
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:fontFamily="@font/gayathri_bold"
+            android:text="Tus favoritos"
+            android:textColor="#1A1A1A"
+            android:textSize="20sp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"/>
 
-            <TextView
+        <!-- FrameLayout para superponer el botón sobre el ScrollView -->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <!-- ScrollView con los premios -->
+            <ScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="Recompensas"
-                android:fontFamily="@font/dongle_bold"
-                android:textSize="50sp"
-                android:textColor="#1A1A1A"/>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:orientation="horizontal"
-                >
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom">
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:text="Premios Reclamados"
-                    android:fontFamily="@font/gayathri_bold"
-                    android:textSize="25sp"
-                    android:textColor="#1A1A1A"
-                    android:layout_weight="0.7"/>
-                <ImageView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/flecha_iz"
-                    android:layout_weight="0.06"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginBottom="5dp"/>
-                <ImageView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/flecha_de"
-                    android:layout_weight="0.06"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginBottom="5dp"/>
-                </LinearLayout>
-            </LinearLayout>
+                android:fillViewport="true"
+                android:overScrollMode="always"
+                android:scrollbars="none">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="10dp"
-                android:orientation="vertical">
-                <TextView
+                <LinearLayout
+                    android:id="@+id/Contenedor_Premios"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/gayathri_bold"
-                    android:text="Tus favoritos"
-                    android:textColor="#1A1A1A"
-                    android:textSize="20sp" />
-                <ScrollView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:id="@+id/Cotenedor_Premios"
-                    android:minHeight="500dp"
-                    android:orientation="horizontal">
-
+                    android:orientation="vertical"
+                    android:layout_marginBottom="40dp">
                 </LinearLayout>
-                </ScrollView>
-            </LinearLayout>
-        </LinearLayout>
+
+            </ScrollView>
+
+            <!-- Botón encima del Contenedor_Premios -->
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="bottom|end"
+                android:layout_marginBottom="40dp"
+                android:layout_marginRight="30dp"
+                android:id="@+id/btnAgregarPrem"
+                android:src="@drawable/btn_agregar_hijo"/>
+
+        </FrameLayout>
+
+    </LinearLayout>
+
 </LinearLayout>

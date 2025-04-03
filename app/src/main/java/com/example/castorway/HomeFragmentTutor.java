@@ -364,6 +364,7 @@ public class HomeFragmentTutor extends Fragment {
         scaleY.start();
     }
 
+
     private void fetchActividades() {
         ApiService apiService = RetrofitClient.getApiService();
 
@@ -431,6 +432,7 @@ public class HomeFragmentTutor extends Fragment {
         });
         animatorSet.start();
     }
+
 
 
     private void mostrarActividadesEnContenedor(List<Actividad> actividades) {

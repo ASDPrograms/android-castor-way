@@ -98,7 +98,8 @@
                 android:layout_weight="0.2"
                 android:src="@drawable/img_ramita"
                 android:contentDescription="Imagen de ramitas"
-                android:padding="2dp"/>
+                android:padding="2dp"
+                android:layout_marginEnd="5dp"/>
             <TextView
                 android:id="@+id/txtPremRam"
                 android:layout_weight="0.1"
@@ -124,7 +125,8 @@
                 android:textSize="25sp"
                 android:layout_marginLeft="10dp"
                 android:gravity="center"
-                android:textColor="@android:color/black"/>
+                android:textColor="@android:color/black"
+                android:layout_marginEnd="6dp"/>
         </LinearLayout>
 
     </LinearLayout>

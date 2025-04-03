@@ -9,7 +9,9 @@
     <color name="verdecitu">#BCF0E4</color>
     <color name="verdecitu_fuerte">#8DE3CF</color>
     <color name="aguita">#879FD4</color>
-    <color name="amarillito">#FFDF9B</color>
+
+
+    <color name="amarillitoPrem">#FFEEB1</color>
     <color name="azulito_juerte">#566C9F</color>
     <color name="rojito">#E64C3C</color>
     <color name="azul_fondo">#EDF3FF</color>
@@ -39,5 +41,9 @@
     //colores de texto de estatus de actis:
     <color name="amarillo_estatus_texto">#BC8E1B</color>
     <color name="verde_estatus_texto">#328324</color>
+
+    //Premios
+    <color name="amarillito">#FFDF9B</color>
+    <color name="amarillitoRamPrem">#FFD987</color>
 
 </resources>

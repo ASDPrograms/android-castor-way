@@ -7,6 +7,8 @@
     android:background="@drawable/border_hijos"
     android:layout_margin="10dp"
     android:id="@+id/LinearPrin"
+    android:layout_marginRight="15dp"
+    android:layout_marginLeft="15dp"
     >
 
 <ImageView
