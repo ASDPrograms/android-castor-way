@@ -367,6 +367,12 @@ public class HomeFragmentTutor extends Fragment {
 
     private void fetchActividades() {
         ApiService apiService = RetrofitClient.getApiService();
+        SharedPreferences preferences = getActivity().getSharedPreferences("usrKitCuentaTutor", MODE_PRIVATE);
+        int idKit = preferences.getInt("idKit", 0);
+        if (idKit == 0) {
+            requireActivity().runOnUiThread(() -> mostrarMensajeSeleccionarIdKitAct());
+            return;
+        }
 
         apiService.getAllActividades().enqueue(new Callback<List<Actividad>>() {
             @Override

@@ -40,6 +40,11 @@
             android:exported="false"
             android:windowSoftInputMode="adjustPan" />
         <activity
+            android:name=".AgregarPremTutor"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize"
+            android:configChanges="orientation|keyboardHidden|keyboard|screenSize"/>
+        <activity
             android:name=".HomeTutor"
             android:exported="false" />
         <activity

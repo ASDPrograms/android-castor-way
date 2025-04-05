@@ -95,20 +95,24 @@ public class RecompensasFragmentTutor extends Fragment {
         Contenedor_Premios = view.findViewById(R.id.Contenedor_Premios);
         btnAgregarPrem = view.findViewById(R.id.btnAgregarPrem);
 
-       btnAgregarPrem.setOnClickListener(vie -> {
-            int num = confirmUsrKitSeleccionado();
-            if(num != 0){
-                Intent intent = new Intent(requireActivity(), AgregarPremTutor.class);
-                startActivity(intent);
-            }
-        });
+       btnAgregarPrem.setOnClickListener(this::abrirFormRecompensas);
+
 
         fetchRecompensaMasCostosa();
     }
+
     private int confirmUsrKitSeleccionado(){
         SharedPreferences sharedPreferences = requireContext().getSharedPreferences("usrKitCuentaTutor", MODE_PRIVATE);
         int idKit = sharedPreferences.getInt("idKit", 0);
         return idKit;
+    }
+    private void abrirFormRecompensas(View view){
+        animarImageView(btnAgregarPrem);
+        int num = confirmUsrKitSeleccionado();
+        if(num != 0){
+            Intent intent = new Intent(view.getContext(), AgregarPremTutor.class);
+            startActivity(intent);
+        }
     }
     private void mostrarMensajeSeleccionarIdKit() {
         if (!isAdded() || Contenedor_Premios == null) return;
@@ -437,12 +441,52 @@ public class RecompensasFragmentTutor extends Fragment {
         }
     }
     private void borrarPremio(int idPremio) {
+        Log.d("API_LOG", "Iniciando eliminación de relaciones para el premio ID: " + idPremio);
+
         ApiService apiService = RetrofitClient.getApiService();
-        Call<Void> call = apiService.deletePremio(idPremio);
-        call.enqueue(new Callback<Void>() {
+        Call<Void> callRel = apiService.deleteRelPremios(idPremio);
+
+        callRel.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()) {
+                    Log.d("API_LOG", "Relaciones eliminadas exitosamente. Código: " + response.code());
+
+                    // Ahora sí, eliminamos el premio
+                    eliminarPremio(idPremio);
+
+                } else {
+                    Log.e("API_ERROR", "Error al eliminar relaciones. Código: " + response.code());
+                    if (response.errorBody() != null) {
+                        try {
+                            Log.e("API_ERROR", "Cuerpo del error (relaciones): " + response.errorBody().string());
+                        } catch (IOException e) {
+                            Log.e("API_ERROR", "Error al leer el cuerpo del error: " + e.getMessage());
+                        }
+                    }
+                    Toast.makeText(requireContext(), "No se pudo eliminar las relaciones del premio", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.e("API_ERROR", "Fallo al eliminar relaciones del premio: " + t.getMessage(), t);
+                Toast.makeText(requireContext(), "Error de conexión al eliminar relaciones", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void eliminarPremio(int idPremio) {
+        Log.d("API_LOG", "Eliminando premio con ID: " + idPremio);
+
+        ApiService apiService = RetrofitClient.getApiService();
+        Call<Void> callPremio = apiService.deletePremio(idPremio);
+
+        callPremio.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    Log.d("API_LOG", "Premio eliminado exitosamente. Código: " + response.code());
 
                     LayoutInflater inflater = getLayoutInflater();
                     View layout = inflater.inflate(R.layout.toast_personalizado, null);
@@ -455,7 +499,6 @@ public class RecompensasFragmentTutor extends Fragment {
 
                     Drawable background = layout.getBackground();
                     background.setColorFilter(ContextCompat.getColor(requireContext(), R.color.rojito_toast), PorterDuff.Mode.SRC_IN);
-
                     text.setTextColor(ContextCompat.getColor(requireContext(), R.color.black));
 
                     Toast toast = new Toast(requireContext());
@@ -468,13 +511,22 @@ public class RecompensasFragmentTutor extends Fragment {
                     transaction.replace(R.id.frame_container, new RecompensasFragmentTutor());
                     transaction.commit();
                 } else {
-                    Toast.makeText(requireContext(), "Ocurrió un error", Toast.LENGTH_SHORT).show();
+                    Log.e("API_ERROR", "Error al eliminar el premio. Código: " + response.code());
+                    if (response.errorBody() != null) {
+                        try {
+                            Log.e("API_ERROR", "Cuerpo del error (premio): " + response.errorBody().string());
+                        } catch (IOException e) {
+                            Log.e("API_ERROR", "Error al leer el cuerpo del error: " + e.getMessage());
+                        }
+                    }
+                    Toast.makeText(requireContext(), "Ocurrió un error al eliminar el premio", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                Toast.makeText(requireContext(), "Error de conexión", Toast.LENGTH_SHORT).show();
+                Log.e("API_ERROR", "Fallo al eliminar el premio: " + t.getMessage(), t);
+                Toast.makeText(requireContext(), "Error de conexión al eliminar el premio", Toast.LENGTH_SHORT).show();
             }
         });
     }
