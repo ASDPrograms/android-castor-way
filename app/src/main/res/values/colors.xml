@@ -33,10 +33,18 @@
 
     //colores de fondo de estatus de actis:
     <color name="amarillo_estatus_fondo">#FFD274</color>
+    <color name="rojo_estatus_fondo">#FF5C54</color>
+    <color name="azul_estatus_fondo">#879FD4</color>
+    <color name="carnita_estatus_fondo">#F7B9A2</color>
+    <color name="naranja_estatus_fondo">#FF9D60</color>
     <color name="verde_estatus_fondo">#66BD6E</color>
 
     //colores de texto de estatus de actis:
     <color name="amarillo_estatus_texto">#BC8E1B</color>
+    <color name="rojo_estatus_texto">#8F281F</color>
+    <color name="azul_estatus_texto">#566C9F</color>
+    <color name="carnita_estatus_texto">#C28E7B</color>
+    <color name="naranja_estatus_texto">#D7631C</color>
     <color name="verde_estatus_texto">#328324</color>
 
 </resources>

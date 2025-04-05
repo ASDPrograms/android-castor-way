@@ -15,7 +15,7 @@ public class Actividad {
     private String rutaImagenHabito;
     private String recordatorio;
     private String infoExtraHabito;
-    private boolean estadoActividad;
+    private int estadoActividad;
     private String infoActividadDevuelta;
     private String fechasActividad;
     private String fechasCompletadas;
@@ -143,11 +143,11 @@ public class Actividad {
         this.infoExtraHabito = infoExtraHabito;
     }
 
-    public boolean isEstadoActividad() {
+    public int getEstadoActividad() {
         return estadoActividad;
     }
 
-    public void setEstadoActividad(boolean estadoActividad) {
+    public void setEstadoActividad(int estadoActividad) {
         this.estadoActividad = estadoActividad;
     }
 
@@ -198,5 +198,4 @@ public class Actividad {
     public void setEstadosActi(String estadosActi) {
         this.estadosActi = estadosActi;
     }
-
 }

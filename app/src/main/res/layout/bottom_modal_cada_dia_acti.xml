@@ -78,6 +78,7 @@
                 android:layout_marginRight="15dp">
             </ImageView>
             <TextView
+                android:id="@+id/fechaActi"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="2025-01-01"
@@ -99,6 +100,7 @@
                 android:layout_marginRight="15dp">
             </ImageView>
             <TextView
+                android:id="@+id/txtIntervaloHrs"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="00:00 - 00:15"
@@ -140,6 +142,7 @@
             android:layout_marginRight="15dp">
         </ImageView>
         <TextView
+            android:id="@+id/horaCompletada"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="12:00"
@@ -212,17 +215,20 @@
         </TextView>
     </LinearLayout>
     <LinearLayout
+        android:id="@+id/contBtnAceptRechazActi"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:padding="10dp"
         android:gravity="center">
         <ImageView
+            android:id="@+id/btnAceptarActi"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:src="@drawable/img_circ_palomita_verde"
             android:layout_marginRight="15dp"></ImageView>
         <ImageView
+            android:id="@+id/btnRechazarActi"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:src="@drawable/img_circ_tache_rojo"

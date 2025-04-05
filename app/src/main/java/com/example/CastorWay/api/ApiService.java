@@ -23,11 +23,15 @@ public interface  ApiService{
     @POST("tablaCastor")
     Call<Castor> createCastor(@Body Castor castor);
 
+    //tabla Kit:
     @GET("tablaKit")
     Call<List<Kit>> getAllKits();
 
     @POST("tablaKit")
     Call<Kit> createKit(@Body Kit kit);
+
+    @PUT("tablaKit")
+    Call<Kit> updateKit(@Body Kit kit);
 
     //Actividad:
     @GET("tablaActividad")
@@ -61,4 +65,8 @@ public interface  ApiService{
     
     @POST("tablaRelPrem")
     Call<RelPrem> createRelPrem(@Body RelPrem relprem);
+
+    @DELETE("tablaRelPrem")
+    Call<Void> deleteRelPrem(@Query("idPremio") int idPremio);
+
 }
