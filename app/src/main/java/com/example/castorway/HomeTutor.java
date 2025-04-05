@@ -139,7 +139,6 @@ public class HomeTutor extends AppCompatActivity {
         circulogrande = findViewById(R.id.circulo_grande);
         circulogrande.setOnClickListener(this::desplListUsrsKit);
 
-
         //declaración de xml y funcionalidad del botón que despliega los hijos disponibles
         btnDesplegar = findViewById(R.id.btnDesplegar);
         btnDesplegar.setOnClickListener(this::desplListUsrsKit);
@@ -202,7 +201,6 @@ public class HomeTutor extends AppCompatActivity {
         editor.clear();
         editor.apply();
     }
-
 
     private void actuInfoTopNav(){
         ApiService apiService = RetrofitClient.getApiService();
@@ -510,7 +508,6 @@ public class HomeTutor extends AppCompatActivity {
                                             Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.frame_container);
                                             String fragmentName = currentFragment.getClass().getSimpleName();
                                             Log.e("DEBUG", "Nombre del fragment: " + fragmentName);
-
 
                                             //con el valor que se saca del nombre del fragment se decide que fragment cargar:
                                             if(fragmentName.equals("HomeFragmentTutor")){

@@ -17,10 +17,14 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +32,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,6 +49,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -52,6 +59,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import android.graphics.drawable.Drawable;
+
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import org.w3c.dom.Text;
@@ -63,9 +72,10 @@ import org.w3c.dom.Text;
  * create an instance of this fragment.
  */
 public class ActividadesFragmentTutor extends Fragment {
-    LinearLayout layout_esta_semana, layout_siguiente_semana, layout_mas_tarde, contenedor_despues, contenedor_esta_semana, contenedor_siguiente_semana, layout_no_usr_kit_seleccionado;
-    TextView numActisEstaSemanaTxt, numActisSigSemanaTxt, numActisMasTardeTxt;
-    ImageView imgFlechEstaSemana, imgFlechSigSemana, imgFlechMasTarde, btnAgregarActi;
+    SwipeRefreshLayout refrescarFragment;
+    LinearLayout layout_esta_semana, layout_siguiente_semana, layout_mas_tarde, contenedor_despues, contenedor_esta_semana, contenedor_siguiente_semana, layout_no_usr_kit_seleccionado, linLayContainAllActis;
+    TextView numActisEstaSemana, numActisSigSemana, numActisMasTarde, edit_busqueda;
+    ImageView imgFlechEstaSemana, imgFlechSigSemana, imgFlechMasTarde, btnAgregarActi, btn_filtros;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -79,7 +89,6 @@ public class ActividadesFragmentTutor extends Fragment {
     public ActividadesFragmentTutor() {
         // Required empty public constructor
     }
-
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
@@ -117,6 +126,19 @@ public class ActividadesFragmentTutor extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        linLayContainAllActis = view.findViewById(R.id.linLayContainAllActis);
+        refrescarFragment = view.findViewById(R.id.refrescarFragment);
+        refrescarFragment.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                FragmentTransaction transaction = requireFragmentManager().beginTransaction();
+                transaction.replace(R.id.frame_container, new ActividadesFragmentTutor());
+                transaction.addToBackStack(null);
+                transaction.commit();
+
+                refrescarFragment.setRefreshing(false);
+            }
+        });
 
         // Ahora las vistas están inicializadas correctamente
         layout_esta_semana = view.findViewById(R.id.layout_esta_semana);
@@ -124,9 +146,9 @@ public class ActividadesFragmentTutor extends Fragment {
         layout_mas_tarde = view.findViewById(R.id.layout_mas_tarde);
         layout_no_usr_kit_seleccionado = view.findViewById(R.id.layout_no_usr_kit_seleccionado);
 
-        numActisEstaSemanaTxt = view.findViewById(R.id.numActisEstaSemana);
-        numActisSigSemanaTxt = view.findViewById(R.id.numActisSigSemana);
-        numActisMasTardeTxt = view.findViewById(R.id.numActisMasTarde);
+        numActisEstaSemana = view.findViewById(R.id.numActisEstaSemana);
+        numActisSigSemana = view.findViewById(R.id.numActisSigSemana);
+        numActisMasTarde = view.findViewById(R.id.numActisMasTarde);
 
         contenedor_despues = view.findViewById(R.id.contenedor_despues);
         contenedor_esta_semana = view.findViewById(R.id.contenedor_esta_semana);
@@ -143,21 +165,44 @@ public class ActividadesFragmentTutor extends Fragment {
         layout_siguiente_semana.setOnClickListener(v -> alternarVisibActis(contenedor_siguiente_semana));
         layout_mas_tarde.setOnClickListener(v -> alternarVisibActis(contenedor_despues));
 
+
         confirmUsrKitSeleccionado();
         //Btn que se encarga de abrir modal para agregar nueva acti, al dar click manda a otra acti sin terminar este fragment para que al regresar mande al fragment de nuevo
         btnAgregarActi.setOnClickListener(v -> {
-            int num = confirmUsrKitSeleccionado();
-            if(num != 0){
+            SharedPreferences sharedPreferences = getContext().getSharedPreferences("usrKitCuentaTutor", Context.MODE_PRIVATE);
+            int idKit = sharedPreferences.getInt("idKit", 0);
+            if(idKit != 0){
                 Intent intent = new Intent(requireActivity(), AgregarActiTutor.class);
                 startActivity(intent);
             }
         });
+
         actuNumActis();
 
-        //Se intenta desplegar el modal con la info de la sesión al abrir la acti:
+        //para el filtrado de actividades por la barra de búsqueda
+        edit_busqueda = view.findViewById(R.id.edit_busqueda);
+        edit_busqueda.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                despleActisPorBusqueda(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+
+        btn_filtros = view.findViewById(R.id.btn_filtros);
+        btn_filtros.setOnClickListener(view1 -> {
+            desplFiltros();
+        });
+
     }
-
-
     private void desplegarModal(View view) {
         try {
             ApiService apiService = RetrofitClient.getApiService();
@@ -169,7 +214,7 @@ public class ActividadesFragmentTutor extends Fragment {
 
                     if (actividades != null) {
                         Log.e("DEBUG", "Hay actis");
-                        SharedPreferences sharedPreferences = requireContext().getSharedPreferences("actividadSelected", Context.MODE_PRIVATE);
+                        SharedPreferences sharedPreferences = getContext().getSharedPreferences("actividadSelected", Context.MODE_PRIVATE);
                         for (Actividad actividad : actividades) {
                             int idActividad = sharedPreferences.getInt("idActividad", 0);
                             Log.e("DEBUG", "Id acti: " + idActividad);
@@ -199,7 +244,6 @@ public class ActividadesFragmentTutor extends Fragment {
             Log.e("MiFragment", "Error al intentar mostrar el modal: " + e.getMessage());
         }
     }
-
 
     private void desplModalConDatosActi(Actividad actividad){
         View view = getLayoutInflater().inflate(R.layout.bottom_modal_view, null);
@@ -243,7 +287,7 @@ public class ActividadesFragmentTutor extends Fragment {
 
         modal.setOnDismissListener(dialog -> {
             if (isAdded() && getActivity() != null) {
-                SharedPreferences sharedPreferencesCerrar = requireContext().getSharedPreferences("sesionModalActis", MODE_PRIVATE);
+                SharedPreferences sharedPreferencesCerrar = getContext().getSharedPreferences("sesionModalActis", MODE_PRIVATE);
                 SharedPreferences.Editor editorCerrar = sharedPreferencesCerrar.edit();
                 editorCerrar.putBoolean("sesion_activa", false);
                 editorCerrar.apply();
@@ -268,7 +312,7 @@ public class ActividadesFragmentTutor extends Fragment {
 
         btnEditActi.setOnClickListener(v1 -> {
             if (isAdded()) {
-                SharedPreferences preferences = requireContext().getSharedPreferences("actividadSelected", MODE_PRIVATE);
+                SharedPreferences preferences = getContext().getSharedPreferences("actividadSelected", MODE_PRIVATE);
                 SharedPreferences.Editor editor2 = preferences.edit();
                 editor2.putInt("idActividad", actividad.getIdActividad());
                 editor2.apply();
@@ -329,7 +373,6 @@ public class ActividadesFragmentTutor extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
         // Verificar si el fragmento está adjunto y si el contexto está disponible
         if (isAdded() && getContext() != null) {
             Log.e("PAVER", "SIPAPI 1");
@@ -358,7 +401,6 @@ public class ActividadesFragmentTutor extends Fragment {
             Log.e("PAVER", "NOPAPI");
         }
     }
-
     private void alternarVisibActis(LinearLayout contenedor) {
         // Aquí se va alternando la visibilidad de los contenedores de las actividades
         Log.d("DEBUG", "Botón CLICKEADO");
@@ -388,7 +430,7 @@ public class ActividadesFragmentTutor extends Fragment {
     }
     //Esta función verifica que haya almenos un usuario de hijo seleccionado
     private int confirmUsrKitSeleccionado(){
-        SharedPreferences sharedPreferences = requireContext().getSharedPreferences("usrKitCuentaTutor", MODE_PRIVATE);
+        SharedPreferences sharedPreferences = requireContext().getSharedPreferences("usrKitCuentaTutor", Context.MODE_PRIVATE);
         int idKit = sharedPreferences.getInt("idKit", 0);
         if(idKit == 0){
             layout_esta_semana.setVisibility(View.GONE);
@@ -410,24 +452,35 @@ public class ActividadesFragmentTutor extends Fragment {
         String idName = contenedor.getResources().getResourceEntryName(contenedor.getId());
         contenedor.removeAllViews();
 
-        // Se consultan todas las actividades del hijo seleccionado
-        int idKit = confirmUsrKitSeleccionado();
-
-        if (idKit != 0) {
+        SharedPreferences preferencesKit = getContext().getSharedPreferences("usrKitCuentaTutor", Context.MODE_PRIVATE);
+        int idKitVer = preferencesKit.getInt("idKit", 0);
+        if (idKitVer != 0) {
             Log.d("DEBUG", "Si hay idKit");
             ApiService apiService2 = RetrofitClient.getApiService();
             Call<List<Actividad>> call2 = apiService2.getAllActividades();
-            int finalIdKit = idKit;
             call2.enqueue(new Callback<List<Actividad>>() {
                 @Override
                 public void onResponse(Call<List<Actividad>> call, Response<List<Actividad>> response) {
                     List<Actividad> actividades = response.body();
 
                     if (actividades != null) {
+                        //ordena por la hora de inicio de la acti
+                        Collections.sort(actividades, new Comparator<Actividad>() {
+                            @Override
+                            public int compare(Actividad a1, Actividad a2) {
+                                // Primero compara por horaInicio
+                                int comparacionInicio = a1.getHoraInicioHabito().compareTo(a2.getHoraInicioHabito());
+
+                                // Si son iguales, compara por horaFin
+                                return (comparacionInicio != 0) ? comparacionInicio : a1.getHoraFinHabito().compareTo(a2.getHoraFinHabito());
+                            }
+                        });
+
                         Log.e("DEBUG", "Hay actis");
+                        SharedPreferences preferencesKit = getContext().getSharedPreferences("usrKitCuentaTutor", Context.MODE_PRIVATE);
+                        int idKit = preferencesKit.getInt("idKit", 0);
                         for (Actividad actividad : actividades) {
-                            Log.e("DEBUG", String.valueOf(actividad.getIdKit() == finalIdKit));
-                            if (actividad.getIdKit() == finalIdKit) {
+                            if (actividad.getIdKit() == idKit) {
                                 String fechasActis = String.valueOf(actividad.getFechasActividad());
                                 if(idName.equals(obtenerPeriodo(fechasActis)) ){
                                     Log.d("DEBUG", "Entró al if de acti");
@@ -616,13 +669,11 @@ public class ActividadesFragmentTutor extends Fragment {
         }
     }
 
-
     public static String doesImageExist(Context context, String inputPath) {
         // Se obtiene solo el nombre del archivo desde la ruta
         String fileName = extractFileName(inputPath);
         return fileName;
     }
-
 
     // Función para extraer solo el nombre del archivo de la ruta, ya que en la bd se tiene una ruta antes del name y el .svg
     private static String extractFileName(String path) {
@@ -637,45 +688,49 @@ public class ActividadesFragmentTutor extends Fragment {
     private void actuNumActis(){
         //Se consultan todas las actividades del hijo seleccionado
 
-        int idKit = confirmUsrKitSeleccionado();
+        SharedPreferences preferencesKit = requireContext().getSharedPreferences("usrKitCuentaTutor", Context.MODE_PRIVATE);
+        int idKit = preferencesKit.getInt("idKit", 0);
 
         if(idKit != 0){
             Log.d("DEBUG", "Si hay idKit");
             ApiService apiService2 = RetrofitClient.getApiService();
             Call<List<Actividad>> call2 = apiService2.getAllActividades();
-            int finalIdKit = idKit;
             call2.enqueue(new Callback<List<Actividad>>() {
                 @Override
                 public void onResponse(Call<List<Actividad>> call, Response<List<Actividad>> response) {
                     List<Actividad> actividades = response.body();
-                    AtomicInteger numActisEstaSemana = new AtomicInteger(0);
-                    AtomicInteger numActisSigSemana = new AtomicInteger(0);
-                    AtomicInteger numActisMasTarde = new AtomicInteger(0);
 
                     if (actividades != null) {
+                        int numActisEstaSemanaInt = 0;
+                        int numActisSigSemanaInt = 0;
+                        int numActisMasTardeInt = 0;
                         Log.e("DEBUG", "Hay actis");
                         for (Actividad actividad : actividades) {
-                            Log.e("DEBUG", String.valueOf(actividad.getIdKit() == finalIdKit));
-                            if (actividad.getIdKit() == finalIdKit) {
-                                Log.d("DEBUG", "Entró al if de acti");
+                            Log.e("DEBUG", String.valueOf(actividad.getIdKit() == idKit));
+                            if (actividad.getIdKit() == idKit) {
+                                Log.d("DEBUG", "Entró al if de acti: " + idKit);
 
-                                String verifi = obtenerPeriodo(actividad.getFechasActividad());
+                                String verifi = obtenerPeriodo(String.valueOf(actividad.getFechasActividad()));
 
                                 if(verifi.equals("No hay fechas disponibles en el futuro")){
                                     continue;
                                 }else if(verifi.equals("contenedor_esta_semana")){
-                                    numActisEstaSemana.incrementAndGet();
+                                    numActisEstaSemanaInt++;
                                 }else if(verifi.equals("contenedor_siguiente_semana")){
-                                    numActisSigSemana.incrementAndGet();
+                                    numActisSigSemanaInt++;
                                 }else if(verifi.equals("contenedor_despues")){
-                                    numActisMasTarde.incrementAndGet();
+                                    numActisMasTardeInt++;
                                 }
                             }
                         }
+                        numActisEstaSemana.setText(String.valueOf(numActisEstaSemanaInt));
+                        numActisSigSemana.setText(String.valueOf(numActisSigSemanaInt));
+                        numActisMasTarde.setText(String.valueOf(numActisMasTardeInt));
+                    }else{
+                        numActisEstaSemana.setText("0");
+                        numActisSigSemana.setText("0");
+                        numActisMasTarde.setText("0");
                     }
-                    numActisEstaSemanaTxt.setText(numActisEstaSemana.toString());
-                    numActisSigSemanaTxt.setText(numActisSigSemana.toString());
-                    numActisMasTardeTxt.setText(numActisMasTarde.toString());
                 }
                 @Override
                 public void onFailure(Call<List<Actividad>> call, Throwable t) {
@@ -809,5 +864,288 @@ public class ActividadesFragmentTutor extends Fragment {
 
             }
         });
+    }
+
+    //método que se encarga de desplegar las actividades que concuerden
+    //con lo ingresado en la barra de búsqueda
+    private void despleActisPorBusqueda(String textoIngresado){
+        ApiService apiService = RetrofitClient.getApiService();
+        Call<List<Actividad>> call = apiService.getAllActividades();
+        call.enqueue(new Callback<List<Actividad>>() {
+            @Override
+            public void onResponse(Call<List<Actividad>> call, Response<List<Actividad>> response) {
+                List<Actividad> actividades = response.body();
+                if (actividades != null) {
+                    Log.e("DEBUG", "Hay actis");
+                    SharedPreferences sharedPreferences = getContext().getSharedPreferences("usrKitCuentaTutor", Context.MODE_PRIVATE);
+                    int idKit = sharedPreferences.getInt("idKit", 0);
+                    List<Actividad> actisCoincid = new ArrayList<>();
+                    Boolean verifiActiCoincid = false;
+
+                        for (Actividad actividad : actividades) {
+                            Log.e("DEBUG", "idKit: " + idKit);
+                            if (actividad.getIdKit() == idKit) {
+                                if (String.valueOf(actividad.getNombreHabito()).toLowerCase().contains(textoIngresado.toLowerCase())) {
+                                    //se agregan las actividades que coincidan y se establece un boolean pa decidir si o si no
+                                    actisCoincid.add(actividad);
+                                    verifiActiCoincid = true;
+                                }
+                            }
+                        }
+                    if(textoIngresado.isEmpty()){
+                        verifiActiCoincid = false;
+                    }
+
+
+                    LinearLayout linearLayoutCont = new LinearLayout(getActivity());
+                    linearLayoutCont.setLayoutParams(new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.MATCH_PARENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT
+                    ));
+                    linearLayoutCont.setOrientation(LinearLayout.VERTICAL);
+                    int padding = (int) TypedValue.applyDimension(
+                            TypedValue.COMPLEX_UNIT_DIP, 8, getResources().getDisplayMetrics());
+                    linearLayoutCont.setPadding(padding, padding, padding, padding);
+                    linearLayoutCont.setTag("actisDesplegadas");
+                    linearLayoutCont.removeAllViews();
+                    for (int i = linLayContainAllActis.getChildCount() - 1; i >= 0; i--) {
+                        View child = linLayContainAllActis.getChildAt(i);
+                        if ("actisDesplegadas".equals(child.getTag())) {
+                            linLayContainAllActis.removeViewAt(i);
+                        }
+                    }
+
+                    if(verifiActiCoincid){
+                        //se esconden los linearlayout
+                        layout_esta_semana.setVisibility(View.GONE);
+                        layout_siguiente_semana.setVisibility(View.GONE);
+                        layout_mas_tarde.setVisibility(View.GONE);
+                        for(Actividad actividadVer : actisCoincid){
+                            Log.d("DEBUG", "Entró al if de acti");
+                            LayoutInflater inflater = LayoutInflater.from(requireContext());
+                            View actividadView = inflater.inflate(R.layout.item_list_actividades, linearLayoutCont, false);
+
+                            //Inicio código de cargar actividades desde asset, solo copien lo de la imágen, lo demás no es necesario
+                            ImageView imgActividad = actividadView.findViewById(R.id.imgActividad);
+                            TextView txtNombre = actividadView.findViewById(R.id.txtTitActi);
+                            TextView txtRamitasActi = actividadView.findViewById(R.id.txtRamitasActi);
+                            TextView txtIntervaloHrs = actividadView.findViewById(R.id.txtIntervaloHrs);
+
+                            String hraInicial = String.valueOf(actividadVer.getHoraInicioHabito());
+                            String horaFinal = String.valueOf(actividadVer.getHoraFinHabito());
+
+                            txtIntervaloHrs.setText(hraInicial + " - " + horaFinal);
+
+                            Button btn_ir = actividadView.findViewById(R.id.btn_ir);
+
+                            String imgBd = actividadVer.getRutaImagenHabito();
+                            Log.d("DEBUG", "valor ruta imágen: " + imgBd);
+
+                            String imageName = doesImageExist(requireContext(), imgBd);
+                            if (imageName != null) {
+                                InputStream inputStream = null;
+                                String assetPath = "img/img_actividades/" + imageName; // Asegúrate de que la ruta esté correcta
+                                Log.d("DEBUG", "Intentando abrir archivo: " + assetPath);
+
+                                try {
+                                    inputStream = requireContext().getAssets().open(assetPath);
+                                    Log.d("DEBUG", "InputStream abierto correctamente.");
+
+                                    // Crear un objeto SVG desde el InputStream
+                                    SVG svg = SVG.getFromInputStream(inputStream);
+                                    if (svg != null) {
+                                        // Convertir el SVG a un Drawable y mostrarlo
+                                        Drawable drawable = new PictureDrawable(svg.renderToPicture());
+                                        imgActividad.setImageDrawable(drawable);
+                                        Log.d("DEBUG", "Imagen SVG cargada correctamente.");
+                                    } else {
+                                        Log.e("DEBUG", "Error al crear el objeto SVG.");
+                                    }
+                                    Log.d("DEBUG", "InputStream cerrado.");
+                                } catch (IOException | SVGParseException e) {
+                                    Log.e("DEBUG", "Error al cargar el archivo SVG: " + e.getMessage());
+                                }
+                            } else {
+                                Log.e("DEBUG", "Error al encontrar la ruta de la imagen");
+                            }
+                            //Fin del código de cargar imágen svg desde asset
+
+
+                            String nombreHabito = String.valueOf(actividadVer.getNombreHabito());
+                            int numRamitas = actividadVer.getNumRamitas();
+                            String stringNumRamitas = String.valueOf(numRamitas);
+
+                            txtNombre.setText(nombreHabito);
+                            txtRamitasActi.setText(stringNumRamitas + " ramitas");
+
+                            //Esta es la lógica del botón de "Ir" de cada acti que despliega la información de cada acti en la parte inferior
+                            //de la pantalla, se tiene que inflar el xml del diseño y sustituir valores
+                            btn_ir.setOnClickListener(v -> {
+                                //Sesión para que se despliegue la acti seleccionada el editar, recargar, abrir, etc.
+                                SharedPreferences sharedPreferences2 = requireContext().getSharedPreferences("sesionModalActis", MODE_PRIVATE);
+                                SharedPreferences.Editor editor = sharedPreferences2.edit();
+                                editor.putBoolean("sesion_activa", true);
+                                editor.apply();
+
+                                BottomSheetDialog modal = new BottomSheetDialog(requireContext());
+                                View view = getLayoutInflater().inflate(R.layout.bottom_modal_view, null);
+                                modal.setContentView(view);
+
+                                modal.setOnDismissListener(dialog -> {
+                                    // Aquí se cambia el valor de la sesión cuando se cierra
+                                    SharedPreferences sharedPreferencesCerrar = requireContext().getSharedPreferences("sesionModalActis", MODE_PRIVATE);
+                                    SharedPreferences.Editor editorCerrar = sharedPreferencesCerrar.edit();
+                                    editorCerrar.putBoolean("sesion_activa", false);
+                                    editorCerrar.apply();
+                                });
+
+                                // Obtener referencias de los elementos
+                                TextView txtTitle = view.findViewById(R.id.txtTitle);
+                                TextView txtTipoHabito = view.findViewById(R.id.txtTipoHabito);
+                                ImageView imgActiModal = view.findViewById(R.id.imgActividad);
+                                TextView numRamitasModal = view.findViewById(R.id.numRamitas);
+                                ImageView btnVerMasInfoActi = view.findViewById(R.id.btnVerMasInfoActi);
+
+                                //Aquí va lo que pasa cuando quiere ver más información de la acti:
+                                btnVerMasInfoActi.setOnClickListener(v1 -> {
+                                    Intent intent = new Intent(requireActivity(), VerMasInfoActi.class);
+                                    startActivity(intent);
+                                });
+
+                                LinearLayout btnEditActi = view.findViewById(R.id.layout_btn_edit_acti);
+                                LinearLayout btnBorrarActi = view.findViewById(R.id.layout_btn_borrar_acti);
+
+                                btnEditActi.setOnClickListener(v1 -> {
+                                    //Aquí va lo que pasa cuando quiere editar el modal
+                                    SharedPreferences preferences = requireContext().getSharedPreferences("actividadSelected", MODE_PRIVATE);
+                                    SharedPreferences.Editor editor2 = preferences.edit();
+                                    editor2.putInt("idActividad", actividadVer.getIdActividad());
+                                    editor2.apply();
+
+                                    Intent intent = new Intent(requireActivity(), EditarActividad.class);
+                                    startActivity(intent);
+                                });
+
+                                //Aquí se abre el modal que confirma borrar la acti cuando da click en el boton de borrar acti
+                                btnBorrarActi.setOnClickListener(v1 -> {
+                                    Dialog modalBorrar = new Dialog(requireContext());
+                                    View viewBorrar = getLayoutInflater().inflate(R.layout.modal_cerrar_view_confirm, null);
+                                    modalBorrar.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                    modalBorrar.setContentView(viewBorrar);
+
+                                    TextView txtDialogTitle = viewBorrar.findViewById(R.id.txtDialogTitle);
+                                    TextView txtDialogMessage = viewBorrar.findViewById(R.id.txtDialogMessage);
+                                    Button btnCerrarModal = viewBorrar.findViewById(R.id.btnCerrarModal);
+                                    Button btnConfirm = viewBorrar.findViewById(R.id.btnConfirm);
+
+                                    btnConfirm.setOnClickListener(v3 -> {
+                                        modalBorrar.dismiss();
+                                        modal.dismiss();
+                                        borrarActividad(actividadVer.getIdActividad());
+
+                                    });
+
+
+                                    txtDialogTitle.setText("¡Atención!");
+                                    txtDialogMessage.setText("Estás a punto de borrar el hábito: " + "'"+actividadVer.getNombreHabito() + "'" + " si aceptas no se podrá deshacer la acción.");
+
+                                    btnCerrarModal.setOnClickListener(v2 -> modalBorrar.dismiss());
+                                    modalBorrar.show();
+                                });
+
+                                String nomHabito = String.valueOf(actividadVer.getNombreHabito());
+                                String tipHabit = String.valueOf(actividadVer.getTipoHabito());
+                                int numeroRamitas = actividadVer.getNumRamitas();
+                                String strgNumRamitas = String.valueOf(numeroRamitas);
+
+                                txtTitle.setText(nomHabito);
+                                txtTipoHabito.setText(tipHabit);
+                                numRamitasModal.setText(strgNumRamitas + " ramitas");
+
+                                String imageName2 = doesImageExist(requireContext(), imgBd);
+                                InputStream inputStream2 = null;
+                                String assetPath2 = "img/img_actividades/" + imageName2;
+                                InputStream inputStream3 = null;
+                                try {
+                                    inputStream3 = requireContext().getAssets().open(assetPath2);
+                                } catch (IOException e) {
+                                    throw new RuntimeException(e);
+                                }
+                                SVG svg = null;
+                                try {
+                                    svg = SVG.getFromInputStream(inputStream3);
+                                } catch (SVGParseException e) {
+                                    throw new RuntimeException(e);
+                                }
+                                Drawable drawable2 = new PictureDrawable(svg.renderToPicture());
+                                imgActiModal.setImageDrawable(drawable2);
+                                modal.show();
+
+                                SharedPreferences preferences = requireContext().getSharedPreferences("actividadSelected", MODE_PRIVATE);
+                                SharedPreferences.Editor editor3 = preferences.edit();
+                                editor3.putInt("idActividad", actividadVer.getIdActividad());
+                                editor3.apply();
+                            });
+                            //Fin de la lógica de desplegar modal
+
+                            // Agregar la vista al contenedor
+                            if (linearLayoutCont.getParent() != null) {
+                                ((ViewGroup) linearLayoutCont.getParent()).removeView(linearLayoutCont);
+                            }
+                            linearLayoutCont.addView(actividadView);
+                            linLayContainAllActis.addView(linearLayoutCont);
+
+                            Log.e("DEBUG", "Cont: " + linearLayoutCont);
+                        }
+                    }else{
+                        //se comprueba si están desplegadas y luego se despliegan en caso de que no
+                        if (layout_esta_semana.getVisibility() == View.GONE) {
+                            layout_esta_semana.setVisibility(View.VISIBLE);
+                        }if (layout_siguiente_semana.getVisibility() == View.GONE) {
+                            layout_siguiente_semana.setVisibility(View.VISIBLE);
+                        }if (layout_mas_tarde.getVisibility() == View.GONE) {
+                            layout_mas_tarde.setVisibility(View.VISIBLE);
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Actividad>> call, Throwable t) {
+
+            }
+        });
+    }
+
+    private void desplFiltros(){
+        BottomSheetDialog modal = new BottomSheetDialog(requireContext());
+        View modalView = getLayoutInflater().inflate(R.layout.filtros_actis, null);
+        modal.setContentView(modalView);
+
+        View bottomSheet = modal.getDelegate().findViewById(com.google.android.material.R.id.design_bottom_sheet);
+        if (bottomSheet != null) {
+            BottomSheetBehavior<View> behavior = BottomSheetBehavior.from(bottomSheet);
+            behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+            // Evita el colapso intermedio
+            behavior.setSkipCollapsed(true);
+            behavior.setDraggable(false);
+        }
+
+        ScrollView scrollView = modalView.findViewById(R.id.scrollFiltros);
+        scrollView.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                BottomSheetBehavior<View> behavior = BottomSheetBehavior.from(bottomSheet);
+                // Si el scroll está arriba, se permite cerrar arrastrando, sino , ps no
+                if (scrollY == 0) {
+                    behavior.setDraggable(true);
+                } else {
+                    behavior.setDraggable(false);
+                }
+            }
+        });
+
+        modal.show();
+
     }
 }

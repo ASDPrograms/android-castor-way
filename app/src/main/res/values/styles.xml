@@ -34,5 +34,10 @@
         <item name="maxWidth">12dp</item>
     </style>
 
+    //para los radiobutton:
+    <style name="CustomRadioButton" parent="Widget.AppCompat.CompoundButton.RadioButton">
+        <item name="colorControlActivated">#566C9F</item>
+        <item name="colorControlNormal">#B0BEC5</item>
+    </style>
 </resources>
 

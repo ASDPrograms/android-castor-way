@@ -4,13 +4,16 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.PorterDuff;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.media.Image;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -23,6 +26,7 @@ import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -32,6 +36,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -41,12 +46,22 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.castorway.api.ApiService;
 import com.example.castorway.modelsDB.Actividad;
+import com.example.castorway.modelsDB.Kit;
 import com.example.castorway.retrofit.RetrofitClient;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
+
 import org.w3c.dom.Text;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -200,7 +215,7 @@ public class VerMasInfoActi extends AppCompatActivity {
 
                                     int finalI = i;
                                     imageView.setOnClickListener(v -> {
-                                        mostrarModalPorDiaActi(finalI);
+                                        mostrarModalPorDiaActi(finalI, dialog);
                                     });
 
                                     //para que el 1 esté hasta abajo y el 21 hasta arriba
@@ -294,12 +309,11 @@ public class VerMasInfoActi extends AppCompatActivity {
         });
     }
 
-    private void mostrarModalPorDiaActi(int numDia){
+    private void mostrarModalPorDiaActi(int numDia, Dialog dialog){
         ApiService apiService = RetrofitClient.getApiService();
         Call<List<Actividad>> call = apiService.getAllActividades();
-
-        // Realizamos la llamada Retrofit
         call.enqueue(new Callback<List<Actividad>>() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onResponse(Call<List<Actividad>> call, Response<List<Actividad>> response) {
                 List<Actividad> actividades = response.body();
@@ -316,6 +330,414 @@ public class VerMasInfoActi extends AppCompatActivity {
                             View view = LayoutInflater.from(VerMasInfoActi.this).inflate(R.layout.bottom_modal_cada_dia_acti, null);
                             BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(VerMasInfoActi.this);
                             bottomSheetDialog.setContentView(view);
+
+                            TextView progress_item_text = view.findViewById(R.id.progress_item_text);
+                            progress_item_text.setText(String.valueOf(numDia));
+
+                            //para la fecha en que cae la acti:
+                            String fechasActis = String.valueOf(actividad.getFechasActividad());
+                            String elementosFechasActis[] = fechasActis.split(",");
+                            TextView fechaActi = view.findViewById(R.id.fechaActi);
+                            String fechaSelected = "";
+
+                            for (int i = 0; i < elementosFechasActis.length; i++){
+                                if(i == numDia - 1){
+                                    fechaSelected = elementosFechasActis[i].trim();
+                                    fechaActi.setText(elementosFechasActis[i]);
+                                }
+                            }
+
+                            //hora de intervalos:
+                            String horaInicial = String.valueOf(actividad.getHoraInicioHabito());
+                            String horaFinal = String.valueOf(actividad.getHoraFinHabito());
+
+                            TextView txtIntervaloHrs = view.findViewById(R.id.txtIntervaloHrs);
+                            txtIntervaloHrs.setText(horaInicial + " - " + horaFinal);
+
+                            //horaEntrega:
+                            String hrsCompletadas = String.valueOf(actividad.getHrsCompletadas());
+                            String elementosHrsCompletadas[] = hrsCompletadas.split(",");
+                            TextView horaCompletada = view.findViewById(R.id.horaCompletada);
+
+                            for (int i = 0; i < elementosHrsCompletadas.length; i++){
+                                if(i == numDia - 1){
+                                    horaCompletada.setText(elementosHrsCompletadas[i].trim());
+                                }
+                            }
+
+                            //estadosActi:
+                            LinearLayout linLayEstatusActi = view.findViewById(R.id.linLayEstatusActi);
+                            TextView txtEstatusActi = view.findViewById(R.id.txtEstatusActi);
+                            String estadosActi = String.valueOf(actividad.getEstadosActi()).trim();
+                            String elementEstadosActi[] = estadosActi.split(",");
+                            String estadoAsignar = "";
+                            ImageView btnAceptarActi = view.findViewById(R.id.btnAceptarActi);
+                            ImageView btnRechazarActi = view.findViewById(R.id.btnRechazarActi);
+                            LinearLayout contBtnAceptRechazActi=  view.findViewById(R.id.contBtnAceptRechazActi);
+
+                            for (int i = 0; i < elementEstadosActi.length; i++){
+                                if(i == numDia - 1){
+                                    estadoAsignar = elementEstadosActi[i].trim();
+                                }
+                            }
+
+                            DateTimeFormatter formatter = null;
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                            } else {
+                                Toast.makeText(VerMasInfoActi.this, "Hay un error con tu versión", Toast.LENGTH_SHORT).show();
+                            }
+
+                            LocalDate fechaAComparar = null;
+
+                            Log.e("fechaSelected", fechaSelected);
+                            try {
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                    fechaAComparar = LocalDate.parse(fechaSelected, formatter);
+                                } else {
+                                    Toast.makeText(VerMasInfoActi.this, "Hay un error con tu versión", Toast.LENGTH_SHORT).show();
+                                }
+                            } catch (DateTimeParseException e) {
+                                e.printStackTrace();
+                                Toast.makeText(VerMasInfoActi.this, "Error al parsear la fecha", Toast.LENGTH_SHORT).show();
+                            }
+
+                            LocalDate fechaActual = LocalDate.now();
+
+
+                            if (estadoAsignar.equals("0")) {
+                                //se esconden los botone de aceptar y rechazar:
+                                contBtnAceptRechazActi.removeView(btnAceptarActi);
+                                contBtnAceptRechazActi.removeView(btnRechazarActi);
+
+                                //se pone el texto pa decir que no se puede hacer na
+                                TextView textView = new TextView(VerMasInfoActi.this);
+                                textView.setText("--Sin acción disponible--");
+                                textView.setTextSize(18);
+                                textView.setTypeface(getResources().getFont(R.font.gayathri_bold));
+                                textView.setTextColor(Color.BLACK);
+                                contBtnAceptRechazActi.addView(textView);
+
+                                if (fechaAComparar.isBefore(fechaActual)) {
+                                    //colores rojos:
+                                    int color_estatus_fondo = getResources().getColor(R.color.rojo_estatus_fondo);
+                                    ColorStateList colorStateList = ColorStateList.valueOf(color_estatus_fondo);
+                                    linLayEstatusActi.setBackgroundTintList(colorStateList);
+
+                                    txtEstatusActi.setText("Sin completar");
+                                    int color_estatus_txt = getResources().getColor(R.color.rojo_estatus_texto);
+                                    txtEstatusActi.setTextColor(color_estatus_txt);
+                                } else {
+                                    //colores amarillos:
+                                    int color_estatus_fondo = getResources().getColor(R.color.amarillo_estatus_fondo);
+                                    ColorStateList colorStateList = ColorStateList.valueOf(color_estatus_fondo);
+                                    linLayEstatusActi.setBackgroundTintList(colorStateList);
+
+                                    txtEstatusActi.setText("En proceso");
+                                    int color_estatus_txt = getResources().getColor(R.color.amarillo_estatus_texto);
+                                    txtEstatusActi.setTextColor(color_estatus_txt);
+                                }
+                            } else if (estadoAsignar.equals("1")) {
+                                //se esconden los botone de aceptar y rechazar:
+                                contBtnAceptRechazActi.removeView(btnAceptarActi);
+                                contBtnAceptRechazActi.removeView(btnRechazarActi);
+
+                                //se pone el texto pa decir que no se puede hacer na
+                                TextView textView = new TextView(VerMasInfoActi.this);
+                                textView.setText("--Sin acción disponible--");
+                                textView.setTextSize(18);
+                                textView.setTypeface(getResources().getFont(R.font.gayathri_bold));
+                                textView.setTextColor(Color.BLACK);
+                                contBtnAceptRechazActi.addView(textView);
+
+                                //colores rojos:
+                                int color_estatus_fondo = getResources().getColor(R.color.rojo_estatus_fondo);
+                                ColorStateList colorStateList = ColorStateList.valueOf(color_estatus_fondo);
+                                linLayEstatusActi.setBackgroundTintList(colorStateList);
+
+                                txtEstatusActi.setText("Sin completar");
+                                int color_estatus_txt = getResources().getColor(R.color.rojo_estatus_texto);
+                                txtEstatusActi.setTextColor(color_estatus_txt);
+                            } else if (estadoAsignar.equals("2")) {
+                                //se esconden los botone de aceptar y rechazar:
+                                contBtnAceptRechazActi.removeView(btnAceptarActi);
+                                contBtnAceptRechazActi.removeView(btnRechazarActi);
+
+                                //se pone el texto pa decir que no se puede hacer na
+                                TextView textView = new TextView(VerMasInfoActi.this);
+                                textView.setText("--Sin acción disponible--");
+                                textView.setTextSize(18);
+                                textView.setTypeface(getResources().getFont(R.font.gayathri_bold));
+                                textView.setTextColor(Color.BLACK);
+                                contBtnAceptRechazActi.addView(textView);
+
+                                //colores verde:
+                                int color_estatus_fondo = getResources().getColor(R.color.verde_estatus_fondo);
+                                ColorStateList colorStateList = ColorStateList.valueOf(color_estatus_fondo);
+                                linLayEstatusActi.setBackgroundTintList(colorStateList);
+
+                                txtEstatusActi.setText("Completada");
+                                int color_estatus_txt = getResources().getColor(R.color.verde_estatus_texto);
+                                txtEstatusActi.setTextColor(color_estatus_txt);
+                            } else if (estadoAsignar.equals("3")) {
+                                //como está en revisión se permite aceptar y regresar la acti.
+                                //colores azules:
+                                int color_estatus_fondo = getResources().getColor(R.color.azul_estatus_fondo);
+                                ColorStateList colorStateList = ColorStateList.valueOf(color_estatus_fondo);
+                                linLayEstatusActi.setBackgroundTintList(colorStateList);
+
+                                txtEstatusActi.setText("En revisión");
+                                int color_estatus_txt = getResources().getColor(R.color.azul_estatus_texto);
+                                txtEstatusActi.setTextColor(color_estatus_txt);
+
+                                //aquí se deben de poner las acciones para los botones de aceptar y rechazar actis:
+                                btnAceptarActi.setOnClickListener(v -> {
+                                    StringBuilder sb = new StringBuilder();
+                                    elementEstadosActi[numDia - 1] = "2";
+
+                                    // Recorremos el array y agregamos los valores separados por comas
+                                    for (int i = 0; i < elementEstadosActi.length; i++) {
+                                        sb.append(elementEstadosActi[i]);
+                                        if (i < elementEstadosActi.length - 1) {
+                                            sb.append(",");
+                                        }
+                                    }
+
+                                    String resultadoEstados = sb.toString().trim();
+                                    Log.e("Verificar", "resultadoEstados" + resultadoEstados);
+
+                                    //verificar si es el último en marcar como completado para dar ramitas
+                                    boolean verifiUltActi = false;
+                                    for(int i = 0; i < elementEstadosActi.length; i++){
+                                        if(!elementEstadosActi[i].equals("2")){
+                                            verifiUltActi = true;
+                                        }
+                                    }
+
+                                    Log.e("Verificar", "elementEstadosActi.length" + elementEstadosActi.length);
+                                    Log.e("Verificar", "verifiUltActi" + verifiUltActi);
+
+                                    if(!verifiUltActi){
+                                        ApiService apiService = RetrofitClient.getApiService();
+                                        Call<List<Kit>> call2 = apiService.getAllKits();
+                                        call2.enqueue(new Callback<List<Kit>>() {
+                                            @Override
+                                            public void onResponse(Call<List<Kit>> call, Response<List<Kit>> response) {
+                                                if (response.isSuccessful()) {
+                                                    List<Kit> kits = response.body();
+                                                    if (kits != null) {
+                                                        SharedPreferences preferences = getSharedPreferences("usrKitCuentaTutor", MODE_PRIVATE);
+                                                        int idKit = preferences.getInt("idKit", 0);
+                                                        for (Kit kit : kits) {
+                                                            if (kit.getIdKit() == idKit){
+                                                                int numRamitaS = kit.getRamitas();
+
+                                                                kit.setRamitas(numRamitaS + actividad.getNumRamitas());
+
+                                                                Log.e("Verificar", "getRamitas" + kit.getRamitas());
+
+                                                                ApiService apiService2 = RetrofitClient.getApiService();
+                                                                Call<Kit> call3 = apiService2.updateKit(kit);
+                                                                call3.enqueue(new Callback<Kit>() {
+                                                                    @Override
+                                                                    public void onResponse(Call<Kit> call, Response<Kit> response) {
+                                                                        if (response.isSuccessful()) {
+                                                                            Kit updaKit = response.body();
+                                                                            if (updaKit != null) {
+                                                                                Log.d("Verificar", "Kit actualizado: " + updaKit.toString());
+                                                                            } else {
+                                                                                // Si la respuesta no fue exitosa, loguear el código de error
+                                                                                Log.d("APIResponse", "Error en la actualización: " + response.code());
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                    @Override
+                                                                    public void onFailure(Call<Kit> call, Throwable t) {
+                                                                        Log.d("APIResponse", "Error en la actualización: " + response.code());
+                                                                    }
+                                                                });
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onFailure(Call<List<Kit>> call, Throwable t) {
+                                                Log.d("APIResponse", "Error");
+                                            }
+                                        });
+                                    }
+
+                                    actividad.setEstadosActi(resultadoEstados);
+                                    int diasCompletados = actividad.getDiasCompletados();
+                                    actividad.setDiasCompletados(diasCompletados + 1);
+
+                                    Log.e("Verificar", "actividad: " + actividad.getIdActividad());
+
+                                    ApiService apiService = RetrofitClient.getApiService();
+                                    Call<Actividad> call2 = apiService.updateActividad(actividad);
+                                    call2.enqueue(new Callback<Actividad>() {
+                                        @Override
+                                        public void onResponse(Call<Actividad> call, Response<Actividad> response) {
+                                            if (response.isSuccessful()) {
+                                                Actividad updatedActividad = response.body();
+                                                if (updatedActividad != null) {
+                                                    Log.d("Verificar", "Actividad actualizada: " + updatedActividad.toString());
+                                                } else {
+                                                    // Si la respuesta no fue exitosa, loguear el código de error
+                                                    Log.d("Verificar", "Error en la actualización: " + response.code());
+                                                }
+                                                //Inicio del código para mostrar el toast personalizado
+                                                LayoutInflater inflater = getLayoutInflater();
+                                                View layout = inflater.inflate(R.layout.toast_personalizado, null);
+
+                                                ImageView icon = layout.findViewById(R.id.toast_icon);
+                                                icon.setImageResource(R.drawable.img_circ_palomita_verde);
+
+                                                TextView text = layout.findViewById(R.id.toast_text);
+                                                text.setText("Actividad revisada con éxito.");
+
+                                                Drawable background = layout.getBackground();
+                                                background.setColorFilter(ContextCompat.getColor(VerMasInfoActi.this, R.color.verdecito_toast), PorterDuff.Mode.SRC_IN);
+
+                                                text.setTextColor(ContextCompat.getColor(VerMasInfoActi.this, R.color.black));
+
+                                                Toast toast = new Toast(VerMasInfoActi.this);
+                                                toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
+                                                toast.setDuration(Toast.LENGTH_LONG);
+                                                toast.setView(layout);
+                                                toast.show();
+
+                                                //esconde el modal bottom y el modal de progreso total
+                                                bottomSheetDialog.dismiss();
+                                                dialog.dismiss();
+
+                                                Intent intent = getIntent();
+                                                finish();
+                                                startActivity(intent);
+                                            }
+                                        }
+                                        @Override
+                                        public void onFailure(Call<Actividad> call, Throwable t) {
+
+                                        }
+                                    });
+                                });
+
+                                btnRechazarActi.setOnClickListener(v -> {
+                                    StringBuilder sb = new StringBuilder();
+                                    elementEstadosActi[numDia - 1] = "5";
+
+                                    // Recorremos el array y agregamos los valores separados por comas
+                                    for (int i = 0; i < elementEstadosActi.length; i++) {
+                                        sb.append(elementEstadosActi[i]);
+                                        if (i < elementEstadosActi.length - 1) {
+                                            sb.append(",");
+                                        }
+                                    }
+
+                                    Log.e("Verificar", "elementEstadosActi.length" + elementEstadosActi.length);
+                                    String resultadoEstados = sb.toString().trim();
+                                    Log.e("Verificar", "resultadoEstados" + resultadoEstados);
+
+                                    actividad.setEstadosActi(resultadoEstados);
+
+                                    ApiService apiService = RetrofitClient.getApiService();
+                                    Call<Actividad> call2 = apiService.updateActividad(actividad);
+                                    call2.enqueue(new Callback<Actividad>() {
+                                        @Override
+                                        public void onResponse(Call<Actividad> call, Response<Actividad> response) {
+                                            if (response.isSuccessful()) {
+                                                Actividad updatedActividad = response.body();
+                                                if (updatedActividad != null) {
+                                                    Log.d("APIResponse", "Actividad actualizada: " + updatedActividad.toString());
+                                                } else {
+                                                    // Si la respuesta no fue exitosa, loguear el código de error
+                                                    Log.d("APIResponse", "Error en la actualización: " + response.code());
+                                                }
+
+                                                //Inicio del código para mostrar el toast personalizado
+                                                LayoutInflater inflater = getLayoutInflater();
+                                                View layout = inflater.inflate(R.layout.toast_personalizado, null);
+
+                                                ImageView icon = layout.findViewById(R.id.toast_icon);
+                                                icon.setImageResource(R.drawable.notif_actdevuelta);
+
+                                                TextView text = layout.findViewById(R.id.toast_text);
+                                                text.setText("Actividad regresada con éxito.");
+
+                                                Drawable background = layout.getBackground();
+                                                background.setColorFilter(ContextCompat.getColor(VerMasInfoActi.this, R.color.azul_toast_bienvenido), PorterDuff.Mode.SRC_IN);
+
+                                                text.setTextColor(ContextCompat.getColor(VerMasInfoActi.this, R.color.black));
+
+                                                Toast toast = new Toast(VerMasInfoActi.this);
+                                                toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
+                                                toast.setDuration(Toast.LENGTH_LONG);
+                                                toast.setView(layout);
+                                                toast.show();
+
+                                                //esconde el modal bottom y el modal de progreso total
+                                                bottomSheetDialog.dismiss();
+                                                dialog.dismiss();
+
+                                                Intent intent = getIntent();
+                                                finish();
+                                                startActivity(intent);
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onFailure(Call<Actividad> call, Throwable t) {
+
+                                        }
+                                    });
+                                });
+
+                            } else if (estadoAsignar.equals("4")) {
+                                //se esconden los botones de aceptar y rechazar:
+                                contBtnAceptRechazActi.removeView(btnAceptarActi);
+                                contBtnAceptRechazActi.removeView(btnRechazarActi);
+
+                                //se pone el texto pa decir que no se puede hacer na
+                                TextView textView = new TextView(VerMasInfoActi.this);
+                                textView.setText("--Sin acción disponible--");
+                                textView.setTextSize(18);
+                                textView.setTypeface(getResources().getFont(R.font.gayathri_bold));
+                                textView.setTextColor(Color.BLACK);
+                                contBtnAceptRechazActi.addView(textView);
+
+                                //colores carnita:
+                                int color_estatus_fondo = getResources().getColor(R.color.carnita_estatus_fondo);
+                                ColorStateList colorStateList = ColorStateList.valueOf(color_estatus_fondo);
+                                linLayEstatusActi.setBackgroundTintList(colorStateList);
+
+                                txtEstatusActi.setText("Comodín usado");
+                                int color_estatus_txt = getResources().getColor(R.color.carnita_estatus_texto);
+                                txtEstatusActi.setTextColor(color_estatus_txt);
+                            } else if (estadoAsignar.equals("5")) {
+                                //se esconden los botone de aceptar y rechazar:
+                                contBtnAceptRechazActi.removeView(btnAceptarActi);
+                                contBtnAceptRechazActi.removeView(btnRechazarActi);
+
+                                //se pone el texto pa decir que no se puede hacer na
+                                TextView textView = new TextView(VerMasInfoActi.this);
+                                textView.setText("--Sin acción disponible--");
+                                textView.setTextSize(18);
+                                textView.setTypeface(getResources().getFont(R.font.gayathri_bold));
+                                textView.setTextColor(Color.BLACK);
+                                contBtnAceptRechazActi.addView(textView);
+
+                                //colores naranjas:
+                                int color_estatus_fondo = getResources().getColor(R.color.naranja_estatus_fondo);
+                                ColorStateList colorStateList = ColorStateList.valueOf(color_estatus_fondo);
+                                linLayEstatusActi.setBackgroundTintList(colorStateList);
+
+                                txtEstatusActi.setText("Regresada");
+                                int color_estatus_txt = getResources().getColor(R.color.naranja_estatus_texto);
+                                txtEstatusActi.setTextColor(color_estatus_txt);
+                            }
 
                             bottomSheetDialog.show();
                             break;
@@ -481,7 +903,7 @@ public class VerMasInfoActi extends AppCompatActivity {
 
                             boolean todosSonDos = true;
                             for (String valor : estadosActiArray) {
-                                if (Integer.parseInt(valor) != 2) {
+                                if (Integer.parseInt(valor.trim()) != 2) {
                                     todosSonDos = false;
                                     break;
                                 }

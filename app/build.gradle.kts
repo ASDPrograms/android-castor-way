@@ -43,6 +43,7 @@ dependencies {
     implementation ("com.google.android.material:material:1.13.0-alpha10")
     implementation ("com.caverock:androidsvg:1.4")
     implementation ("com.github.bumptech.glide:glide:4.16.0")
+    implementation(libs.swiperefreshlayout)
     annotationProcessor ("com.github.bumptech.glide:compiler:4.16.0")
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
