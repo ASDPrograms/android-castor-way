@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/border_bottom_modal_premio"
-    android:padding="16dp"
+    android:padding="15dp"
     android:orientation="vertical"
     android:gravity="center"
     android:id="@+id/modalBottomSheetActis">
@@ -42,8 +42,8 @@
 
                 <ImageView
                     android:id="@+id/imgPremio"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
+                    android:layout_width="110dp"
+                    android:layout_height="110dp"
                     />
             </LinearLayout>
 
@@ -140,7 +140,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
                 android:text="Nivel Premio"
-                android:textSize="25sp"
+                android:textSize="30sp"
                 android:fontFamily="@font/dongle_bold"
                 android:textStyle="bold"
                 android:textColor="@color/black"
@@ -159,7 +159,7 @@
                         android:layout_height="30dp"
                         android:text="Categoria"
 
-                        android:textSize="25sp"
+                        android:textSize="30sp"
                         android:fontFamily="@font/dongle_bold"
                         android:textStyle="bold"
                         android:textColor="@color/black"
@@ -189,7 +189,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="30dp"
                         android:text="Tipo"
-                        android:textSize="25sp"
+                        android:textSize="30sp"
                         android:fontFamily="@font/dongle_bold"
                         android:textStyle="bold"
                         android:textColor="@color/black"

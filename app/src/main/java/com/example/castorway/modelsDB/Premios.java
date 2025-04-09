@@ -19,6 +19,7 @@ public class Premios {
     }
 
     public void setIdPremio(int idPremio) {
+
         this.idPremio = idPremio;
     }
 

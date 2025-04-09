@@ -32,9 +32,10 @@
         android:gravity="bottom">
 
         <TextView
+            android:id="@+id/Prem"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Premios Reclamados"
+            android:text=""
             android:fontFamily="@font/gayathri_bold"
             android:textSize="25sp"
             android:textColor="#1A1A1A"

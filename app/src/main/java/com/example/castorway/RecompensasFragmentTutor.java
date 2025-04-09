@@ -14,7 +14,6 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Path;
 import android.graphics.Picture;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.PorterDuff;
@@ -30,8 +29,11 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -51,6 +53,8 @@ import com.example.castorway.modelsDB.Premios;
 import com.example.castorway.modelsDB.RelPrem;
 import com.example.castorway.retrofit.RetrofitClient;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -71,6 +75,7 @@ public class RecompensasFragmentTutor extends Fragment {
     private ImageView flecha_iz;
     private ImageView flecha_der;
     ImageView btnAgregarPrem;
+    TextView prem;
     private static final float RADIUS = 80f;
 
     @Override
@@ -94,8 +99,43 @@ public class RecompensasFragmentTutor extends Fragment {
         flecha_der = view.findViewById(R.id.flecha_de);
         Contenedor_Premios = view.findViewById(R.id.Contenedor_Premios);
         btnAgregarPrem = view.findViewById(R.id.btnAgregarPrem);
+        prem=view.findViewById(R.id.Prem);
+        prem.setText("Premios Reclamados");
 
-       btnAgregarPrem.setOnClickListener(this::abrirFormRecompensas);
+        btnAgregarPrem.setOnClickListener(this::abrirFormRecompensas);
+
+        flecha_iz.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                animarImageView(flecha_iz);
+
+                new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                    Fragment nuevoFragment = new RecompensasFragmentTutor1();
+                    FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+                    FragmentTransaction transaction = fragmentManager.beginTransaction();
+                    transaction.replace(R.id.frame_container, nuevoFragment);
+                    transaction.addToBackStack(null);
+                    transaction.commit();
+                }, 300); // Espera 300ms para que termine la animación
+            }
+        });
+
+        flecha_der.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                animarImageView(flecha_der);
+
+                new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                    Fragment nuevoFragment = new RecompensasFragmentTutor1();
+                    FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+                    FragmentTransaction transaction = fragmentManager.beginTransaction();
+                    transaction.replace(R.id.frame_container, nuevoFragment);
+                    transaction.addToBackStack(null);
+                    transaction.commit();
+                }, 300); // Igual, espera 300ms
+            }
+        });
+
 
 
         fetchRecompensaMasCostosa();
@@ -108,12 +148,17 @@ public class RecompensasFragmentTutor extends Fragment {
     }
     private void abrirFormRecompensas(View view){
         animarImageView(btnAgregarPrem);
-        int num = confirmUsrKitSeleccionado();
-        if(num != 0){
-            Intent intent = new Intent(view.getContext(), AgregarPremTutor.class);
-            startActivity(intent);
-        }
+
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            int num = confirmUsrKitSeleccionado();
+            if(num != 0){
+                Intent intent = new Intent(view.getContext(), AgregarPremTutor.class);
+                startActivity(intent);
+            }
+        }, 300); // Espera 300ms antes de lanzar la nueva Activity
     }
+
+
     private void mostrarMensajeSeleccionarIdKit() {
         if (!isAdded() || Contenedor_Premios == null) return;
 
@@ -186,9 +231,224 @@ public class RecompensasFragmentTutor extends Fragment {
 
         Contenedor_Premios.addView(contenedorMensaje);
     }
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Verificar si el fragmento está adjunto y si el contexto está disponible
+        if (isAdded() && getContext() != null) {
+            Log.e("PAVER", "SIPAPI 1");
+
+            SharedPreferences sharedPreferences = getContext().getSharedPreferences("sesionModalPrem", Context.MODE_PRIVATE);
+            boolean isModalOpened = sharedPreferences.getBoolean("sesion_activa_prem", false);
+
+            Log.e("PAVER", "estado modal: " + isModalOpened);
+
+            if(isModalOpened){
+                // Asegurarse de que la vista del fragmento esté disponible
+                if (getView() != null) {
+                    Log.e("PAVER", "SIPAPI 3");
+
+                    // Mostrar el modal en el hilo principal usando un Handler
+                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Log.e("PAVER", "SIPAPI 4");
+                            desplegarModal(getView());
+                        }
+                    });
+                }
+            }
+        }else{
+            Log.e("PAVER", "NOPAPI");
+        }
+    }
+    private void desplegarModal(View view) {
+        try {
+            ApiService apiService = RetrofitClient.getApiService();
+            Call<List<Premios>> call = apiService.getAllPremios();
+            call.enqueue(new Callback<List<Premios>>() {
+                @Override
+                public void onResponse(Call<List<Premios>> call, Response<List<Premios>> response) {
+                    List<Premios> listaPremios = response.body();
+
+                    if (listaPremios != null) {
+                        SharedPreferences sharedPreferences = requireContext().getSharedPreferences("premioSelected", Context.MODE_PRIVATE);
+                        int idPremio = sharedPreferences.getInt("idPremio", 0);
+
+                        for (Premios premio : listaPremios) {
+                            if (premio.getIdPremio() == idPremio) {
+                                mostrarModalPremio(premio, listaPremios);
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<List<Premios>> call, Throwable t) {
+                    if (isAdded()) {
+                        Log.e("ERROR", "Fallo en la API: " + t.getMessage());
+                    }
+                }
+            });
+        } catch (Exception e) {
+            Log.e("MiFragment", "Error al intentar mostrar el modal: " + e.getMessage());
+        }
+    }
+
+    private void mostrarModalPremio(Premios premio, List<Premios> listaPremios) {
+        if (!isAdded()) return;
+
+        SharedPreferences sharedPreferences = requireContext().getSharedPreferences("sesionModalPrem", MODE_PRIVATE);
+        SharedPreferences.Editor editorP = sharedPreferences.edit();
+        editorP.putBoolean("sesion_activa_prem", true);
+        editorP.apply();
+
+        BottomSheetDialog modal = new BottomSheetDialog(requireContext());
+        View view = getLayoutInflater().inflate(R.layout.bottom_modal_view_premio, null);
+        modal.setContentView(view);
+
+        modal.setOnDismissListener(dialog -> {
+            SharedPreferences.Editor editorCerrarP = sharedPreferences.edit();
+            editorCerrarP.putBoolean("sesion_activa_prem", false);
+            editorCerrarP.apply();
+        });
+
+        modal.show();
+
+        int idKit = requireActivity().getSharedPreferences("usrKitCuentaTutor", MODE_PRIVATE).getInt("idKit", 0);
+        if (idKit == 0) {
+            requireActivity().runOnUiThread(this::mostrarMensajeSeleccionarIdKit);
+            return;
+        }
+
+        TextView txtTitle = view.findViewById(R.id.txtTitle);
+        TextView txtNivel = view.findViewById(R.id.txtNivel);
+        ImageView imgPremModal = view.findViewById(R.id.imgPremio);
+        TextView txtCate = view.findViewById(R.id.txtCategoria);
+        TextView txtTipo = view.findViewById(R.id.txtTipo);
+        TextView TxtNumRam = view.findViewById(R.id.CostoPrem);
+        TextView TxtRamitasKit = view.findViewById(R.id.ramitas_Kit);
+        TextView TxtRamitascosto = view.findViewById(R.id.ramitas_costo);
+        TextView TxtInfo = view.findViewById(R.id.info_extra);
+        ImageView imgEstadoModal = view.findViewById(R.id.Img_Estado_M);
+        ImageView imgFavoritoModal = view.findViewById(R.id.Img_Favorito_M);
+        LinearLayout btnEditActi = view.findViewById(R.id.layout_btn_edit_acti);
+        LinearLayout btnBorrarActi = view.findViewById(R.id.layout_btn_borrar_acti);
+
+        txtTitle.setText(premio.getNombrePremio());
+        txtNivel.setText(premio.getNivelPremio());
+        txtCate.setText(premio.getCategoriaPremio());
+        txtTipo.setText(premio.getTipoPremio());
+        TxtNumRam.setText(String.valueOf(premio.getCostoPremio()));
+        TxtRamitascosto.setText(String.valueOf(premio.getCostoPremio()));
+        TxtInfo.setText(premio.getInfoExtraPremio());
+
+        String imageName = doesImageExist(requireContext(), premio.getRutaImagenHabito());
+        if (imageName != null) {
+            try (InputStream inputStream = requireContext().getAssets().open("img/Iconos-recompensas/" + imageName)) {
+                SVG svg = SVG.getFromInputStream(inputStream);
+                if (svg != null) {
+                    Drawable drawable = new PictureDrawable(svg.renderToPicture());
+                    imgPremModal.setImageDrawable(drawable);
+                }
+            } catch (IOException | SVGParseException e) {
+                e.printStackTrace();
+            }
+        }
+
+        imgEstadoModal.setImageResource(premio.getEstadoPremio() == 0 ? R.drawable.trofeo_vacio : R.drawable.trofeo_relleno);
+        imgFavoritoModal.setImageResource(premio.getFavorito() == 0 ? R.drawable.corazon_vacio : R.drawable.corazon_relleno);
+
+        imgFavoritoModal.setOnClickListener(vi -> {
+            animarImageView(imgFavoritoModal);
+
+            new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                premio.setFavorito(premio.getFavorito() == 0 ? 1 : 0);
+                actualizarLista(listaPremios);
+                actualizarPremio(premio);
+                imgFavoritoModal.setImageResource(premio.getFavorito() == 0 ? R.drawable.corazon_vacio : R.drawable.corazon_relleno);
+            }, 300);
+        });
+
+        imgEstadoModal.setOnClickListener(vi -> {
+            animarImageView(imgEstadoModal);
+
+            new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                premio.setEstadoPremio(premio.getEstadoPremio() == 0 ? 1 : 0);
+                actualizarLista(listaPremios);
+                actualizarPremio(premio);
+                imgEstadoModal.setImageResource(premio.getEstadoPremio() == 0 ? R.drawable.trofeo_vacio : R.drawable.trofeo_relleno);
+            }, 300);
+        });
+        btnEditActi.setOnClickListener(v1 -> {
+            animarLinear(btnEditActi);
+
+            new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                SharedPreferences preferences1 = requireContext().getSharedPreferences("premioSelected", MODE_PRIVATE);
+                SharedPreferences.Editor editorp = preferences1.edit();
+                editorp.putInt("idPremio", premio.getIdPremio());
+                editorp.apply();
+
+
+                Intent intent = new Intent(requireActivity(), EditarPremio.class);
+                startActivity(intent);
+            },300);
+        });
+
+        btnBorrarActi.setOnClickListener(v1 -> {
+            animarLinear(btnBorrarActi);
+
+            new Handler(Looper.getMainLooper()).postDelayed(() -> {
+
+                Dialog modalBorrar = new Dialog(requireContext());
+                View viewBorrar = getLayoutInflater().inflate(R.layout.modal_cerrar_view_confirm, null);
+                modalBorrar.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                modalBorrar.setContentView(viewBorrar);
+
+                TextView txtDialogTitle = viewBorrar.findViewById(R.id.txtDialogTitle);
+                TextView txtDialogMessage = viewBorrar.findViewById(R.id.txtDialogMessage);
+                Button btnCerrarModal = viewBorrar.findViewById(R.id.btnCerrarModal);
+                Button btnConfirm = viewBorrar.findViewById(R.id.btnConfirm);
+
+                btnConfirm.setOnClickListener(v3 -> {
+                    modalBorrar.dismiss();
+                    modal.dismiss();
+                    borrarPremio(premio.getIdPremio());
+
+                });
+
+
+                txtDialogTitle.setText("¡Atención!");
+                txtDialogMessage.setText("Estás a punto de borrar el premio: " + "'" + premio.getNombrePremio() + "'" + " si aceptas no se podrá deshacer la acción.");
+
+                btnCerrarModal.setOnClickListener(v2 -> modalBorrar.dismiss());
+                modalBorrar.show();
+            },300);
+        });
+
+
+        fetchRamitasDelKit(idKit, TxtRamitasKit);
+    }
 
     private void fetchRecompensaMasCostosa() {
+        // Mostrar mensaje "No hay premios" primero
+        requireActivity().runOnUiThread(this::mostrarMensajeNoPremios);
+
+        // Mostrar primero desde caché
+        SharedPreferences cache = requireContext().getSharedPreferences("cachePremiosEstado1", MODE_PRIVATE);
+        String premiosJson = cache.getString("premios_estado_1", null);
+        if (premiosJson != null) {
+            Gson gson = new Gson();
+            List<Premios> premiosCache = gson.fromJson(premiosJson, new TypeToken<List<Premios>>(){}.getType());
+            if (!premiosCache.isEmpty()) {
+                mostrarPremios(premiosCache);
+                return; // Salir, ya que los premios ya fueron cargados
+            }
+        }
+
         ApiService apiService = RetrofitClient.getApiService();
+
         CompletableFuture<List<Premios>> premiosFuture = CompletableFuture.supplyAsync(() -> {
             try {
                 Response<List<Premios>> response = apiService.getAllPremios().execute();
@@ -216,28 +476,37 @@ public class RecompensasFragmentTutor extends Fragment {
             SharedPreferences preferences = getActivity().getSharedPreferences("usrKitCuentaTutor", MODE_PRIVATE);
             int idKit = preferences.getInt("idKit", 0);
             if (idKit == 0) {
-                requireActivity().runOnUiThread(() -> mostrarMensajeSeleccionarIdKit());
+                requireActivity().runOnUiThread(this::mostrarMensajeSeleccionarIdKit);
                 return;
             }
 
             Map<Integer, Premios> premiosMap = premios.stream()
-                    .collect(Collectors.toMap(Premios::getIdPremio, premio -> premio));
+                    .collect(Collectors.toMap(Premios::getIdPremio, p -> p));
 
             List<Premios> premiosConEstado1 = relPremList.stream()
-                    .filter(relPrem -> relPrem.getIdKit() == idKit)
-                    .map(relPrem -> premiosMap.get(relPrem.getIdPremio()))
-                    .filter(premio -> premio != null && premio.getEstadoPremio() == 1)
+                    .filter(r -> r.getIdKit() == idKit)
+                    .map(r -> premiosMap.get(r.getIdPremio()))
+                    .filter(p -> p != null && p.getEstadoPremio() == 1)
                     .collect(Collectors.toList());
 
+            // Mostrar los premios obtenidos
             requireActivity().runOnUiThread(() -> {
                 if (!premiosConEstado1.isEmpty()) {
+                    // Guardar en caché
+                    Gson gson = new Gson();
+                    String jsonPremios = gson.toJson(premiosConEstado1);
+                    SharedPreferences.Editor editor = cache.edit();
+                    editor.putString("premios_estado_1", jsonPremios);
+                    editor.apply();
+
                     mostrarPremios(premiosConEstado1);
                 } else {
-                    mostrarMensajeNoPremios();
+                    mostrarMensajeNoPremios();  // Mostrar mensaje si no hay premios
                 }
             });
         });
     }
+
     private void mostrarPremios(List<Premios> premios) {
         if (!isAdded() || Contenedor_Premios == null) return;
 
@@ -299,138 +568,169 @@ public class RecompensasFragmentTutor extends Fragment {
 
             imgFavorito.setOnClickListener(v -> {
                 animarImageView(imgFavorito);
-                premio.setFavorito(premio.getFavorito() == 0 ? 1 : 0);
-                actualizarLista(premios);
-                actualizarPremio(premio);
+
+                new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                    premio.setFavorito(premio.getFavorito() == 0 ? 1 : 0);
+                    actualizarLista(premios);
+                    actualizarPremio(premio);
+                }, 300);
             });
 
             imgEstado.setOnClickListener(v -> {
                 animarImageView(imgEstado);
-                premio.setEstadoPremio(premio.getEstadoPremio() == 0 ? 1 : 0);
-                actualizarLista(premios);
-                actualizarPremio(premio);
+
+                new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                    premio.setEstadoPremio(premio.getEstadoPremio() == 0 ? 1 : 0);
+                    actualizarLista(premios);
+                    actualizarPremio(premio);
+                }, 300);
             });
+
 
             imgPremio.setOnClickListener(v -> {
                 animarLinear(Linear_Img_Prem);
 
-                // Guardar sesión activa del modal
-                SharedPreferences sharedPreferences = requireContext().getSharedPreferences("sesionModalPrem", MODE_PRIVATE);
-                SharedPreferences.Editor editorP = sharedPreferences.edit();
-                editorP.putBoolean("sesion_activa_prem", true);
-                editorP.apply();
+                new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                    // Guardar sesión activa del modal
+                    SharedPreferences sharedPreferences = requireContext().getSharedPreferences("sesionModalPrem", MODE_PRIVATE);
+                    SharedPreferences.Editor editorP = sharedPreferences.edit();
+                    editorP.putBoolean("sesion_activa_prem", true);
+                    editorP.apply();
 
-                BottomSheetDialog modal = new BottomSheetDialog(requireContext());
-                View view = getLayoutInflater().inflate(R.layout.bottom_modal_view_premio, null);
-                modal.setContentView(view);
+                    BottomSheetDialog modal = new BottomSheetDialog(requireContext());
+                    View view = getLayoutInflater().inflate(R.layout.bottom_modal_view_premio, null);
+                    modal.setContentView(view);
 
-                modal.setOnDismissListener(dialog -> {
-                    // Cerrar sesión del modal
-                    SharedPreferences sharedPreferencesCerrar = requireContext().getSharedPreferences("sesionModalPrem", MODE_PRIVATE);
-                    SharedPreferences.Editor editorCerrarP = sharedPreferencesCerrar.edit();
-                    editorCerrarP.putBoolean("sesion_activa_prem", false);
-                    editorCerrarP.apply();
-                });
+                    modal.setOnDismissListener(dialog -> {
+                        // Cerrar sesión del modal
+                        SharedPreferences sharedPreferencesCerrar = requireContext().getSharedPreferences("sesionModalPrem", MODE_PRIVATE);
+                        SharedPreferences.Editor editorCerrarP = sharedPreferencesCerrar.edit();
+                        editorCerrarP.putBoolean("sesion_activa_prem", false);
+                        editorCerrarP.apply();
+                    });
 
-                modal.show();
+                    modal.show();
 
-                SharedPreferences preferences = requireActivity().getSharedPreferences("usrKitCuentaTutor", MODE_PRIVATE);
-                int idKit = preferences.getInt("idKit", 0);
+                    SharedPreferences preferences = requireActivity().getSharedPreferences("usrKitCuentaTutor", MODE_PRIVATE);
+                    int idKit = preferences.getInt("idKit", 0);
 
-                if (idKit == 0) {
-                    requireActivity().runOnUiThread(() -> mostrarMensajeSeleccionarIdKit());
-                    return;
-                }
-
-                TextView txtTitle = view.findViewById(R.id.txtTitle);
-                TextView txtNivel = view.findViewById(R.id.txtNivel);
-                ImageView imgPremModal = view.findViewById(R.id.imgPremio);
-                TextView txtCate = view.findViewById(R.id.txtCategoria);
-                TextView txtTipo = view.findViewById(R.id.txtTipo);
-                TextView TxtNumRam = view.findViewById(R.id.CostoPrem);
-                TextView TxtRamitasKit = view.findViewById(R.id.ramitas_Kit);
-                TextView TxtRamitascosto = view.findViewById(R.id.ramitas_costo);
-                TextView TxtInfo= view.findViewById(R.id.info_extra);
-
-                ImageView imgEstadoModal = view.findViewById(R.id.Img_Estado_M);
-                ImageView imgFavoritoModal = view.findViewById(R.id.Img_Favorito_M);
-
-                LinearLayout btnEditActi = view.findViewById(R.id.layout_btn_edit_acti);
-                LinearLayout btnBorrarActi = view.findViewById(R.id.layout_btn_borrar_acti);
-
-                int costoPremio = premio.getCostoPremio();
-
-                txtTitle.setText(premio.getNombrePremio());
-                txtNivel.setText(premio.getNivelPremio());
-                txtCate.setText(premio.getCategoriaPremio());
-                txtTipo.setText(premio.getTipoPremio());
-                TxtNumRam.setText(String.valueOf(costoPremio));
-                TxtRamitascosto.setText(String.valueOf(costoPremio));
-                TxtInfo.setText(premio.getInfoExtraPremio());
-
-                String imageName2 = doesImageExist(requireContext(), imgBd);
-                if (imageName2 != null) {
-                    try (InputStream inputStream = requireContext().getAssets().open("img/Iconos-recompensas/" + imageName2)) {
-                        SVG svg = SVG.getFromInputStream(inputStream);
-                        if (svg != null) {
-                            Drawable drawable = new PictureDrawable(svg.renderToPicture());
-                            imgPremModal.setImageDrawable(drawable);
-                        }
-                    } catch (IOException | SVGParseException e) {
+                    if (idKit == 0) {
+                        requireActivity().runOnUiThread(() -> mostrarMensajeSeleccionarIdKit());
+                        return;
                     }
-                }
 
-                imgEstadoModal.setImageResource(premio.getEstadoPremio() == 0 ? R.drawable.trofeo_vacio : R.drawable.trofeo_relleno);
-                imgFavoritoModal.setImageResource(premio.getFavorito() == 0 ? R.drawable.corazon_vacio : R.drawable.corazon_relleno);
+                    TextView txtTitle = view.findViewById(R.id.txtTitle);
+                    TextView txtNivel = view.findViewById(R.id.txtNivel);
+                    ImageView imgPremModal = view.findViewById(R.id.imgPremio);
+                    TextView txtCate = view.findViewById(R.id.txtCategoria);
+                    TextView txtTipo = view.findViewById(R.id.txtTipo);
+                    TextView TxtNumRam = view.findViewById(R.id.CostoPrem);
+                    TextView TxtRamitasKit = view.findViewById(R.id.ramitas_Kit);
+                    TextView TxtRamitascosto = view.findViewById(R.id.ramitas_costo);
+                    TextView TxtInfo = view.findViewById(R.id.info_extra);
 
-                imgFavoritoModal.setOnClickListener(vi -> {
-                    animarImageView(imgFavoritoModal);
-                    premio.setFavorito(premio.getFavorito() == 0 ? 1 : 0);
-                    actualizarLista(premios);
-                    actualizarPremio(premio);
+                    ImageView imgEstadoModal = view.findViewById(R.id.Img_Estado_M);
+                    ImageView imgFavoritoModal = view.findViewById(R.id.Img_Favorito_M);
+
+                    LinearLayout btnEditActi = view.findViewById(R.id.layout_btn_edit_acti);
+                    LinearLayout btnBorrarActi = view.findViewById(R.id.layout_btn_borrar_acti);
+
+                    int costoPremio = premio.getCostoPremio();
+
+                    txtTitle.setText(premio.getNombrePremio());
+                    txtNivel.setText(premio.getNivelPremio());
+                    txtCate.setText(premio.getCategoriaPremio());
+                    txtTipo.setText(premio.getTipoPremio());
+                    TxtNumRam.setText(String.valueOf(costoPremio));
+                    TxtRamitascosto.setText(String.valueOf(costoPremio));
+                    TxtInfo.setText(premio.getInfoExtraPremio());
+
+                    String imageName2 = doesImageExist(requireContext(), imgBd);
+                    if (imageName2 != null) {
+                        try (InputStream inputStream = requireContext().getAssets().open("img/Iconos-recompensas/" + imageName2)) {
+                            SVG svg = SVG.getFromInputStream(inputStream);
+                            if (svg != null) {
+                                Drawable drawable = new PictureDrawable(svg.renderToPicture());
+                                imgPremModal.setImageDrawable(drawable);
+                            }
+                        } catch (IOException | SVGParseException e) {
+                        }
+                    }
+
+                    imgEstadoModal.setImageResource(premio.getEstadoPremio() == 0 ? R.drawable.trofeo_vacio : R.drawable.trofeo_relleno);
                     imgFavoritoModal.setImageResource(premio.getFavorito() == 0 ? R.drawable.corazon_vacio : R.drawable.corazon_relleno);
 
-                });
+                    imgFavoritoModal.setOnClickListener(vi -> {
+                        animarImageView(imgFavoritoModal);
 
-                imgEstadoModal.setOnClickListener(vi -> {
-                    animarImageView(imgEstadoModal);
-                    premio.setEstadoPremio(premio.getEstadoPremio() == 0 ? 1 : 0);
-                    actualizarLista(premios);
-                    actualizarPremio(premio);
-                    imgEstadoModal.setImageResource(premio.getEstadoPremio() == 0 ? R.drawable.trofeo_vacio : R.drawable.trofeo_relleno);
+                        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                            premio.setFavorito(premio.getFavorito() == 0 ? 1 : 0);
+                            actualizarLista(premios);
+                            actualizarPremio(premio);
+                            imgFavoritoModal.setImageResource(premio.getFavorito() == 0 ? R.drawable.corazon_vacio : R.drawable.corazon_relleno);
+                        }, 300);
+                    });
 
-                });
+                    imgEstadoModal.setOnClickListener(vi -> {
+                        animarImageView(imgEstadoModal);
 
-                btnBorrarActi.setOnClickListener(v1 -> {
-                    animarLinear(btnBorrarActi);
-                    Dialog modalBorrar = new Dialog(requireContext());
-                    View viewBorrar = getLayoutInflater().inflate(R.layout.modal_cerrar_view_confirm, null);
-                    modalBorrar.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                    modalBorrar.setContentView(viewBorrar);
+                        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                            premio.setEstadoPremio(premio.getEstadoPremio() == 0 ? 1 : 0);
+                            actualizarLista(premios);
+                            actualizarPremio(premio);
+                            imgEstadoModal.setImageResource(premio.getEstadoPremio() == 0 ? R.drawable.trofeo_vacio : R.drawable.trofeo_relleno);
+                        }, 300);
+                    });
+                    btnEditActi.setOnClickListener(v1 -> {
+                        animarLinear(btnEditActi);
 
-                    TextView txtDialogTitle = viewBorrar.findViewById(R.id.txtDialogTitle);
-                    TextView txtDialogMessage = viewBorrar.findViewById(R.id.txtDialogMessage);
-                    Button btnCerrarModal = viewBorrar.findViewById(R.id.btnCerrarModal);
-                    Button btnConfirm = viewBorrar.findViewById(R.id.btnConfirm);
+                        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                            SharedPreferences preferences1 = requireContext().getSharedPreferences("premioSelected", MODE_PRIVATE);
+                            SharedPreferences.Editor editorp = preferences1.edit();
+                            editorp.putInt("idPremio", premio.getIdPremio());
+                            editorp.apply();
 
-                    btnConfirm.setOnClickListener(v3 -> {
-                        modalBorrar.dismiss();
-                        modal.dismiss();
-                        borrarPremio(premio.getIdPremio());
 
+                            Intent intent = new Intent(requireActivity(), EditarPremio.class);
+                            startActivity(intent);
+                        }, 300);
+                    });
+
+                    btnBorrarActi.setOnClickListener(v1 -> {
+                        animarLinear(btnBorrarActi);
+
+                        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+
+                            Dialog modalBorrar = new Dialog(requireContext());
+                            View viewBorrar = getLayoutInflater().inflate(R.layout.modal_cerrar_view_confirm, null);
+                            modalBorrar.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                            modalBorrar.setContentView(viewBorrar);
+
+                            TextView txtDialogTitle = viewBorrar.findViewById(R.id.txtDialogTitle);
+                            TextView txtDialogMessage = viewBorrar.findViewById(R.id.txtDialogMessage);
+                            Button btnCerrarModal = viewBorrar.findViewById(R.id.btnCerrarModal);
+                            Button btnConfirm = viewBorrar.findViewById(R.id.btnConfirm);
+
+                            btnConfirm.setOnClickListener(v3 -> {
+                                modalBorrar.dismiss();
+                                modal.dismiss();
+                                borrarPremio(premio.getIdPremio());
+
+                            });
+
+
+                            txtDialogTitle.setText("¡Atención!");
+                            txtDialogMessage.setText("Estás a punto de borrar el premio: " + "'" + premio.getNombrePremio() + "'" + " si aceptas no se podrá deshacer la acción.");
+
+                            btnCerrarModal.setOnClickListener(v2 -> modalBorrar.dismiss());
+                            modalBorrar.show();
+                        }, 300);
                     });
 
 
-                    txtDialogTitle.setText("¡Atención!");
-                    txtDialogMessage.setText("Estás a punto de borrar el premio: " + "'"+premio.getNombrePremio() + "'" + " si aceptas no se podrá deshacer la acción.");
 
-                    btnCerrarModal.setOnClickListener(v2 -> modalBorrar.dismiss());
-                    modalBorrar.show();
-                });
-
-
-
-                fetchRamitasDelKit(idKit, TxtRamitasKit);
+                    fetchRamitasDelKit(idKit, TxtRamitasKit);
+                }, 300);
             });
 
             filaActual.addView(vistaPremio);
@@ -440,11 +740,12 @@ public class RecompensasFragmentTutor extends Fragment {
             }
         }
     }
+
     private void borrarPremio(int idPremio) {
         Log.d("API_LOG", "Iniciando eliminación de relaciones para el premio ID: " + idPremio);
 
         ApiService apiService = RetrofitClient.getApiService();
-        Call<Void> callRel = apiService.deleteRelPremios(idPremio);
+        Call<Void> callRel = apiService.deleteRelPrem(idPremio);
 
         callRel.enqueue(new Callback<Void>() {
             @Override
@@ -508,7 +809,7 @@ public class RecompensasFragmentTutor extends Fragment {
                     toast.show();
 
                     FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-                    transaction.replace(R.id.frame_container, new RecompensasFragmentTutor());
+                    transaction.replace(R.id.frame_container, new RecompensasFragmentTutor1());
                     transaction.commit();
                 } else {
                     Log.e("API_ERROR", "Error al eliminar el premio. Código: " + response.code());
@@ -698,8 +999,5 @@ public class RecompensasFragmentTutor extends Fragment {
         int lastSlash = path.lastIndexOf('/');
         return (lastSlash != -1) ? path.substring(lastSlash + 1) : path;
     }
-
-
-
 
 }

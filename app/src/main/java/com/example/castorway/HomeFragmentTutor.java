@@ -199,6 +199,15 @@ public class HomeFragmentTutor extends Fragment {
     }
 
     private void fetchRecompensaMasCostosa() {
+        // Mostrar desde caché primero
+        SharedPreferences cache = requireContext().getSharedPreferences("cachePremioCostoso", MODE_PRIVATE);
+        String premioJson = cache.getString("premio_mas_costoso", null);
+        if (premioJson != null) {
+            Gson gson = new Gson();
+            Premios premioCache = gson.fromJson(premioJson, Premios.class);
+            mostrarPremio(premioCache);
+        }
+
         ApiService apiService = RetrofitClient.getApiService();
 
         CompletableFuture<List<Premios>> premiosFuture = CompletableFuture.supplyAsync(() -> {
@@ -231,8 +240,10 @@ public class HomeFragmentTutor extends Fragment {
                 requireActivity().runOnUiThread(() -> mostrarMensajeSeleccionarIdKit());
                 return;
             }
+
             Map<Integer, Premios> premiosMap = premios.stream()
                     .collect(Collectors.toMap(Premios::getIdPremio, premio -> premio));
+
             Premios premioMayorCosto = relPremList.stream()
                     .filter(relPrem -> relPrem.getIdKit() == idKit)
                     .map(relPrem -> premiosMap.get(relPrem.getIdPremio()))
@@ -242,48 +253,19 @@ public class HomeFragmentTutor extends Fragment {
 
             requireActivity().runOnUiThread(() -> {
                 if (premioMayorCosto != null) {
+                    // Guardar en caché
+                    Gson gson = new Gson();
+                    String jsonPremio = gson.toJson(premioMayorCosto);
+                    SharedPreferences.Editor editor = cache.edit();
+                    editor.putString("premio_mas_costoso", jsonPremio);
+                    editor.apply();
+
                     mostrarPremio(premioMayorCosto);
                 } else {
                     mostrarMensajeNoPremios();
                 }
             });
         });
-    }
-    private void mostrarMensajeSeleccionarIdKit() {
-        if (!isAdded() || contenedorPremioMasCostoso == null) return;
-
-        contenedorPremioMasCostoso.removeAllViews();
-
-        TextView mensajeSeleccionarIdKit = new TextView(requireContext());
-        mensajeSeleccionarIdKit.setText("Seleccione primero un Kit");
-        mensajeSeleccionarIdKit.setTextSize(35);
-        mensajeSeleccionarIdKit.setTypeface(ResourcesCompat.getFont(requireContext(), R.font.dongle_bold));
-        mensajeSeleccionarIdKit.setTextColor(Color.WHITE);
-        mensajeSeleccionarIdKit.setPadding(16, 16, 16, 16);
-        mensajeSeleccionarIdKit.setGravity(Gravity.CENTER);
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT);
-        mensajeSeleccionarIdKit.setLayoutParams(params);
-        contenedorPremioMasCostoso.addView(mensajeSeleccionarIdKit);
-    }
-    private void mostrarMensajeNoPremios() {
-        if (!isAdded() || contenedorPremioMasCostoso == null) return;
-
-        contenedorPremioMasCostoso.removeAllViews();
-
-        TextView mensajeNoPremios = new TextView(requireContext());
-        mensajeNoPremios.setText("No hay Premios para este kit");
-        mensajeNoPremios.setTextSize(35);
-        mensajeNoPremios.setTypeface(ResourcesCompat.getFont(requireContext(), R.font.dongle_bold));
-        mensajeNoPremios.setTextColor(Color.WHITE);
-        mensajeNoPremios.setPadding(16, 16, 16, 16);
-        mensajeNoPremios.setGravity(Gravity.CENTER);
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT);
-        mensajeNoPremios.setLayoutParams(params);
-        contenedorPremioMasCostoso.addView(mensajeNoPremios);
     }
     private void mostrarPremio(Premios premio) {
         if (!isAdded() || contenedorPremioMasCostoso == null) return;
@@ -300,11 +282,20 @@ public class HomeFragmentTutor extends Fragment {
         Button boton = vistaPremio.findViewById(R.id.verMas);
 
         boton.setOnClickListener(view -> {
+            SharedPreferences preferences= requireContext().getSharedPreferences("premioSelected", MODE_PRIVATE);
+            SharedPreferences.Editor editorp = preferences.edit();
+            editorp.putInt("idPremio", premio.getIdPremio());
+            editorp.apply();
+
+            SharedPreferences sharedPreferencesCerrar = requireContext().getSharedPreferences("sesionModalPrem", MODE_PRIVATE);
+            SharedPreferences.Editor editorcerrarp = sharedPreferencesCerrar.edit();
+            editorcerrarp.putBoolean("sesion_activa_prem", true);
+            editorcerrarp.apply();
 
             animarBoton(boton);
 
             new Handler().postDelayed(() -> {
-                Fragment nuevoFragment = new RecompensasFragmentTutor();
+                Fragment nuevoFragment = new RecompensasFragmentTutor1();
                 FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
                 FragmentTransaction transaction = fragmentManager.beginTransaction();
                 transaction.replace(R.id.frame_container, nuevoFragment);
@@ -345,6 +336,42 @@ public class HomeFragmentTutor extends Fragment {
         contenedorPremioMasCostoso.addView(vistaPremio);
     }
 
+    private void mostrarMensajeSeleccionarIdKit() {
+        if (!isAdded() || contenedorPremioMasCostoso == null) return;
+
+        contenedorPremioMasCostoso.removeAllViews();
+
+        TextView mensajeSeleccionarIdKit = new TextView(requireContext());
+        mensajeSeleccionarIdKit.setText("Seleccione primero un Kit");
+        mensajeSeleccionarIdKit.setTextSize(35);
+        mensajeSeleccionarIdKit.setTypeface(ResourcesCompat.getFont(requireContext(), R.font.dongle_bold));
+        mensajeSeleccionarIdKit.setTextColor(Color.WHITE);
+        mensajeSeleccionarIdKit.setPadding(16, 16, 16, 16);
+        mensajeSeleccionarIdKit.setGravity(Gravity.CENTER);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT);
+        mensajeSeleccionarIdKit.setLayoutParams(params);
+        contenedorPremioMasCostoso.addView(mensajeSeleccionarIdKit);
+    }
+    private void mostrarMensajeNoPremios() {
+        if (!isAdded() || contenedorPremioMasCostoso == null) return;
+
+        contenedorPremioMasCostoso.removeAllViews();
+
+        TextView mensajeNoPremios = new TextView(requireContext());
+        mensajeNoPremios.setText("No hay Premios para este kit");
+        mensajeNoPremios.setTextSize(35);
+        mensajeNoPremios.setTypeface(ResourcesCompat.getFont(requireContext(), R.font.dongle_bold));
+        mensajeNoPremios.setTextColor(Color.WHITE);
+        mensajeNoPremios.setPadding(16, 16, 16, 16);
+        mensajeNoPremios.setGravity(Gravity.CENTER);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT);
+        mensajeNoPremios.setLayoutParams(params);
+        contenedorPremioMasCostoso.addView(mensajeNoPremios);
+    }
     private void animarBoton(Button boton) {
         ObjectAnimator scaleX = ObjectAnimator.ofFloat(boton, "scaleX", 1f, 1.1f); // Aumenta el tamaño en X
         ObjectAnimator scaleY = ObjectAnimator.ofFloat(boton, "scaleY", 1f, 1.1f); // Aumenta el tamaño en Y
@@ -364,42 +391,6 @@ public class HomeFragmentTutor extends Fragment {
         scaleY.start();
     }
 
-
-    private void fetchActividades() {
-        ApiService apiService = RetrofitClient.getApiService();
-        SharedPreferences preferences = getActivity().getSharedPreferences("usrKitCuentaTutor", MODE_PRIVATE);
-        int idKit = preferences.getInt("idKit", 0);
-        if (idKit == 0) {
-            requireActivity().runOnUiThread(() -> mostrarMensajeSeleccionarIdKitAct());
-            return;
-        }
-
-        apiService.getAllActividades().enqueue(new Callback<List<Actividad>>() {
-            @Override
-            public void onResponse(Call<List<Actividad>> call, Response<List<Actividad>> response) {
-                if (!isAdded() || response.body() == null) return;
-
-                SharedPreferences preferences = getActivity().getSharedPreferences("usrKitCuentaTutor", MODE_PRIVATE);
-                int idKit = preferences.getInt("idKit", 0);
-                if (idKit == 0) {
-                    requireActivity().runOnUiThread(() -> mostrarMensajeSeleccionarIdKitAct());
-                    return;
-                }
-
-                List<Actividad> actividades = response.body().stream()
-                        .filter(actividad -> actividad.getIdKit() == idKit)
-                        .sorted(Comparator.comparing(Actividad::getHoraInicioHabito, Comparator.nullsLast(String::compareTo)))
-                        .collect(Collectors.toList());
-
-
-                requireActivity().runOnUiThread(() -> mostrarActividadesEnContenedor(actividades));
-            }
-
-            @Override
-            public void onFailure(Call<List<Actividad>> call, Throwable t) {
-            }
-        });
-    }
     private void mostrarMensajeSeleccionarIdKitAct() {
         if (contenedorActividades == null) return;
 
@@ -440,6 +431,59 @@ public class HomeFragmentTutor extends Fragment {
     }
 
 
+
+
+    private void fetchActividades() {
+        SharedPreferences preferences = getActivity().getSharedPreferences("usrKitCuentaTutor", MODE_PRIVATE);
+        int idKit = preferences.getInt("idKit", 0);
+        if (idKit == 0) {
+            requireActivity().runOnUiThread(this::mostrarMensajeSeleccionarIdKitAct);
+            return;
+        }
+
+        // Mostrar primero actividades guardadas en caché
+        SharedPreferences cachePrefs = getActivity().getSharedPreferences("cacheActividades", MODE_PRIVATE);
+        String actividadesJson = cachePrefs.getString("actividades", null);
+        if (actividadesJson != null) {
+            Type listType = new TypeToken<List<Actividad>>() {}.getType();
+            List<Actividad> actividadesCache = new Gson().fromJson(actividadesJson, listType);
+            if (actividadesCache != null) {
+                List<Actividad> filtradas = actividadesCache.stream()
+                        .filter(actividad -> actividad.getIdKit() == idKit)
+                        .sorted(Comparator.comparing(Actividad::getHoraInicioHabito, Comparator.nullsLast(String::compareTo)))
+                        .collect(Collectors.toList());
+
+                mostrarActividadesEnContenedor(filtradas);
+            }
+        }
+
+        // Luego hacer la petición real a la API y actualizar el caché
+        ApiService apiService = RetrofitClient.getApiService();
+        apiService.getAllActividades().enqueue(new Callback<List<Actividad>>() {
+            @Override
+            public void onResponse(Call<List<Actividad>> call, Response<List<Actividad>> response) {
+                if (!isAdded() || response.body() == null) return;
+
+                List<Actividad> actividades = response.body().stream()
+                        .filter(actividad -> actividad.getIdKit() == idKit)
+                        .sorted(Comparator.comparing(Actividad::getHoraInicioHabito, Comparator.nullsLast(String::compareTo)))
+                        .collect(Collectors.toList());
+
+                // Guardar en caché
+                String actividadesJson = new Gson().toJson(response.body());
+                SharedPreferences.Editor editor = cachePrefs.edit();
+                editor.putString("actividades", actividadesJson);
+                editor.apply();
+
+                requireActivity().runOnUiThread(() -> mostrarActividadesEnContenedor(actividades));
+            }
+
+            @Override
+            public void onFailure(Call<List<Actividad>> call, Throwable t) {
+                // Podrías mostrar un Toast si lo deseas
+            }
+        });
+    }
 
     private void mostrarActividadesEnContenedor(List<Actividad> actividades) {
 

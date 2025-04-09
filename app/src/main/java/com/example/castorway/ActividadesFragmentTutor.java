@@ -203,6 +203,7 @@ public class ActividadesFragmentTutor extends Fragment {
         });
 
     }
+
     private void desplegarModal(View view) {
         try {
             ApiService apiService = RetrofitClient.getApiService();
