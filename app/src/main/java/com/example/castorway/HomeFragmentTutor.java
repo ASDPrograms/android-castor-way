@@ -26,6 +26,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -94,12 +95,14 @@ public class HomeFragmentTutor extends Fragment {
     }
 
     private void cargarDatosLocales() {
-        String nombreCastor = preferences.getString("castor_name", "Cargando...");
+        String nombreCastor = preferences.getString("castor_name", "Usuario");
         NameCastor.setText(nombreCastor);
 
         Set<String> hijosGuardados = preferences.getStringSet("hijos_list", new HashSet<>());
-        if (hijosGuardados != null) {
-            useritoContainer.removeAllViews();
+
+        useritoContainer.removeAllViews();
+
+        if (hijosGuardados != null && !hijosGuardados.isEmpty()) {
             LayoutInflater inflater = LayoutInflater.from(requireContext());
 
             for (String nombreHijo : hijosGuardados) {
@@ -108,6 +111,8 @@ public class HomeFragmentTutor extends Fragment {
                 ((ImageView) hijoView.findViewById(R.id.imgHijo)).setImageResource(R.drawable.icn_user_gris);
                 useritoContainer.addView(hijoView);
             }
+        } else {
+            insertarTextViewNoHayHijos();
         }
     }
 
@@ -188,26 +193,51 @@ public class HomeFragmentTutor extends Fragment {
         if (!isAdded() || useritoContainer == null) return;
 
         useritoContainer.removeAllViews();
-        LayoutInflater inflater = LayoutInflater.from(requireContext());
 
-        for (String nombreHijo : hijos) {
-            View hijoView = inflater.inflate(R.layout.item_hijo, useritoContainer, false);
-            ((TextView) hijoView.findViewById(R.id.txtHijoNombre)).setText(nombreHijo);
-            ((ImageView) hijoView.findViewById(R.id.imgHijo)).setImageResource(R.drawable.icn_user_gris);
-            useritoContainer.addView(hijoView);
+        if (hijos != null && !hijos.isEmpty()) {
+            LayoutInflater inflater = LayoutInflater.from(requireContext());
+
+            for (String nombreHijo : hijos) {
+                View hijoView = inflater.inflate(R.layout.item_hijo, useritoContainer, false);
+                ((TextView) hijoView.findViewById(R.id.txtHijoNombre)).setText(nombreHijo);
+                ((ImageView) hijoView.findViewById(R.id.imgHijo)).setImageResource(R.drawable.icn_user_gris);
+                useritoContainer.addView(hijoView);
+            }
+        } else {
+            insertarTextViewNoHayHijos();
         }
+    }
+    private void insertarTextViewNoHayHijos() {
+        TextView txtNoHijos = new TextView(requireContext());
+        txtNoHijos.setText("No hay hijos disponibles");
+        txtNoHijos.setTextSize(35);
+        txtNoHijos.setTypeface(ResourcesCompat.getFont(requireContext(), R.font.dongle_bold));
+        txtNoHijos.setTextColor(Color.WHITE);
+        txtNoHijos.setPadding(16, 16, 16, 16);
+        txtNoHijos.setGravity(Gravity.CENTER);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT);
+        txtNoHijos.setLayoutParams(params);
+
+        useritoContainer.addView(txtNoHijos);
     }
 
     private void fetchRecompensaMasCostosa() {
         // Mostrar desde caché primero
         SharedPreferences cache = requireContext().getSharedPreferences("cachePremioCostoso", MODE_PRIVATE);
         String premioJson = cache.getString("premio_mas_costoso", null);
+
         if (premioJson != null) {
             Gson gson = new Gson();
             Premios premioCache = gson.fromJson(premioJson, Premios.class);
             mostrarPremio(premioCache);
+        } else {
+            // Mostrar mensaje mientras carga si no hay nada en caché
+            requireActivity().runOnUiThread(this::mostrarMensajeNoPremios);
         }
 
+        // Luego realizar la llamada a la API
         ApiService apiService = RetrofitClient.getApiService();
 
         CompletableFuture<List<Premios>> premiosFuture = CompletableFuture.supplyAsync(() -> {
@@ -237,7 +267,7 @@ public class HomeFragmentTutor extends Fragment {
             SharedPreferences preferences = getActivity().getSharedPreferences("usrKitCuentaTutor", MODE_PRIVATE);
             int idKit = preferences.getInt("idKit", 0);
             if (idKit == 0) {
-                requireActivity().runOnUiThread(() -> mostrarMensajeSeleccionarIdKit());
+                requireActivity().runOnUiThread(this::mostrarMensajeSeleccionarIdKit);
                 return;
             }
 
@@ -256,9 +286,7 @@ public class HomeFragmentTutor extends Fragment {
                     // Guardar en caché
                     Gson gson = new Gson();
                     String jsonPremio = gson.toJson(premioMayorCosto);
-                    SharedPreferences.Editor editor = cache.edit();
-                    editor.putString("premio_mas_costoso", jsonPremio);
-                    editor.apply();
+                    cache.edit().putString("premio_mas_costoso", jsonPremio).apply();
 
                     mostrarPremio(premioMayorCosto);
                 } else {
@@ -267,6 +295,7 @@ public class HomeFragmentTutor extends Fragment {
             });
         });
     }
+
     private void mostrarPremio(Premios premio) {
         if (!isAdded() || contenedorPremioMasCostoso == null) return;
 

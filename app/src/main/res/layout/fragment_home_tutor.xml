@@ -210,7 +210,7 @@
                     android:layout_height="match_parent"
                     android:background="@drawable/border_mover_modal_bottom"
                     android:layout_marginBottom="15sp"
-                    android:minHeight="130dp"
+                    android:minHeight="90dp"
                     android:paddingTop="10dp"
                     android:paddingBottom="10dp">
 
