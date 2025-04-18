@@ -64,24 +64,27 @@ public class HomeTutor extends AppCompatActivity {
 
         //Al abrir intentar recibir el valor de modal trás actividad creada
         String fragmentName = getIntent().getStringExtra("fragmentActiCrear");
+        String fragmentNamePremio = getIntent().getStringExtra("fragmenPremCrear");
+        String fragmentNamePremioEditar = getIntent().getStringExtra("fragmenPremEditar");
 
-        if (fragmentName != null) {
-            // Cargar el fragmento correspondiente
-            Fragment fragment = null;
+        Fragment fragment = null;
 
-            switch (fragmentName) {
-                case "ActividadesFragmentTutor":
-                    fragment = new ActividadesFragmentTutor();
-                    break;
-            }
+        if (fragmentName != null && fragmentName.equals("ActividadesFragmentTutor")) {
+            fragment = new ActividadesFragmentTutor();
+        }
 
-            // Si se recibe un fragmento válido, lo mostramos
-            if (fragment != null) {
-                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.frame_container, fragment); // Asegúrate de tener un contenedor adecuado
-                transaction.commit();
+        if (fragmentNamePremio != null && fragmentNamePremio.equals("RecompensasFragmentTutor1")) {
+            fragment = new RecompensasFragmentTutor1();
+        }
+        if (fragmentNamePremioEditar != null && fragmentNamePremio.equals("RecompensasFragmentTutor")) {
+            fragment = new RecompensasFragmentTutor();
+        }
 
-            }
+// Si se recibe un fragmento válido, lo mostramos
+        if (fragment != null) {
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.frame_container, fragment); // Asegúrate de tener un contenedor adecuado
+            transaction.commit();
         }
 
         HorizontalScrollView userScrollView = findViewById(R.id.userScrollView);
@@ -148,40 +151,41 @@ public class HomeTutor extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
+        // Obtener el nombre del fragmento desde cualquiera de los extras
         String fragmentName = getIntent().getStringExtra("fragmentActiCrear");
+        String fragmentNamePremio = getIntent().getStringExtra("fragmenPremCrear");
+        String fragmentNamePremioEditar = getIntent().getStringExtra("fragmenPremEditar");
 
-        if (fragmentName != null) {
-            // Cargar el fragmento correspondiente
-            Fragment fragment = null;
+        Fragment fragment = null;
+        ImageView iconToSelect = null;
 
-            ImageView iconToSelect = null; // Variable para saber qué icono seleccionar
-
-            switch (fragmentName) {
-                case "ActividadesFragmentTutor":
-                    fragment = new ActividadesFragmentTutor();
-                    iconToSelect = iconActividades; // Ícono de actividades
-                    break;
-                case "HomeFragmentTutor":
-                    fragment = new HomeFragmentTutor();
-                    iconToSelect = iconHome; // Ícono de inicio
-                    break;
-            }
-
-            if (fragment != null) {
-                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.frame_container, fragment);
-                transaction.commit();
-
-                // Seleccionar el ícono correspondiente visualmente
-                if (iconToSelect != null) {
-                    selectIcon(iconToSelect);
-                }
-            }
-
+        // Verificar cuál fragmento se debe cargar
+        if (fragmentName != null && fragmentName.equals("ActividadesFragmentTutor")) {
+            fragment = new ActividadesFragmentTutor();
+            iconToSelect = iconActividades;
+        } else if (fragmentNamePremio != null && fragmentNamePremio.equals("RecompensasFragmentTutor1")) {
+            fragment = new RecompensasFragmentTutor1();
+            iconToSelect = iconRecompensas;
+        } else if (fragmentNamePremioEditar != null && fragmentNamePremioEditar.equals("RecompensasFragmentTutor")) {
+            fragment = new RecompensasFragmentTutor();
+            iconToSelect = iconRecompensas;
         }
 
+        // Cargar el fragmento seleccionado y seleccionar el icono correspondiente
+        if (fragment != null) {
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.frame_container, fragment);
+            transaction.commit();
+
+            if (iconToSelect != null) {
+                selectIcon(iconToSelect);
+            }
+        }
+
+        // Confirmar existencia del usuario
         confirmExistUsrKit();
     }
+
     //para cuando cierra la app (el activity de hometutor)
     @Override
     public void onDestroy() {

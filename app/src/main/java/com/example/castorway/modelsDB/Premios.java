@@ -1,3 +1,4 @@
+
 package com.example.castorway.modelsDB;
 
 public class Premios {
@@ -18,6 +19,7 @@ public class Premios {
     }
 
     public void setIdPremio(int idPremio) {
+
         this.idPremio = idPremio;
     }
 

@@ -1,8 +1,46 @@
 <resources>
     <string name="app_name">CastorWay</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
+
+    <string-array name="Nivel">
+        <item>- Selecciona un nivel de premio -</item>
+        <item>Común</item>
+        <item>Raro</item>
+        <item>Épico</item>
+        <item>Legendario</item>
+    </string-array>
+    <string-array name="Categoria">
+        <item>- Selecciona una categoria de premio -</item>
+        <item>Juguetes</item>
+        <item>Tiempo</item>
+        <item>Comida</item>
+        <item>Especiales</item>
+        <item>Tecnología</item>
+        <item>Entretenimiento</item>
+        <item>Deporte</item>
+        <item>Educación</item>
+        <item>Aventura</item>
+        <item>Creatividad</item>
+        <item>Viajes</item>
+    </string-array>
+    <string-array name="tipo">
+        <item>- Selecciona un tipo de premio -</item>
+        <item>Salud</item>
+        <item>Productividad</item>
+        <item>Personales</item>
+        <item>Sociales</item>
+        <item>Financieros</item>
+        <item>Emocionales</item>
+        <item>Mentales</item>
+        <item>Aventuras</item>
+        <item>Habilidades</item>
+        <item>Recreación</item>
+        <item>Tecnológicos</item>
+        <item>Educativos</item>
+        <item>Familiares</item>
+        <item>Amistosos</item>
+        <item>Experiencias</item>
+    </string-array>
 
     <string-array name="opciones">
         <item>- Selecciona un tipo de hábito -</item>

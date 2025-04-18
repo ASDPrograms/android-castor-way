@@ -16,7 +16,7 @@ import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Query;
 
-public interface  ApiService{
+public interface ApiService {
     @GET("tablaCastor")
     Call<List<Castor>> getAllCastores();
 
@@ -30,10 +30,10 @@ public interface  ApiService{
     @POST("tablaKit")
     Call<Kit> createKit(@Body Kit kit);
 
+
     @PUT("tablaKit")
     Call<Kit> updateKit(@Body Kit kit);
 
-    //Actividad:
     @GET("tablaActividad")
     Call<List<Actividad>> getAllActividades();
 
@@ -46,7 +46,7 @@ public interface  ApiService{
     @DELETE("tablaActividad")
     Call<Void> deleteActividad(@Query("idActividad") int idActividad);
 
-    //Premios:
+    // Premios:
     @GET("tablaPremios")
     Call<List<Premios>> getAllPremios();
 
@@ -59,11 +59,13 @@ public interface  ApiService{
     @DELETE("tablaPremios")
     Call<Void> deletePremio(@Query("idPremio") int idPremio);
 
+
     //relPrem:
     @GET("tablaRelPrem")
     Call<List<RelPrem>> getAllRelPrem();
     
     @POST("tablaRelPrem")
+
     Call<RelPrem> createRelPrem(@Body RelPrem relprem);
 
     @DELETE("tablaRelPrem")
