@@ -76,7 +76,7 @@ public class HomeTutor extends AppCompatActivity {
         if (fragmentNamePremio != null && fragmentNamePremio.equals("RecompensasFragmentTutor1")) {
             fragment = new RecompensasFragmentTutor1();
         }
-        if (fragmentNamePremioEditar != null && fragmentNamePremio.equals("RecompensasFragmentTutor")) {
+        if (fragmentNamePremioEditar != null && fragmentNamePremioEditar.equals("RecompensasFragmentTutor")) {
             fragment = new RecompensasFragmentTutor();
         }
 

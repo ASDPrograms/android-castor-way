@@ -77,7 +77,6 @@ public class EditarPremio extends AppCompatActivity {
     ImageView  btnAgregarImgPrem, btnSalirAddPrem;
 
     Button btnCrearPremMandar;
-    private final int limCharNombreHabit = 80;
     private final int limCharInfoExtr = 350;
 
     private String imagenPremSelected = "";
@@ -358,7 +357,7 @@ public class EditarPremio extends AppCompatActivity {
         btnConfirm.setOnClickListener(v -> {
             dialog.dismiss();
             Intent intent = new Intent(EditarPremio.this, HomeTutor.class);
-            intent.putExtra("fragmenPremCrear", "RecompensasFragmentTutor");
+            intent.putExtra("fragmenPremEditar", "RecompensasFragmentTutor");
             startActivity(intent);
         });
 
@@ -800,6 +799,7 @@ public class EditarPremio extends AppCompatActivity {
         editorcerrarp.apply();
         Intent intent = new Intent(EditarPremio.this, HomeTutor.class);
         intent.putExtra("fragmenPremEditar", "RecompensasFragmentTutor");
+        Log.d("Cambiecito","Se envia editar");
         startActivity(intent);
     }
     //la clasesita pa la imágen

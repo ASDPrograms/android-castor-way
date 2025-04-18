@@ -58,6 +58,8 @@ import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -755,6 +757,7 @@ public class RecompensasFragmentTutor extends Fragment {
 
                     // Ahora sí, eliminamos el premio
                     eliminarPremio(idPremio);
+                    limpiarCachePremio(idPremio);
 
                 } else {
                     Log.e("API_ERROR", "Error al eliminar relaciones. Código: " + response.code());
@@ -776,6 +779,32 @@ public class RecompensasFragmentTutor extends Fragment {
             }
         });
     }
+    private void limpiarCachePremio(int idPremio) {
+        SharedPreferences cache = requireContext().getSharedPreferences("cachePremiosEstado1", Context.MODE_PRIVATE);
+        String premiosJson = cache.getString("premios_estado_1", null);
+
+        if (premiosJson != null) {
+            Gson gson = new Gson();
+            Type type = new TypeToken<List<Premios>>(){}.getType();
+            List<Premios> premiosCache = gson.fromJson(premiosJson, type);
+
+            // Filtrar la lista y eliminar el premio con el ID especificado
+            List<Premios> nuevaLista = new ArrayList<>();
+            for (Premios premio : premiosCache) {
+                if (premio.getIdPremio() != idPremio) {
+                    nuevaLista.add(premio);
+                }
+            }
+
+            // Guardar la lista actualizada en caché
+            SharedPreferences.Editor editor = cache.edit();
+            String nuevaListaJson = gson.toJson(nuevaLista);
+            editor.putString("premios_estado_1", nuevaListaJson);
+            editor.apply();
+
+            Log.d("CACHE", "Premio ID " + idPremio + " eliminado del caché.");
+        }
+    }
 
     private void eliminarPremio(int idPremio) {
         Log.d("API_LOG", "Eliminando premio con ID: " + idPremio);
@@ -788,6 +817,7 @@ public class RecompensasFragmentTutor extends Fragment {
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()) {
                     Log.d("API_LOG", "Premio eliminado exitosamente. Código: " + response.code());
+
 
                     LayoutInflater inflater = getLayoutInflater();
                     View layout = inflater.inflate(R.layout.toast_personalizado, null);
@@ -811,6 +841,7 @@ public class RecompensasFragmentTutor extends Fragment {
                     FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
                     transaction.replace(R.id.frame_container, new RecompensasFragmentTutor1());
                     transaction.commit();
+
                 } else {
                     Log.e("API_ERROR", "Error al eliminar el premio. Código: " + response.code());
                     if (response.errorBody() != null) {
@@ -831,6 +862,8 @@ public class RecompensasFragmentTutor extends Fragment {
             }
         });
     }
+
+
 
     private void fetchRamitasDelKit(int idKit, TextView TxtRamitasKit) {
         ApiService apiService = RetrofitClient.getApiService();

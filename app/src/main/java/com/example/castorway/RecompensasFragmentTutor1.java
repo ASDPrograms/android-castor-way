@@ -58,6 +58,8 @@ import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -762,6 +764,7 @@ public class RecompensasFragmentTutor1 extends Fragment {
 
                     // Ahora sí, eliminamos el premio
                     eliminarPremio(idPremio);
+                    limpiarCachePremio(idPremio);
 
                 } else {
                     Log.e("API_ERROR", "Error al eliminar relaciones. Código: " + response.code());
@@ -782,6 +785,33 @@ public class RecompensasFragmentTutor1 extends Fragment {
                 Toast.makeText(requireContext(), "Error de conexión al eliminar relaciones", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void limpiarCachePremio(int idPremio) {
+        SharedPreferences cache = requireContext().getSharedPreferences("cachePremiosEstado0", Context.MODE_PRIVATE);
+        String premiosJson = cache.getString("premios_estado_0", null);
+
+        if (premiosJson != null) {
+            Gson gson = new Gson();
+            Type type = new TypeToken<List<Premios>>(){}.getType();
+            List<Premios> premiosCache = gson.fromJson(premiosJson, type);
+
+            // Filtrar la lista y eliminar el premio con el ID especificado
+            List<Premios> nuevaLista = new ArrayList<>();
+            for (Premios premio : premiosCache) {
+                if (premio.getIdPremio() != idPremio) {
+                    nuevaLista.add(premio);
+                }
+            }
+
+            // Guardar la lista actualizada en caché
+            SharedPreferences.Editor editor = cache.edit();
+            String nuevaListaJson = gson.toJson(nuevaLista);
+            editor.putString("premios_estado_0", nuevaListaJson);
+            editor.apply();
+
+            Log.d("CACHE", "Premio ID " + idPremio + " eliminado del caché.");
+        }
     }
 
     private void eliminarPremio(int idPremio) {

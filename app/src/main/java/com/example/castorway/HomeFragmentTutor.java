@@ -7,6 +7,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -308,9 +309,9 @@ public class HomeFragmentTutor extends Fragment {
         TextView txtPremRam = vistaPremio.findViewById(R.id.txtPremRam);
         ImageView imgPremio = vistaPremio.findViewById(R.id.imgPremioMasCostoso);
 
-        Button boton = vistaPremio.findViewById(R.id.verMas);
+        LinearLayout LinearPrinP = vistaPremio.findViewById(R.id.LinearPrinP);
 
-        boton.setOnClickListener(view -> {
+        LinearPrinP.setOnClickListener(view -> {
             SharedPreferences preferences= requireContext().getSharedPreferences("premioSelected", MODE_PRIVATE);
             SharedPreferences.Editor editorp = preferences.edit();
             editorp.putInt("idPremio", premio.getIdPremio());
@@ -321,16 +322,14 @@ public class HomeFragmentTutor extends Fragment {
             editorcerrarp.putBoolean("sesion_activa_prem", true);
             editorcerrarp.apply();
 
-            animarBoton(boton);
+            animarLinear(LinearPrinP);
 
-            new Handler().postDelayed(() -> {
-                Fragment nuevoFragment = new RecompensasFragmentTutor1();
-                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
-                FragmentTransaction transaction = fragmentManager.beginTransaction();
-                transaction.replace(R.id.frame_container, nuevoFragment);
-                transaction.addToBackStack(null);
-                transaction.commit();
+            new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                Intent intent = new Intent(requireContext(), HomeTutor.class);
+                intent.putExtra("fragmenPremCrear", "RecompensasFragmentTutor1");
+                startActivity(intent);
             }, 500);
+
         });
 
         txtHijoPremio.setText(premio.getNombrePremio());
@@ -400,24 +399,6 @@ public class HomeFragmentTutor extends Fragment {
                 LinearLayout.LayoutParams.MATCH_PARENT);
         mensajeNoPremios.setLayoutParams(params);
         contenedorPremioMasCostoso.addView(mensajeNoPremios);
-    }
-    private void animarBoton(Button boton) {
-        ObjectAnimator scaleX = ObjectAnimator.ofFloat(boton, "scaleX", 1f, 1.1f); // Aumenta el tamaño en X
-        ObjectAnimator scaleY = ObjectAnimator.ofFloat(boton, "scaleY", 1f, 1.1f); // Aumenta el tamaño en Y
-
-        scaleX.setDuration(150);
-        scaleY.setDuration(150);
-
-        scaleX.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                ObjectAnimator.ofFloat(boton, "scaleX", 1.1f, 1f).setDuration(150).start();
-                ObjectAnimator.ofFloat(boton, "scaleY", 1.1f, 1f).setDuration(150).start();
-            }
-        });
-
-        scaleX.start();
-        scaleY.start();
     }
 
     private void mostrarMensajeSeleccionarIdKitAct() {
@@ -566,13 +547,10 @@ public class HomeFragmentTutor extends Fragment {
 
                 animarLinear(LinearPrin);
 
-                new Handler().postDelayed(() -> {
-                    Fragment nuevoFragment = new ActividadesFragmentTutor();
-                    FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
-                    FragmentTransaction transaction = fragmentManager.beginTransaction();
-                    transaction.replace(R.id.frame_container, nuevoFragment);
-                    transaction.addToBackStack(null);
-                    transaction.commit();
+                new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                    Intent intent = new Intent(requireContext(), HomeTutor.class);
+                    intent.putExtra("fragmentActiCrear", "ActividadesFragmentTutor");
+                    startActivity(intent);
                 }, 500);
             });
 
