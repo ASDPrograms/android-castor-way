@@ -22,7 +22,17 @@
             android:layout_gravity="center"
             />
         <Button
+            android:id="@+id/btnFiltrar"
             android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:text="Filtrar"
+            android:fontFamily="@font/gayathri_bold"
+            android:textSize="18dp"
+            android:textColor="@color/white"
+            android:backgroundTint="@color/azulito_juerte"
+            android:layout_height="wrap_content"></Button>
+        <Button
+            android:layout_marginTop="5dp"
             android:layout_width="match_parent"
             android:text="Limpiar filtros"
             android:fontFamily="@font/gayathri_bold"
@@ -32,7 +42,7 @@
             android:layout_height="wrap_content"></Button>
         <TextView
             android:id="@+id/titleFilters"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="20dp"
             android:textColor="@color/black"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -60,58 +70,71 @@
             android:fontFamily="@font/gayathri_bold">
         </TextView>
         <RadioGroup
+            android:id="@+id/radioGroupCatActiFiltros"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <RadioButton
-                android:layout_width="wrap_content"
+                android:id="@+id/radioButtonSalud"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="15dp"
                 android:textColor="@color/black"
+                android:buttonTint="@color/azulito_juerte"
                 style="@style/CustomRadioButton"
                 android:fontFamily="@font/gayathri_bold"
                 android:text="Hábitos de salud.">
             </RadioButton>
             <RadioButton
-                android:layout_width="wrap_content"
+                android:id="@+id/radioButtonProductividad"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="15dp"
                 style="@style/CustomRadioButton"
+                android:buttonTint="@color/azulito_juerte"
                 android:textColor="@color/black"
                 android:fontFamily="@font/gayathri_bold"
                 android:text="Hábitos de productividad.">
             </RadioButton>
             <RadioButton
-                android:layout_width="wrap_content"
+                android:id="@+id/radioButtonPersonales"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="15dp"
                 style="@style/CustomRadioButton"
                 android:textColor="@color/black"
+                android:buttonTint="@color/azulito_juerte"
                 android:fontFamily="@font/gayathri_bold"
                 android:text="Hábitos personales.">
             </RadioButton>
             <RadioButton
-                android:layout_width="wrap_content"
+                android:id="@+id/radioButtonSociales"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="15dp"
                 style="@style/CustomRadioButton"
                 android:textColor="@color/black"
+                android:buttonTint="@color/azulito_juerte"
                 android:fontFamily="@font/gayathri_bold"
                 android:text="Hábitos sociales.">
             </RadioButton>
             <RadioButton
-                android:layout_width="wrap_content"
+                android:id="@+id/radioButtonFinancieros"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="15dp"
                 style="@style/CustomRadioButton"
                 android:textColor="@color/black"
+                android:buttonTint="@color/azulito_juerte"
                 android:fontFamily="@font/gayathri_bold"
                 android:text="Hábitos financieros.">
             </RadioButton>
             <RadioButton
-                android:layout_width="wrap_content"
+                android:id="@+id/radioButtonEmocionales"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="15dp"
                 style="@style/CustomRadioButton"
+                android:buttonTint="@color/azulito_juerte"
                 android:textColor="@color/black"
                 android:fontFamily="@font/gayathri_bold"
                 android:text="Hábitos emocionales.">
@@ -159,10 +182,12 @@
             android:fontFamily="@font/gayathri_bold">
         </TextView>
         <RadioGroup
+            android:id="@+id/radioGroupRepFiltros"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <RadioButton
-                android:layout_width="wrap_content"
+                android:id="@+id/radioButtonDiasSemana"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="15dp"
                 style="@style/CustomRadioButton"
@@ -171,7 +196,8 @@
                 android:text="Días de la semana.">
             </RadioButton>
             <RadioButton
-                android:layout_width="wrap_content"
+                android:id="@+id/radioButtonDiasMes"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="15dp"
                 style="@style/CustomRadioButton"
@@ -180,7 +206,8 @@
                 android:text="Días del mes.">
             </RadioButton>
             <RadioButton
-                android:layout_width="wrap_content"
+                android:id="@+id/radioButtonIntervalos"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="15dp"
                 style="@style/CustomRadioButton"
@@ -255,10 +282,12 @@
             android:textColor="@color/cafe_subtono"
             android:fontFamily="@font/gayathri_bold"></TextView>
         <RadioGroup
+            android:id="@+id/radioGroupEstadoActiFiltr"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <RadioButton
-                android:layout_width="wrap_content"
+                android:id="@+id/radioButtonCompletada"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="15dp"
                 style="@style/CustomRadioButton"
@@ -267,7 +296,8 @@
                 android:text="Completada.">
             </RadioButton>
             <RadioButton
-                android:layout_width="wrap_content"
+                android:id="@+id/radioButtonProgreso"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="15dp"
                 style="@style/CustomRadioButton"
@@ -276,7 +306,8 @@
                 android:text="En progreso.">
             </RadioButton>
             <RadioButton
-                android:layout_width="wrap_content"
+                android:id="@+id/radioButtonSinTerminar"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="15dp"
                 style="@style/CustomRadioButton"
@@ -307,6 +338,7 @@
                 android:paddingStart="10dp"
                 android:paddingEnd="10dp">
                 <RadioButton
+                    android:id="@+id/radioButtonRojo"
                     android:layout_width="wrap_content"
                     style="@style/CustomRadioButton"
                     android:layout_height="wrap_content"/>
@@ -332,6 +364,7 @@
                 android:paddingStart="10dp"
                 android:paddingEnd="10dp">
                 <RadioButton
+                    android:id="@+id/radioButtonAmarillo"
                     android:layout_width="wrap_content"
                     style="@style/CustomRadioButton"
                     android:layout_height="wrap_content"/>
@@ -357,6 +390,7 @@
                 android:paddingStart="10dp"
                 android:paddingEnd="10dp">
                 <RadioButton
+                    android:id="@+id/radioButtonAzul"
                     android:layout_width="wrap_content"
                     style="@style/CustomRadioButton"
                     android:layout_height="wrap_content"/>
@@ -382,6 +416,7 @@
                 android:paddingStart="10dp"
                 android:paddingEnd="10dp">
                 <RadioButton
+                    android:id="@+id/radioButtonVerde"
                     android:layout_width="wrap_content"
                     style="@style/CustomRadioButton"
                     android:layout_height="wrap_content"/>
@@ -407,6 +442,7 @@
                 android:paddingStart="10dp"
                 android:paddingEnd="10dp">
                 <RadioButton
+                    android:id="@+id/radioButtonMorado"
                     android:layout_width="wrap_content"
                     style="@style/CustomRadioButton"
                     android:layout_height="wrap_content"/>
@@ -420,6 +456,32 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Morado"
+                    android:textSize="16sp"
+                    android:textColor="@android:color/black"
+                    android:fontFamily="@font/gayathri_bold"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp">
+                <RadioButton
+                    android:id="@+id/radioButtonNegro"
+                    android:layout_width="wrap_content"
+                    style="@style/CustomRadioButton"
+                    android:layout_height="wrap_content"/>
+                <View
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_marginEnd="8dp"
+                    android:backgroundTint="@color/black"
+                    android:background="@drawable/circulo_colores" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Negro"
                     android:textSize="16sp"
                     android:textColor="@android:color/black"
                     android:fontFamily="@font/gayathri_bold"/>

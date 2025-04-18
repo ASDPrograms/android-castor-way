@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
@@ -30,8 +31,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -53,6 +57,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import retrofit2.Call;
@@ -62,6 +67,8 @@ import android.graphics.drawable.Drawable;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.datepicker.CalendarConstraints;
+import com.google.android.material.datepicker.MaterialDatePicker;
 
 import org.w3c.dom.Text;
 
@@ -72,10 +79,13 @@ import org.w3c.dom.Text;
  * create an instance of this fragment.
  */
 public class ActividadesFragmentTutor extends Fragment {
+    RadioButton radioButtonRojo, radioButtonAmarillo ,radioButtonVerde, radioButtonAzul, radioButtonMorado, radioButtonNegro;
     SwipeRefreshLayout refrescarFragment;
     LinearLayout layout_esta_semana, layout_siguiente_semana, layout_mas_tarde, contenedor_despues, contenedor_esta_semana, contenedor_siguiente_semana, layout_no_usr_kit_seleccionado, linLayContainAllActis;
-    TextView numActisEstaSemana, numActisSigSemana, numActisMasTarde, edit_busqueda;
+    TextView numActisEstaSemana, numActisSigSemana, numActisMasTarde, edit_busqueda, numRamitas,txtFechaInicial, txtFechaFinal;
     ImageView imgFlechEstaSemana, imgFlechSigSemana, imgFlechMasTarde, btnAgregarActi, btn_filtros;
+    Button btnFiltrar;
+    RadioGroup radioGroupCatActiFiltros, radioGroupRepFiltros, radioGroupEstadoActiFiltr;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -201,7 +211,6 @@ public class ActividadesFragmentTutor extends Fragment {
         btn_filtros.setOnClickListener(view1 -> {
             desplFiltros();
         });
-
     }
     private void desplegarModal(View view) {
         try {
@@ -1044,8 +1053,6 @@ public class ActividadesFragmentTutor extends Fragment {
                                         borrarActividad(actividadVer.getIdActividad());
 
                                     });
-
-
                                     txtDialogTitle.setText("¡Atención!");
                                     txtDialogMessage.setText("Estás a punto de borrar el hábito: " + "'"+actividadVer.getNombreHabito() + "'" + " si aceptas no se podrá deshacer la acción.");
 
@@ -1145,7 +1152,205 @@ public class ActividadesFragmentTutor extends Fragment {
             }
         });
 
-        modal.show();
+        //se cargan los elementos del layout:
 
+        //para los radiobutton que cambien de color:
+        ColorStateList colorStateList = new ColorStateList(
+                new int[][]{
+                        new int[]{android.R.attr.state_checked},
+                        new int[]{}
+                },
+                new int[]{
+                        // Color cuando está seleccionado
+                        Color.parseColor("#879FD4"),
+                        // Color cuando no está seleccionado
+                        Color.parseColor("#BDBDBD")
+                }
+        );
+
+        //se declaran los radiobutton
+
+        //RadioButton de "Categoría de la actividad"
+        RadioButton radioButtonSalud = modalView.findViewById(R.id.radioButtonSalud);
+        RadioButton radioButtonProductividad = modalView.findViewById(R.id.radioButtonProductividad);
+        RadioButton radioButtonPersonales = modalView.findViewById(R.id.radioButtonPersonales);
+        RadioButton radioButtonSociales = modalView.findViewById(R.id.radioButtonSociales);
+        RadioButton radioButtonFinancieros = modalView.findViewById(R.id.radioButtonFinancieros);
+        RadioButton radioButtonEmocionales = modalView.findViewById(R.id.radioButtonEmocionales);
+
+        //RadioButton de "Frecuencia de repetición"
+        RadioButton radioButtonDiasSemana = modalView.findViewById(R.id.radioButtonDiasSemana);
+        RadioButton radioButtonDiasMes = modalView.findViewById(R.id.radioButtonDiasMes);
+        RadioButton radioButtonIntervalos = modalView.findViewById(R.id.radioButtonIntervalos);
+
+        //RadioButton de "Estado de la actividad"
+        RadioButton radioButtonCompletada = modalView.findViewById(R.id.radioButtonCompletada);
+        RadioButton radioButtonProgreso = modalView.findViewById(R.id.radioButtonProgreso);
+        RadioButton radioButtonSinTerminar = modalView.findViewById(R.id.radioButtonSinTerminar);
+
+        //RadioButton de "Ícono o color asociado"
+        radioButtonRojo = modalView.findViewById(R.id.radioButtonRojo);
+        radioButtonAmarillo = modalView.findViewById(R.id.radioButtonAmarillo);
+        radioButtonVerde = modalView.findViewById(R.id.radioButtonVerde);
+        radioButtonAzul = modalView.findViewById(R.id.radioButtonAzul);
+        radioButtonMorado = modalView.findViewById(R.id.radioButtonMorado);
+        radioButtonNegro = modalView.findViewById(R.id.radioButtonNegro);
+
+        //se les asigna a los radiobutton el color de cuando está desactivado y el color de cuando está desactivado
+        radioButtonSalud.setButtonTintList(colorStateList);
+        radioButtonProductividad.setButtonTintList(colorStateList);
+        radioButtonPersonales.setButtonTintList(colorStateList);
+        radioButtonSociales.setButtonTintList(colorStateList);
+        radioButtonFinancieros.setButtonTintList(colorStateList);
+        radioButtonEmocionales.setButtonTintList(colorStateList);
+
+        radioButtonDiasSemana.setButtonTintList(colorStateList);
+        radioButtonDiasMes.setButtonTintList(colorStateList);
+        radioButtonIntervalos.setButtonTintList(colorStateList);
+
+        radioButtonCompletada.setButtonTintList(colorStateList);
+        radioButtonProgreso.setButtonTintList(colorStateList);
+        radioButtonSinTerminar.setButtonTintList(colorStateList);
+
+        radioButtonRojo.setButtonTintList(colorStateList);
+        radioButtonAmarillo.setButtonTintList(colorStateList);
+        radioButtonVerde.setButtonTintList(colorStateList);
+        radioButtonAzul.setButtonTintList(colorStateList);
+        radioButtonMorado.setButtonTintList(colorStateList);
+        radioButtonNegro.setButtonTintList(colorStateList);
+
+        //para manejar algo similar al efecto de un radiogroup
+        radioButtonRojo.setOnClickListener(v -> {
+            contrRadioButtonSelected(radioButtonRojo);
+        });
+        radioButtonAmarillo.setOnClickListener(v -> {
+            contrRadioButtonSelected(radioButtonAmarillo);
+        });
+        radioButtonVerde.setOnClickListener(v -> {
+            contrRadioButtonSelected(radioButtonVerde);
+        });
+        radioButtonAzul.setOnClickListener(v -> {
+            contrRadioButtonSelected(radioButtonAzul);
+        });
+        radioButtonMorado.setOnClickListener(v -> {
+            contrRadioButtonSelected(radioButtonMorado);
+        });
+        radioButtonNegro.setOnClickListener(v -> {
+            contrRadioButtonSelected(radioButtonNegro);
+        });
+
+        //evento al dar click en el botón de "filtrar":
+        radioGroupCatActiFiltros = modalView.findViewById(R.id.radioGroupCatActiFiltros);
+        radioGroupRepFiltros = modalView.findViewById(R.id.radioGroupRepFiltros);
+        radioGroupEstadoActiFiltr = modalView.findViewById(R.id.radioGroupEstadoActiFiltr);
+
+        numRamitas = modalView.findViewById(R.id.numRamitas);
+
+        txtFechaInicial = modalView.findViewById(R.id.txtFechaInicial);
+        txtFechaFinal = modalView.findViewById(R.id.txtFechaFinal);
+
+        //abrir modales de reloj al dar click sobre los textview de fecha incial y final:
+        txtFechaInicial.setOnClickListener(this::mostrarDatePicker);
+        txtFechaFinal.setOnClickListener(this::mostrarDatePicker);
+
+        btnFiltrar = modalView.findViewById(R.id.btnFiltrar);
+        btnFiltrar.setOnClickListener(v -> {
+            List<String> filtrosSeleccionados = new ArrayList<>();
+
+            //categoría acti
+            int selectedCategoriaId = radioGroupCatActiFiltros.getCheckedRadioButtonId();
+            if (selectedCategoriaId != -1) {
+                RadioButton selectedCategoria = v.findViewById(selectedCategoriaId);
+                filtrosSeleccionados.add("Categoría: " + selectedCategoria.getText().toString());
+            }
+
+            // Frecuencia seleccionada
+            int selectedFrecuenciaId = radioGroupRepFiltros.getCheckedRadioButtonId();
+            if (selectedFrecuenciaId != -1) {
+                RadioButton selectedFrecuencia = v.findViewById(selectedFrecuenciaId);
+                filtrosSeleccionados.add("Frecuencia: " + selectedFrecuencia.getText().toString());
+            }
+
+            // Ramitas
+            String ramitas = numRamitas.getText().toString();
+            if (!ramitas.isEmpty()) {
+                filtrosSeleccionados.add("Ramitas: " + ramitas);
+            }
+
+            // Fechas
+            String fechaInicial = txtFechaInicial.getText().toString();
+            String fechaFinal = txtFechaFinal.getText().toString();
+            if (!fechaInicial.equals("Seleccione una fecha")) {
+                filtrosSeleccionados.add("Fecha inicial: " + fechaInicial);
+            }
+            if (!fechaFinal.equals("Seleccione una fecha")) {
+                filtrosSeleccionados.add("Fecha final: " + fechaFinal);
+            }
+
+            // Mostrar los filtros seleccionados (ejemplo con Log)
+            for (String filtro : filtrosSeleccionados) {
+                Log.d("FiltrosSeleccionados", filtro);
+            }
+        });
+
+
+        modal.show();
+    }
+
+    private void contrRadioButtonSelected(RadioButton selectedRadioButton) {
+        radioButtonRojo.setChecked(false);
+        radioButtonAmarillo.setChecked(false);
+        radioButtonVerde.setChecked(false);
+        radioButtonAzul.setChecked(false);
+        radioButtonMorado.setChecked(false);
+        radioButtonNegro.setChecked(false);
+
+        selectedRadioButton.setChecked(true);
+    }
+    private void mostrarDatePicker(View view) {
+        // Obtener la fecha actual del dispositivo
+        android.icu.util.Calendar calendar = android.icu.util.Calendar.getInstance(); // Usando la zona horaria y el Locale del dispositivo por defecto
+        int year = calendar.get(android.icu.util.Calendar.YEAR);
+        int month = calendar.get(android.icu.util.Calendar.MONTH);
+        int day = calendar.get(android.icu.util.Calendar.DAY_OF_MONTH);
+
+        // Establecer la fecha mínima que será la fecha actual (reseteando la hora)
+        calendar.set(year, month, day, 0, 0, 0);
+        calendar.set(android.icu.util.Calendar.MILLISECOND, 0); // Asegurarse de que los milisegundos sean 0
+        long todayInMillis = calendar.getTimeInMillis();
+
+        // Crear el modal para mostrar las fechas disponibles en el calendario
+        MaterialDatePicker<Long> datePicker = MaterialDatePicker.Builder.datePicker()
+                .setTitleText("Seleccione una fecha")
+                .setTheme(R.style.CustomMaterialDatePickerTheme)
+                .setSelection(todayInMillis) // Preseleccionar la fecha actual
+                .setCalendarConstraints(
+                        new CalendarConstraints.Builder()
+                                .setStart(todayInMillis) // Configurar el límite inferior para hoy
+                                .build()
+                )
+                .build();
+
+        datePicker.show(getParentFragmentManager(), "MATERIAL_DATE_PICKER");
+
+        datePicker.addOnPositiveButtonClickListener(selection -> {
+            // Se ajusta la fecha seleccionada
+            android.icu.util.Calendar selectedCalendar = android.icu.util.Calendar.getInstance();
+            selectedCalendar.setTimeInMillis(selection);
+
+            selectedCalendar.set(android.icu.util.Calendar.HOUR_OF_DAY, 0);
+            selectedCalendar.set(android.icu.util.Calendar.MINUTE, 0);
+            selectedCalendar.set(android.icu.util.Calendar.SECOND, 0);
+            selectedCalendar.set(android.icu.util.Calendar.MILLISECOND, 0);
+
+            selectedCalendar.add(android.icu.util.Calendar.DAY_OF_MONTH, 1);
+
+            android.icu.util.Calendar todayCalendar = android.icu.util.Calendar.getInstance();
+            todayCalendar.set(android.icu.util.Calendar.HOUR_OF_DAY, 0);
+            todayCalendar.set(android.icu.util.Calendar.MINUTE, 0);
+            todayCalendar.set(android.icu.util.Calendar.SECOND, 0);
+            todayCalendar.set(android.icu.util.Calendar.MILLISECOND, 0);
+
+        });
     }
 }
