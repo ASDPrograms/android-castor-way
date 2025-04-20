@@ -437,18 +437,6 @@ public class RecompensasFragmentTutor extends Fragment {
         // Mostrar mensaje "No hay premios" primero
         requireActivity().runOnUiThread(this::mostrarMensajeNoPremios);
 
-        // Mostrar primero desde caché
-        SharedPreferences cache = requireContext().getSharedPreferences("cachePremiosEstado1", MODE_PRIVATE);
-        String premiosJson = cache.getString("premios_estado_1", null);
-        if (premiosJson != null) {
-            Gson gson = new Gson();
-            List<Premios> premiosCache = gson.fromJson(premiosJson, new TypeToken<List<Premios>>(){}.getType());
-            if (!premiosCache.isEmpty()) {
-                mostrarPremios(premiosCache);
-                return; // Salir, ya que los premios ya fueron cargados
-            }
-        }
-
         ApiService apiService = RetrofitClient.getApiService();
 
         CompletableFuture<List<Premios>> premiosFuture = CompletableFuture.supplyAsync(() -> {
@@ -491,23 +479,16 @@ public class RecompensasFragmentTutor extends Fragment {
                     .filter(p -> p != null && p.getEstadoPremio() == 1)
                     .collect(Collectors.toList());
 
-            // Mostrar los premios obtenidos
             requireActivity().runOnUiThread(() -> {
                 if (!premiosConEstado1.isEmpty()) {
-                    // Guardar en caché
-                    Gson gson = new Gson();
-                    String jsonPremios = gson.toJson(premiosConEstado1);
-                    SharedPreferences.Editor editor = cache.edit();
-                    editor.putString("premios_estado_1", jsonPremios);
-                    editor.apply();
-
                     mostrarPremios(premiosConEstado1);
                 } else {
-                    mostrarMensajeNoPremios();  // Mostrar mensaje si no hay premios
+                    mostrarMensajeNoPremios();
                 }
             });
         });
     }
+
 
     private void mostrarPremios(List<Premios> premios) {
         if (!isAdded() || Contenedor_Premios == null) return;

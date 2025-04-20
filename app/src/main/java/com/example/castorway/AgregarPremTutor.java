@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
+import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.PictureDrawable;
@@ -15,6 +16,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.BaseAdapter;
@@ -67,6 +69,9 @@ public class AgregarPremTutor extends AppCompatActivity {
 
     private String imagenPremSelected = "";
 
+
+    private View rootView;
+    private boolean isKeyboardVisible = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -5530,4 +5535,34 @@ public class AgregarPremTutor extends AppCompatActivity {
         intent.putExtra("fragmenPremCrear", "RecompensasFragmentTutor1");
         startActivity(intent);
     }
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        // Guardamos las posiciones seleccionadas de los spinners
+        outState.putInt("spinnerTipoPrem", spinnerTipoPrem.getSelectedItemPosition());
+        outState.putInt("spinnerCatPrem", spinnerCatPrem.getSelectedItemPosition());
+        outState.putInt("spinnerNivelPrem", spinnerNivelPrem.getSelectedItemPosition());
+    }
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        // Restauramos las posiciones seleccionadas de los spinners
+        if (savedInstanceState != null) {
+            int tipoPremPosition = savedInstanceState.getInt("spinnerTipoPrem");
+            int catPremPosition = savedInstanceState.getInt("spinnerCatPrem");
+            int nivelPremPosition = savedInstanceState.getInt("spinnerNivelPrem");
+
+            // Restauramos la selección en cada Spinner
+            spinnerTipoPrem.setSelection(tipoPremPosition);
+            spinnerCatPrem.setSelection(catPremPosition);
+            spinnerNivelPrem.setSelection(nivelPremPosition);
+        }
+    }
+
+
+
 }
+
+

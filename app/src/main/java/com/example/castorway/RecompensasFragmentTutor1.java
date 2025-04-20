@@ -434,21 +434,7 @@ public class RecompensasFragmentTutor1 extends Fragment {
     }
 
     private void fetchRecompensaMasCostosa() {
-        SharedPreferences cache = requireContext().getSharedPreferences("cachePremiosEstado0", MODE_PRIVATE);
-        String premiosJson = cache.getString("premios_estado_0", null);
-
-        // Verificar si ya hay premios en caché
-        if (premiosJson != null) {
-            Gson gson = new Gson();
-            List<Premios> premiosCache = gson.fromJson(premiosJson, new TypeToken<List<Premios>>(){}.getType());
-
-            if (!premiosCache.isEmpty()) {
-                mostrarPremios(premiosCache);  // Mostrar premios desde caché
-                return; // Salir, ya que los premios ya fueron cargados
-            }
-        }
-
-        // Mostrar mensaje "No hay premios" si aún no hay premios en caché
+        // Mostrar mensaje "No hay premios" primero
         requireActivity().runOnUiThread(this::mostrarMensajeNoPremios);
 
         ApiService apiService = RetrofitClient.getApiService();
@@ -471,7 +457,6 @@ public class RecompensasFragmentTutor1 extends Fragment {
             }
         });
 
-        // Esperar que ambas peticiones se resuelvan
         CompletableFuture.allOf(premiosFuture, relPremFuture).thenRun(() -> {
             List<Premios> premios = premiosFuture.join();
             List<RelPrem> relPremList = relPremFuture.join();
@@ -485,29 +470,20 @@ public class RecompensasFragmentTutor1 extends Fragment {
                 return;
             }
 
-            // Filtrar los premios con estado 0 para el idKit seleccionado
             Map<Integer, Premios> premiosMap = premios.stream()
                     .collect(Collectors.toMap(Premios::getIdPremio, p -> p));
 
-            List<Premios> premiosConEstado0 = relPremList.stream()
+            List<Premios> premiosConEstado1 = relPremList.stream()
                     .filter(r -> r.getIdKit() == idKit)
                     .map(r -> premiosMap.get(r.getIdPremio()))
                     .filter(p -> p != null && p.getEstadoPremio() == 0)
                     .collect(Collectors.toList());
 
-            // Mostrar los premios obtenidos
             requireActivity().runOnUiThread(() -> {
-                if (!premiosConEstado0.isEmpty()) {
-                    // Guardar en caché
-                    Gson gson = new Gson();
-                    String jsonPremios = gson.toJson(premiosConEstado0);
-                    SharedPreferences.Editor editor = cache.edit();
-                    editor.putString("premios_estado_0", jsonPremios);
-                    editor.apply();
-
-                    mostrarPremios(premiosConEstado0);  // Mostrar premios
+                if (!premiosConEstado1.isEmpty()) {
+                    mostrarPremios(premiosConEstado1);
                 } else {
-                    mostrarMensajeNoPremios();  // Mostrar mensaje si no hay premios
+                    mostrarMensajeNoPremios();
                 }
             });
         });
