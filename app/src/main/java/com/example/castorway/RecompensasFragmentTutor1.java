@@ -473,15 +473,15 @@ public class RecompensasFragmentTutor1 extends Fragment {
             Map<Integer, Premios> premiosMap = premios.stream()
                     .collect(Collectors.toMap(Premios::getIdPremio, p -> p));
 
-            List<Premios> premiosConEstado1 = relPremList.stream()
+            List<Premios> premiosConEstado0 = relPremList.stream()
                     .filter(r -> r.getIdKit() == idKit)
                     .map(r -> premiosMap.get(r.getIdPremio()))
                     .filter(p -> p != null && p.getEstadoPremio() == 0)
                     .collect(Collectors.toList());
 
             requireActivity().runOnUiThread(() -> {
-                if (!premiosConEstado1.isEmpty()) {
-                    mostrarPremios(premiosConEstado1);
+                if (!premiosConEstado0.isEmpty()) {
+                    mostrarPremios(premiosConEstado0);
                 } else {
                     mostrarMensajeNoPremios();
                 }
