@@ -487,5 +487,5 @@
                     android:fontFamily="@font/gayathri_bold"/>
             </LinearLayout>
         </RadioGroup>
-    </LinearLayout>
+        </LinearLayout>
 </ScrollView>

@@ -102,6 +102,8 @@ public class AgregarActiTutor extends AppCompatActivity {
     private String fechasSeleccionadas = "";
     // Variable para almacenar la hora inicial
     private Calendar selectedStartTime = null;
+    private Calendar selectedEndTime = null;
+
     private ArrayList<String> imageFiles;
     private GridView gridViewImages;
     private String imagenActiSelected = "";
@@ -2276,6 +2278,7 @@ public class AgregarActiTutor extends AppCompatActivity {
         }
     }
 
+
     private String recorrerFechasDiasSeleccionados(String formattedDate, List<Integer> listaSeleccionados) {
         List<String> fechas = new ArrayList<>();
 
@@ -2352,6 +2355,42 @@ public class AgregarActiTutor extends AppCompatActivity {
             selectedStartTime.set(Calendar.HOUR_OF_DAY, hour);
             selectedStartTime.set(Calendar.MINUTE, minute);
 
+            // Si ya existe una fecha final seleccionada, validamos si la fecha inicial es al menos 15 minutos antes
+            if (selectedEndTime != null) {
+                long differenceInMillis = selectedEndTime.getTimeInMillis() - selectedStartTime.getTimeInMillis();
+                if (differenceInMillis < 15 * 60 * 1000) {
+                    // Si la diferencia es menor a 15 minutos, mostramos un mensaje de error
+                    LayoutInflater inflater = getLayoutInflater();
+                    View layout = inflater.inflate(R.layout.toast_personalizado, null);
+
+                    //Inicio de código para cambiar elementos del toast personalizado
+
+                    //Se cambia la imágen
+                    ImageView icon = layout.findViewById(R.id.toast_icon);
+                    icon.setImageResource(R.drawable.img_circ_tache_rojo);
+
+                    //Se cambia el texto
+                    TextView text = layout.findViewById(R.id.toast_text);
+                    text.setText("La hora final debe ser 15 minutos después de la inicial");
+
+                    //Se cambia el color de fondo
+                    Drawable background = layout.getBackground();
+                    background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.rojito_toast), PorterDuff.Mode.SRC_IN);
+
+                    // Cambia color del texto
+                    text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
+
+                    //Fin del código que se encarga de cambiar los elementos del toast personalizado
+
+                    //Lo crea y lo pone en la parte de arriba del cel
+                    Toast toast = new Toast(getApplicationContext());
+                    toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
+                    toast.setDuration(Toast.LENGTH_LONG);
+                    toast.setView(layout);
+                    toast.show();                    return; // Detenemos el proceso
+                }
+            }
+
             // Asegúrate de que txtHoraInicial está inicializado
             if (txtHoraInicial != null) {
                 txtHoraInicial.setText(selectedTime);
@@ -2414,6 +2453,10 @@ public class AgregarActiTutor extends AppCompatActivity {
             int formattedHour = (hour == 0 || hour == 12) ? 12 : hour % 12;
 
             String selectedTime = String.format(Locale.getDefault(), "%02d:%02d %s", formattedHour, minute, amPm);
+
+            selectedEndTime = Calendar.getInstance();
+            selectedEndTime.set(Calendar.HOUR_OF_DAY, hour);
+            selectedEndTime.set(Calendar.MINUTE, minute);
 
             // Compara la hora final con la hora inicial usando Calendar
             Calendar selectedEndTime = Calendar.getInstance();

@@ -1,17 +1,25 @@
 package com.example.castorway;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -122,13 +130,48 @@ public class LoadingActivityStart extends AppCompatActivity {
             }
         }, 500);
     }
-
+    private void limpiarSesionModalActis(){
+        SharedPreferences preferences = getSharedPreferences("sesionModalActis", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.clear();
+        editor.apply();
+    }
 
     private void goToNextActivity() {
+        //limpia la sesión por si se quedó abierta
+        limpiarSesionModalActis();
         // Después de la carga exitosa, puedes redirigir al usuario
 
-        Toast.makeText(this, "Bienvenido de nuevo :)", Toast.LENGTH_SHORT).show();
+        //Inicio del código para mostrar el toast personalizado
+        LayoutInflater inflater = getLayoutInflater();
+        View layout = inflater.inflate(R.layout.toast_personalizado, null);
 
+        //Inicio de código para cambiar elementos del toast personalizado
+
+        //Se cambia la imágen
+        ImageView icon = layout.findViewById(R.id.toast_icon);
+        icon.setImageResource(R.drawable.castor_logo_solito);
+
+        //Se cambia el texto
+        TextView text = layout.findViewById(R.id.toast_text);
+        text.setText("Bienvenido(a) de nuevo :)");
+
+        //Se cambia el color de fondo
+        Drawable background = layout.getBackground();
+        background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azul_toast_bienvenido), PorterDuff.Mode.SRC_IN);
+
+        // Cambia color del texto
+        text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
+
+        //Fin del código que se encarga de cambiar los elementos del toast personalizado
+
+        //Lo crea y lo pone en la parte de arriba del cel
+        Toast toast = new Toast(getApplicationContext());
+        toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
+        toast.setDuration(Toast.LENGTH_LONG);
+        toast.setView(layout);
+        toast.show();
+        //Fin del código para mostrar el toast personalizado
         Intent intent = new Intent(LoadingActivityStart.this, MainActivity.class);
         startActivity(intent);
         finish();
