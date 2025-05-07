@@ -1,13 +1,19 @@
 package com.example.castorway;
 
 import android.animation.ObjectAnimator;
+import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,6 +49,44 @@ public class HomeKit extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_kit);
 
+        //Al abrir intentar recibir el valor de modal trás actividad creada
+        String fragmentName = getIntent().getStringExtra("fragmentActiCrear");
+        String fragmentNamePremio = getIntent().getStringExtra("fragmenPremCrear");
+        String fragmentNamePremioEditar = getIntent().getStringExtra("fragmenPremEditar");
+
+        Fragment fragment = null;
+
+        if (fragmentName != null && fragmentName.equals("ActividadesFragmentKit")) {
+            fragment = new ActividadesFragmentKit();
+        }
+
+        //if (fragmentNamePremio != null && fragmentNamePremio.equals("RecompensasFragmentKit1")) {
+        //            fragment = new RecompensasFragmentKit1();
+        //        }
+        if (fragmentNamePremioEditar != null && fragmentNamePremio.equals("RecompensasFragmentKit")) {
+            fragment = new RecompensasFragmentKit();
+        }
+
+        // Si se recibe un fragmento válido, lo mostramos
+        if (fragment != null) {
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.frame_container, fragment); // Asegúrate de tener un contenedor adecuado
+            transaction.commit();
+        }
+
+
+        SharedPreferences preferences = getSharedPreferences("User", Context.MODE_PRIVATE);
+        String nombreUsuario = preferences.getString("nombreUsuario", null);
+
+        if (nombreUsuario == null) {
+            Log.e("DEBUG", "Sin nombre de usuario");
+            Toast.makeText(HomeKit.this, "Ocurrió un error con su cuenta", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(HomeKit.this, IniciarSesionKit.class);
+            startActivity(intent);
+            finish();
+
+        }
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getWindow();
             window.setStatusBarColor(Color.TRANSPARENT);
@@ -68,6 +112,55 @@ public class HomeKit extends AppCompatActivity {
         loadFragment(new HomeFragmentKit());
         actuInfoTopNav();
     }
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // Obtener el nombre del fragmento desde cualquiera de los extras
+        String fragmentName = getIntent().getStringExtra("fragmentActiCrear");
+        String fragmentNamePremio = getIntent().getStringExtra("fragmenPremCrear");
+        String fragmentNamePremioEditar = getIntent().getStringExtra("fragmenPremEditar");
+
+        Fragment fragment = null;
+        ImageView iconToSelect = null;
+
+        // Verificar cuál fragmento se debe cargar
+        if (fragmentName != null && fragmentName.equals("ActividadesFragmentKit")) {
+            fragment = new ActividadesFragmentKit();
+            iconToSelect = iconActividades;
+        } //else if (fragmentNamePremio != null && fragmentNamePremio.equals("RecompensasFragmentKit1")) {
+        //fragment = new RecompensasFragmentKit1();
+        //iconToSelect = iconRecompensas;
+        //}
+        else if (fragmentNamePremioEditar != null && fragmentNamePremioEditar.equals("RecompensasFragmentKit")) {
+            fragment = new RecompensasFragmentKit();
+            iconToSelect = iconRecompensas;
+        }
+
+        // Cargar el fragmento seleccionado y seleccionar el icono correspondiente
+        if (fragment != null) {
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.frame_container, fragment);
+            transaction.commit();
+
+            if (iconToSelect != null) {
+                selectIcon(iconToSelect);
+            }
+        }
+    }
+    //para cuando cierra la app (el activity de homekit)
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        limpiarSesionModalActis();
+    }
+    private void limpiarSesionModalActis(){
+        SharedPreferences preferences = getSharedPreferences("sesionModalActis", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.clear();
+        editor.apply();
+    }
+
     private void actuInfoTopNav(){
         ApiService apiService = RetrofitClient.getApiService();
         Call<List<Kit>> call = apiService.getAllKits();

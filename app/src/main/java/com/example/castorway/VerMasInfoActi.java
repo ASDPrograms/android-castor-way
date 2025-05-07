@@ -309,7 +309,7 @@ public class VerMasInfoActi extends AppCompatActivity {
         });
     }
 
-    private void mostrarModalPorDiaActi(int numDia, Dialog dialog){
+    private void mostrarModalPorDiaActi(int numDia, Dialog dialog) {
         ApiService apiService = RetrofitClient.getApiService();
         Call<List<Actividad>> call = apiService.getAllActividades();
         call.enqueue(new Callback<List<Actividad>>() {
@@ -407,7 +407,6 @@ public class VerMasInfoActi extends AppCompatActivity {
 
                             if (estadoAsignar.equals("0")) {
                                 //se esconden los botone de aceptar y rechazar:
-                                contBtnAceptRechazActi.removeView(btnAceptarActi);
                                 contBtnAceptRechazActi.removeView(btnRechazarActi);
 
                                 //se pone el texto pa decir que no se puede hacer na
@@ -509,7 +508,7 @@ public class VerMasInfoActi extends AppCompatActivity {
                                     //verificar si es el último en marcar como completado para dar ramitas
                                     boolean verifiUltActi = false;
                                     for(int i = 0; i < elementEstadosActi.length; i++){
-                                        if(!elementEstadosActi[i].equals("2")){
+                                        if(!elementEstadosActi[i].equals("2") || !elementEstadosActi[i].equals("4")){
                                             verifiUltActi = true;
                                         }
                                     }
