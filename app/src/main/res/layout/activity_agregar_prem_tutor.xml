@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AgregarPremTutor"
+    android:id="@+id/main1"
+    android:background="@color/aguita">
+
+    <LinearLayout
+        android:id="@+id/ContainPrin"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.1"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+                <ImageView
+                    android:id="@+id/btnSalirAddPrem"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:paddingLeft="30dp"
+                    android:paddingTop="30dp"
+                    android:src="@drawable/flechita_izquierda"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentStart="true"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="end|top">
+                <ImageView
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:paddingRight="30dp"
+                    android:paddingTop="30dp"
+                    android:layout_alignParentTop="true"
+                    android:src="@drawable/icon_mas_info_i"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.5"
+            android:gravity="center">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/dongle_bold"
+                android:textSize="55sp"
+                android:textColor="@color/black"
+                android:id="@+id/txtTitNuevoPrem"
+                android:text="Nuevo "/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/dongle_bold"
+                android:textSize="55sp"
+                android:textColor="@color/amarillito"
+                android:id="@+id/txtTitPremio"
+                android:text="premio"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+                <AutoCompleteTextView
+                    android:id="@+id/nombrePremInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginEnd="30dp"
+                    android:padding="8dp"
+                    android:hint="Nombre del premio"
+                    android:textColorHint="@color/hint_input"
+                    android:textColor="@color/black"
+                    android:clickable="true"
+                    android:maxLength="35"
+                    android:fontFamily="@font/gayathri_bold"
+                    android:background="@drawable/input_border"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="right"
+                    android:paddingRight="35dp"
+                    android:paddingTop="5dp">
+                    <TextView
+                        android:id="@+id/contCaractNameHabit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0/80"
+                        android:textColor="@android:color/darker_gray"
+                        android:fontFamily="@font/gayathri_bold"
+                        android:textSize="15sp"
+                        android:gravity="center"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+                <Spinner
+                    android:id="@+id/spinnerNivPremio"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginEnd="30dp"
+                    android:layout_marginBottom="20dp"
+                    android:padding="8dp"
+                    android:background="@drawable/input_border"
+                    android:entries="@array/Nivel"
+                    android:theme="@style/SpinnerTextStyle"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+                <Spinner
+                    android:id="@+id/spinnerCatPremio"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginEnd="30dp"
+                    android:layout_marginBottom="20dp"
+                    android:padding="8dp"
+                    android:background="@drawable/input_border"
+                    android:entries="@array/Categoria"
+                    android:theme="@style/SpinnerTextStyle"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+                <Spinner
+                    android:id="@+id/spinnerTipPremio"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginEnd="30dp"
+                    android:layout_marginBottom="20dp"
+                    android:padding="8dp"
+                    android:background="@drawable/input_border"
+                    android:entries="@array/tipo"
+                    android:theme="@style/SpinnerTextStyle"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.2"
+            android:orientation="vertical"
+            android:layout_marginBottom="20dp">
+            <EditText
+                android:id="@+id/numRamitasPrem"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="30dp"
+                android:padding="10dp"
+                android:hint="Costo del Premio"
+                android:textColorHint="@color/hint_input"
+                android:textColor="@color/black"
+                android:inputType="number"
+                android:fontFamily="@font/gayathri_bold"
+                android:drawableLeft="@drawable/img_ramita"
+                android:drawablePadding="8dp"
+                android:background="@drawable/input_border"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.4"
+            android:gravity="center_horizontal">
+
+            <LinearLayout
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginBottom="20dp"
+                android:padding="8dp"
+                android:orientation="vertical"
+                android:background="@drawable/input_border">
+
+                <!-- Título e icono -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/img_add_acti_azul"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Icono"
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/gayathri_bold"
+                        android:textSize="17sp"
+                        android:paddingStart="5dp"/>
+                </LinearLayout>
+
+                <!-- Selector de imagen centrado -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:id="@+id/btnAgregarImgPrem"
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
+                        android:src="@drawable/icon_agregar_img_acti"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!-- EditText para la información extra -->
+                <ScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    > <!-- Corrected height here -->
+
+                    <EditText
+                        android:id="@+id/txtMasInfoPrem"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginRight="30dp"
+                        android:layout_marginLeft="20dp"
+                        android:padding="10dp"
+                        android:gravity="top"
+                        android:maxLength="350"
+                        android:minHeight="180dp"
+                        android:maxHeight="180dp"
+                        android:hint="Ingresa información extra..."
+                        android:textColor="@color/black"
+                        android:textColorHint="@color/hint_input"
+                        android:fontFamily="@font/gayathri_bold"
+                        android:background="@drawable/input_border"/>
+                </ScrollView>
+
+                <!-- Contador de caracteres -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:paddingEnd="35dp"
+                    android:paddingTop="5dp">
+
+                    <TextView
+                        android:id="@+id/contCaractInfoExtr"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0/350"
+                        android:textColor="@android:color/darker_gray"
+                        android:fontFamily="@font/gayathri_bold"
+                        android:textSize="15sp"/>
+                </LinearLayout>
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btnCrearPremMandar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.3"
+            android:layout_marginHorizontal="30dp"
+            android:clickable="true"
+            android:fontFamily="@font/dongle_bold"
+            android:backgroundTint="@color/azulito_juerte"
+            android:textSize="25sp"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:text="Crear Premio"
+            android:layout_gravity="center_vertical"/>
+    </LinearLayout>
+</ScrollView>

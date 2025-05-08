@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+     android:padding="8dp"
+    android:background="@drawable/borde_con_sombra"
+    android:elevation="4dp"
+    android:layout_margin="10dp">
+
+    <LinearLayout
+        android:layout_width="130dp"
+        android:layout_height="170dp"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="0.13"
+            android:id="@+id/Linear_Img_Prem">
+        <ImageView
+            android:id="@+id/Img_Prem"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/castortutor"
+            android:scaleType="centerCrop"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
+            />
+        </LinearLayout>
+        <TextView
+            android:id="@+id/Name_Prem"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:fontFamily="@font/gayathri_bold"
+            android:text="Ir al cine con tus amigos"
+            android:textColor="#1A1A1A"
+            android:textSize="15sp"
+            android:layout_marginBottom="4dp"
+            android:maxLines="1"
+            android:layout_weight="0.025"
+            android:ellipsize="end"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="horizontal"
+            android:layout_weight="0.04"
+            android:gravity="start">
+
+            <ImageView
+                android:id="@+id/Img_Favorito"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/corazon_vacio"
+                android:layout_marginEnd="5dp"/>
+
+            <ImageView
+                android:id="@+id/Img_Estado"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/trofeo_vacio"
+                />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>
