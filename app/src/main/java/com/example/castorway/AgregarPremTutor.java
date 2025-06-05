@@ -82,11 +82,8 @@ public class AgregarPremTutor extends AppCompatActivity {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
 
-            //Se declara el btn que permite salir del activity de nuevo hábito:
             btnSalirAddPrem = findViewById(R.id.btnSalirAddPrem);
             btnSalirAddPrem.setOnClickListener(v1 -> mostrarModalCerrarView("¡Atención!", "Si das click en aceptar saldrás del formulario y no se guardará la información ingresada."));
-
-             // Inicialización de Spinners
             spinnerTipoPrem = findViewById(R.id.spinnerTipPremio);
             spinnerCatPrem = findViewById(R.id.spinnerCatPremio);
             spinnerNivelPrem = findViewById(R.id.spinnerNivPremio);
@@ -231,9 +228,7 @@ public class AgregarPremTutor extends AppCompatActivity {
 
             nombrePremInput = findViewById(R.id.nombrePremInput);
             nombrePremInput.setDropDownBackgroundResource(R.drawable.input_border);
-
-            //Se agrega un listener a cambio del texto para el contador de caractéres
-            //y se declara el contador de caractéres
+            
             contCaractNameHabit = findViewById(R.id.contCaractNameHabit);
             nombrePremInput.addTextChangedListener(new TextWatcher() {
                 @Override
@@ -255,7 +250,6 @@ public class AgregarPremTutor extends AppCompatActivity {
 
             nombrePremInput.setAdapter(adapter);
 
-            //el evento lo que hace es al presionar el input de nombre de hábito se despliega la lista
             nombrePremInput.setOnFocusChangeListener((view, hasFocus) -> {
                 if (hasFocus) {
                     nombrePremInput.showDropDown();
@@ -268,19 +262,18 @@ public class AgregarPremTutor extends AppCompatActivity {
             nombrePremInput.setOnItemClickListener((parent, view, position, id) -> {
                 String seleccion = (String) parent.getItemAtPosition(position);
 
-                // Llenar datos del formulario según la opción seleccionada
                 switch (seleccion) {
                     case "Coche de juguete":
                         try {
 
-                            //Inicio del código para mostrar el toast personalizado
+                            
                             LayoutInflater inflater = getLayoutInflater();
                             View layout = inflater.inflate(R.layout.toast_personalizado, null);
 
-                            //Inicio de código para cambiar elementos del toast personalizado
+                            
 
 
-                            //Se cambia la imágen
+                            
                             ImageView icon = layout.findViewById(R.id.toast_icon);
 
                             try (InputStream inputStream = getAssets().open("img/Iconos-recompensas/coche_juguete.svg")) {
@@ -294,29 +287,29 @@ public class AgregarPremTutor extends AppCompatActivity {
                             }
 
 
-                            //Se cambia el texto
+                         
                             TextView text = layout.findViewById(R.id.toast_text);
                             text.setText("Coche de juguete");
 
-                            //Se cambia el color de fondo
+                           
                             Drawable background = layout.getBackground();
                             background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
 
-                            // Cambia color del texto
+                            
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            //Fin del código que se encarga de cambiar los elementos del toast personalizado
+                           
 
-                            //Lo crea y lo pone en la parte de arriba del cel
+                            
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
                             toast.setView(layout);
                             toast.show();
-                            //Fin del código para mostrar el toast personalizado
+                            
 
 
-                            //Inicio del código que cambia los valores dependiendo de lo que seleccione
+                            
                             int nuevoNumero = 100;
                             numRamitasPrem.setText(String.valueOf(nuevoNumero));
 
@@ -331,7 +324,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                             txtMasInfo.setText("Este coche de juguete es perfecto para desarrollar la imaginación y" +
                                     " fomentar el juego simbólico. Los niños pueden crear sus propias aventuras " +
                                     "y escenarios mientras mejoran sus habilidades motoras.");
-                            //Fin del código que cambia los valores dependiendo de lo que seleccione
+                            
 
                         }catch (Exception ex){
                             Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
@@ -339,11 +332,11 @@ public class AgregarPremTutor extends AppCompatActivity {
                         break;
                     case "Muñeca":
                         try {
-                            //Inicio del código para mostrar el toast personalizado
+                            
                             LayoutInflater inflater = getLayoutInflater();
                             View layout = inflater.inflate(R.layout.toast_personalizado, null);
 
-                            //Se cambia la imágen
+                            
                             ImageView icon = layout.findViewById(R.id.toast_icon);
                             try (InputStream inputStream = getAssets().open("img/Iconos-recompensas/muneca.svg")) {
                                 SVG svg = SVG.getFromInputStream(inputStream);
@@ -355,25 +348,25 @@ public class AgregarPremTutor extends AppCompatActivity {
                                 e.printStackTrace();
                             }
 
-                            //Se cambia el texto
+                         
                             TextView text = layout.findViewById(R.id.toast_text);
                             text.setText("Muñeca");
 
-                            //Se cambia el color de fondo
+                           
                             Drawable background = layout.getBackground();
                             background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
 
-                            // Cambia color del texto
+                            
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            //Lo crea y lo pone en la parte de arriba del cel
+                            
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
                             toast.setView(layout);
                             toast.show();
 
-                            //Inicio del código que cambia los valores dependiendo de lo que seleccione
+                            
                             int nuevoNumero = 150;
                             numRamitasPrem.setText(String.valueOf(nuevoNumero));
 
@@ -382,10 +375,9 @@ public class AgregarPremTutor extends AppCompatActivity {
                             spinnerCatPrem.setSelection(1); 
                             spinnerNivelPrem.setSelection(1);
                             spinnerTipoPrem.setSelection(3);
-                            // Personales
 
                             txtMasInfo.setText("Una muñeca que se convertirá en la mejor amiga de tu hijo. Ideal para fomentar el juego de roles, la creatividad y la empatía mientras los niños crean historias y escenarios divertidos.");
-                            //Fin del código que cambia los valores dependiendo de lo que seleccione
+                            
 
                         } catch (Exception ex) {
                             Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
@@ -394,11 +386,11 @@ public class AgregarPremTutor extends AppCompatActivity {
 
                     case "Pelota":
                         try {
-                            //Inicio del código para mostrar el toast personalizado
+                            
                             LayoutInflater inflater = getLayoutInflater();
                             View layout = inflater.inflate(R.layout.toast_personalizado, null);
 
-                            //Se cambia la imágen
+                            
                             ImageView icon = layout.findViewById(R.id.toast_icon);
                             try (InputStream inputStream = getAssets().open("img/Iconos-recompensas/pelota.svg")) {
                                 SVG svg = SVG.getFromInputStream(inputStream);
@@ -410,25 +402,25 @@ public class AgregarPremTutor extends AppCompatActivity {
                                 e.printStackTrace();
                             }
 
-                            //Se cambia el texto
+                         
                             TextView text = layout.findViewById(R.id.toast_text);
                             text.setText("Pelota");
 
-                            //Se cambia el color de fondo
+                           
                             Drawable background = layout.getBackground();
                             background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
 
-                            // Cambia color del texto
+                            
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            //Lo crea y lo pone en la parte de arriba del cel
+                            
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
                             toast.setView(layout);
                             toast.show();
 
-                            //Inicio del código que cambia los valores dependiendo de lo que seleccione
+                            
                             int nuevoNumero = 200;
                             numRamitasPrem.setText(String.valueOf(nuevoNumero));
 
@@ -436,10 +428,10 @@ public class AgregarPremTutor extends AppCompatActivity {
 
                             spinnerCatPrem.setSelection(1); 
                             spinnerNivelPrem.setSelection(1);
-                            spinnerTipoPrem.setSelection(1); // Salud
+                            spinnerTipoPrem.setSelection(1);
 
                             txtMasInfo.setText("Una pelota versátil para disfrutar al aire libre. Jugar con una pelota ayuda a desarrollar habilidades motoras, coordinación y fomenta un estilo de vida activo y saludable.");
-                            //Fin del código que cambia los valores dependiendo de lo que seleccione
+                            
 
                         } catch (Exception ex) {
                             Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
@@ -448,11 +440,11 @@ public class AgregarPremTutor extends AppCompatActivity {
 
                     case "Bloques de construcción":
                         try {
-                            //Inicio del código para mostrar el toast personalizado
+                            
                             LayoutInflater inflater = getLayoutInflater();
                             View layout = inflater.inflate(R.layout.toast_personalizado, null);
 
-                            //Se cambia la imágen
+                            
                             ImageView icon = layout.findViewById(R.id.toast_icon);
                             try (InputStream inputStream = getAssets().open("img/Iconos-recompensas/bloques_construccion.svg")) {
                                 SVG svg = SVG.getFromInputStream(inputStream);
@@ -464,25 +456,25 @@ public class AgregarPremTutor extends AppCompatActivity {
                                 e.printStackTrace();
                             }
 
-                            //Se cambia el texto
+                         
                             TextView text = layout.findViewById(R.id.toast_text);
                             text.setText("Bloques de construcción");
 
-                            //Se cambia el color de fondo
+                           
                             Drawable background = layout.getBackground();
                             background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
 
-                            // Cambia color del texto
+                            
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            //Lo crea y lo pone en la parte de arriba del cel
+                            
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
                             toast.setView(layout);
                             toast.show();
 
-                            //Inicio del código que cambia los valores dependiendo de lo que seleccione
+                            
                             int nuevoNumero = 300;
                             numRamitasPrem.setText(String.valueOf(nuevoNumero));
 
@@ -490,10 +482,10 @@ public class AgregarPremTutor extends AppCompatActivity {
 
                             spinnerCatPrem.setSelection(1); 
                             spinnerNivelPrem.setSelection(2);
-                            spinnerTipoPrem.setSelection(2); // Productividad
+                            spinnerTipoPrem.setSelection(2);
 
                             txtMasInfo.setText("Estos bloques de construcción estimulan la creatividad y el pensamiento crítico. Los niños pueden construir lo que imaginen, desarrollando habilidades espaciales y de resolución de problemas.");
-                            //Fin del código que cambia los valores dependiendo de lo que seleccione
+                            
 
                         } catch (Exception ex) {
                             Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
@@ -502,11 +494,11 @@ public class AgregarPremTutor extends AppCompatActivity {
 
                     case "Set de LEGO":
                         try {
-                            //Inicio del código para mostrar el toast personalizado
+                            
                             LayoutInflater inflater = getLayoutInflater();
                             View layout = inflater.inflate(R.layout.toast_personalizado, null);
 
-                            //Se cambia la imágen
+                            
                             ImageView icon = layout.findViewById(R.id.toast_icon);
                             try (InputStream inputStream = getAssets().open("img/Iconos-recompensas/Lego.svg")) {
                                 SVG svg = SVG.getFromInputStream(inputStream);
@@ -518,25 +510,25 @@ public class AgregarPremTutor extends AppCompatActivity {
                                 e.printStackTrace();
                             }
 
-                            //Se cambia el texto
+                         
                             TextView text = layout.findViewById(R.id.toast_text);
                             text.setText("Set de LEGO");
 
-                            //Se cambia el color de fondo
+                           
                             Drawable background = layout.getBackground();
                             background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
 
-                            // Cambia color del texto
+                            
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            //Lo crea y lo pone en la parte de arriba del cel
+                            
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
                             toast.setView(layout);
                             toast.show();
 
-                            //Inicio del código que cambia los valores dependiendo de lo que seleccione
+                            
                             int nuevoNumero = 500;
                             numRamitasPrem.setText(String.valueOf(nuevoNumero));
 
@@ -547,7 +539,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                             spinnerTipoPrem.setSelection(2);
 
                             txtMasInfo.setText("Un clásico que nunca pasa de moda. Este set de LEGO permite a los niños crear estructuras complejas mientras desarrollan su imaginación y habilidades de planificación. Ideal para horas de diversión creativa.");
-                            //Fin del código que cambia los valores dependiendo de lo que seleccione
+                            
 
                         } catch (Exception ex) {
                             Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
@@ -556,11 +548,11 @@ public class AgregarPremTutor extends AppCompatActivity {
 
                     case "Robot de juguete":
                         try {
-                            //Inicio del código para mostrar el toast personalizado
+                            
                             LayoutInflater inflater = getLayoutInflater();
                             View layout = inflater.inflate(R.layout.toast_personalizado, null);
 
-                            //Se cambia la imágen
+                            
                             ImageView icon = layout.findViewById(R.id.toast_icon);
                             try (InputStream inputStream = getAssets().open("img/Iconos-recompensas/Robot.svg")) {
                                 SVG svg = SVG.getFromInputStream(inputStream);
@@ -572,25 +564,25 @@ public class AgregarPremTutor extends AppCompatActivity {
                                 e.printStackTrace();
                             }
 
-                            //Se cambia el texto
+                         
                             TextView text = layout.findViewById(R.id.toast_text);
                             text.setText("Robot de juguete");
 
-                            //Se cambia el color de fondo
+                           
                             Drawable background = layout.getBackground();
                             background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
 
-                            // Cambia color del texto
+                            
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            //Lo crea y lo pone en la parte de arriba del cel
+                            
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
                             toast.setView(layout);
                             toast.show();
 
-                            //Inicio del código que cambia los valores dependiendo de lo que seleccione
+                            
                             int nuevoNumero = 800;
                             numRamitasPrem.setText(String.valueOf(nuevoNumero));
 
@@ -601,7 +593,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                             spinnerTipoPrem.setSelection(3);
 
                             txtMasInfo.setText("Un robot de juguete interactivo que introduce a los niños en la tecnología y la programación. Fomenta el aprendizaje de ciencias, tecnología, ingeniería y matemáticas (STEM) mientras se divierten.");
-                            //Fin del código que cambia los valores dependiendo de lo que seleccione
+                            
 
                         } catch (Exception ex) {
                             Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
@@ -609,11 +601,11 @@ public class AgregarPremTutor extends AppCompatActivity {
                         break;
                     case "Drone para niños":
                         try {
-                            //Inicio del código para mostrar el toast personalizado
+                            
                             LayoutInflater inflater = getLayoutInflater();
                             View layout = inflater.inflate(R.layout.toast_personalizado, null);
 
-                            //Se cambia la imágen
+                            
                             ImageView icon = layout.findViewById(R.id.toast_icon);
                             try (InputStream inputStream = getAssets().open("img/Iconos-recompensas/Dron.svg")) {
                                 SVG svg = SVG.getFromInputStream(inputStream);
@@ -625,25 +617,25 @@ public class AgregarPremTutor extends AppCompatActivity {
                                 e.printStackTrace();
                             }
 
-                            //Se cambia el texto
+                         
                             TextView text = layout.findViewById(R.id.toast_text);
                             text.setText("Drone para niños");
 
-                            //Se cambia el color de fondo
+                           
                             Drawable background = layout.getBackground();
                             background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
 
-                            // Cambia color del texto
+                            
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            //Lo crea y lo pone en la parte de arriba del cel
+                            
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
                             toast.setView(layout);
                             toast.show();
 
-                            //Inicio del código que cambia los valores dependiendo de lo que seleccione
+                            
                             int nuevoNumero = 600;
                             numRamitasPrem.setText(String.valueOf(nuevoNumero));
 
@@ -654,7 +646,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                             spinnerTipoPrem.setSelection(3);
 
                             txtMasInfo.setText("Un emocionante drone diseñado para niños que permite explorar el aire. Desarrolla habilidades de control y coordinación mientras los niños se divierten en el exterior.");
-                            //Fin del código que cambia los valores dependiendo de lo que seleccione
+                            
 
                         } catch (Exception ex) {
                             Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
@@ -663,11 +655,11 @@ public class AgregarPremTutor extends AppCompatActivity {
 
                     case "Camión de bomberos":
                         try {
-                            //Inicio del código para mostrar el toast personalizado
+                            
                             LayoutInflater inflater = getLayoutInflater();
                             View layout = inflater.inflate(R.layout.toast_personalizado, null);
 
-                            //Se cambia la imágen
+                            
                             ImageView icon = layout.findViewById(R.id.toast_icon);
                             try (InputStream inputStream = getAssets().open("img/Iconos-recompensas/Bomberos.svg")) {
                                 SVG svg = SVG.getFromInputStream(inputStream);
@@ -679,25 +671,25 @@ public class AgregarPremTutor extends AppCompatActivity {
                                 e.printStackTrace();
                             }
 
-                            //Se cambia el texto
+                         
                             TextView text = layout.findViewById(R.id.toast_text);
                             text.setText("Camión de bomberos");
 
-                            //Se cambia el color de fondo
+                           
                             Drawable background = layout.getBackground();
                             background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
 
-                            // Cambia color del texto
+                            
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            //Lo crea y lo pone en la parte de arriba del cel
+                            
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
                             toast.setView(layout);
                             toast.show();
 
-                            //Inicio del código que cambia los valores dependiendo de lo que seleccione
+                            
                             int nuevoNumero = 350;
                             numRamitasPrem.setText(String.valueOf(nuevoNumero));
 
@@ -708,7 +700,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                             spinnerTipoPrem.setSelection(3);
 
                             txtMasInfo.setText("Este camión de bomberos inspirará historias de rescate y aventuras emocionantes. Fomenta el juego imaginativo y la creatividad mientras los niños recrean situaciones heroicas.");
-                            //Fin del código que cambia los valores dependiendo de lo que seleccione
+                            
 
                         } catch (Exception ex) {
                             Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
@@ -717,11 +709,11 @@ public class AgregarPremTutor extends AppCompatActivity {
 
                     case "Juegos de mesa (ej. Monopoly, Uno)":
                         try {
-                            //Inicio del código para mostrar el toast personalizado
+                            
                             LayoutInflater inflater = getLayoutInflater();
                             View layout = inflater.inflate(R.layout.toast_personalizado, null);
 
-                            //Se cambia la imágen
+                            
                             ImageView icon = layout.findViewById(R.id.toast_icon);
                             try (InputStream inputStream = getAssets().open("img/Iconos-recompensas/Juegos_de_mesa.svg")) {
                                 SVG svg = SVG.getFromInputStream(inputStream);
@@ -733,25 +725,25 @@ public class AgregarPremTutor extends AppCompatActivity {
                                 e.printStackTrace();
                             }
 
-                            //Se cambia el texto
+                         
                             TextView text = layout.findViewById(R.id.toast_text);
                             text.setText("Juegos de mesa");
 
-                            //Se cambia el color de fondo
+                           
                             Drawable background = layout.getBackground();
                             background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
 
-                            // Cambia color del texto
+                            
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            //Lo crea y lo pone en la parte de arriba del cel
+                            
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
                             toast.setView(layout);
                             toast.show();
 
-                            //Inicio del código que cambia los valores dependiendo de lo que seleccione
+                            
                             int nuevoNumero = 400;
                             numRamitasPrem.setText(String.valueOf(nuevoNumero));
 
@@ -762,7 +754,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                             spinnerTipoPrem.setSelection(4);
 
                             txtMasInfo.setText("Una forma excelente de pasar tiempo en familia o con amigos. Los juegos de mesa ayudan a desarrollar habilidades sociales, pensamiento estratégico y, sobre todo, ¡muchas risas!");
-                            //Fin del código que cambia los valores dependiendo de lo que seleccione
+                            
 
                         } catch (Exception ex) {
                             Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
@@ -771,11 +763,11 @@ public class AgregarPremTutor extends AppCompatActivity {
 
                     case "Puzzles y rompecabezas":
                         try {
-                            //Inicio del código para mostrar el toast personalizado
+                            
                             LayoutInflater inflater = getLayoutInflater();
                             View layout = inflater.inflate(R.layout.toast_personalizado, null);
 
-                            //Se cambia la imágen
+                            
                             ImageView icon = layout.findViewById(R.id.toast_icon);
                             try (InputStream inputStream = getAssets().open("img/Iconos-recompensas/Puzzle.svg")) {
                                 SVG svg = SVG.getFromInputStream(inputStream);
@@ -787,25 +779,25 @@ public class AgregarPremTutor extends AppCompatActivity {
                                 e.printStackTrace();
                             }
 
-                            //Se cambia el texto
+                         
                             TextView text = layout.findViewById(R.id.toast_text);
                             text.setText("Puzzles y rompecabezas");
 
-                            //Se cambia el color de fondo
+                           
                             Drawable background = layout.getBackground();
                             background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
 
-                            // Cambia color del texto
+                            
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            //Lo crea y lo pone en la parte de arriba del cel
+                            
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
                             toast.setView(layout);
                             toast.show();
 
-                            //Inicio del código que cambia los valores dependiendo de lo que seleccione
+                            
                             int nuevoNumero = 350;
                             numRamitasPrem.setText(String.valueOf(nuevoNumero));
 
@@ -816,7 +808,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                             spinnerTipoPrem.setSelection(2);
 
                             txtMasInfo.setText("Un reto divertido que fomenta la concentración y la resolución de problemas. Los puzzles ayudan a desarrollar habilidades cognitivas mientras los niños se divierten armando imágenes.");
-                            //Fin del código que cambia los valores dependiendo de lo que seleccione
+                            
 
                         } catch (Exception ex) {
                             Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
@@ -825,11 +817,11 @@ public class AgregarPremTutor extends AppCompatActivity {
 
                     case "Kits de ciencia o experimentos":
                         try {
-                            //Inicio del código para mostrar el toast personalizado
+                            
                             LayoutInflater inflater = getLayoutInflater();
                             View layout = inflater.inflate(R.layout.toast_personalizado, null);
 
-                            //Se cambia la imágen
+                            
                             ImageView icon = layout.findViewById(R.id.toast_icon);
                             try (InputStream inputStream = getAssets().open("img/Iconos-recompensas/Ciencia.svg")) {
                                 SVG svg = SVG.getFromInputStream(inputStream);
@@ -841,25 +833,25 @@ public class AgregarPremTutor extends AppCompatActivity {
                                 e.printStackTrace();
                             }
 
-                            //Se cambia el texto
+                         
                             TextView text = layout.findViewById(R.id.toast_text);
                             text.setText("Kits de ciencia o experimentos");
 
-                            //Se cambia el color de fondo
+                           
                             Drawable background = layout.getBackground();
                             background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
 
-                            // Cambia color del texto
+                            
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            //Lo crea y lo pone en la parte de arriba del cel
+                            
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
                             toast.setView(layout);
                             toast.show();
 
-                            //Inicio del código que cambia los valores dependiendo de lo que seleccione
+                            
                             int nuevoNumero = 450;
                             numRamitasPrem.setText(String.valueOf(nuevoNumero));
 
@@ -870,7 +862,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                           spinnerTipoPrem.setSelection(12);
 
                             txtMasInfo.setText("Estos kits permiten a los niños explorar el mundo de la ciencia a través de experimentos prácticos y divertidos. Aprenderán conceptos científicos de manera interactiva y entretenida.");
-                            //Fin del código que cambia los valores dependiendo de lo que seleccione
+                            
 
                         } catch (Exception ex) {
                             Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
@@ -878,11 +870,11 @@ public class AgregarPremTutor extends AppCompatActivity {
                         break;
                     case "Figuras de acción (ej. superhéroes)":
                         try {
-                            // Inicio del código para mostrar el toast personalizado
+                            
                             LayoutInflater inflater = getLayoutInflater();
                             View layout = inflater.inflate(R.layout.toast_personalizado, null);
 
-                            // Se cambia la imágen
+                            
                             ImageView icon = layout.findViewById(R.id.toast_icon);
                             try (InputStream inputStream = getAssets().open("img/Iconos-recompensas/Heroe.svg")) {
                                 SVG svg = SVG.getFromInputStream(inputStream);
@@ -894,25 +886,25 @@ public class AgregarPremTutor extends AppCompatActivity {
                                 e.printStackTrace();
                             }
 
-                            // Se cambia el texto
+                            
                             TextView text = layout.findViewById(R.id.toast_text);
                             text.setText("Figuras de acción");
 
-                            // Se cambia el color de fondo
+                            
                             Drawable background = layout.getBackground();
                             background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
 
-                            // Cambia color del texto
+                            
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            // Lo crea y lo pone en la parte de arriba del cel
+                            
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
                             toast.setView(layout);
                             toast.show();
 
-                            // Inicio del código que cambia los valores dependiendo de lo que seleccione
+                            
                             int nuevoNumero = 200;
                             numRamitasPrem.setText(String.valueOf(nuevoNumero));
 
@@ -923,7 +915,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                             spinnerTipoPrem.setSelection(3);
 
                             txtMasInfo.setText("Figuras de acción que invitan a los niños a crear sus propias historias llenas de aventuras y heroísmo. Perfectas para el juego imaginativo y el desarrollo de narrativas creativas.");
-                            // Fin del código que cambia los valores dependiendo de lo que seleccione
+                            
 
                         } catch (Exception ex) {
                             Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
@@ -932,11 +924,11 @@ public class AgregarPremTutor extends AppCompatActivity {
 
                     case "15 minutos adicionales de TV":
                         try {
-                            // Inicio del código para mostrar el toast personalizado
+                            
                             LayoutInflater inflater = getLayoutInflater();
                             View layout = inflater.inflate(R.layout.toast_personalizado, null);
 
-                            // Se cambia la imágen
+                            
                             ImageView icon = layout.findViewById(R.id.toast_icon);
                             try (InputStream inputStream = getAssets().open("img/Iconos-recompensas/TV.svg")) {
                                 SVG svg = SVG.getFromInputStream(inputStream);
@@ -948,25 +940,25 @@ public class AgregarPremTutor extends AppCompatActivity {
                                 e.printStackTrace();
                             }
 
-                            // Se cambia el texto
+                            
                             TextView text = layout.findViewById(R.id.toast_text);
                             text.setText("15 minutos adicionales de TV");
 
-                            // Se cambia el color de fondo
+                            
                             Drawable background = layout.getBackground();
                             background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
 
-                            // Cambia color del texto
+                            
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            // Lo crea y lo pone en la parte de arriba del cel
+                            
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
                             toast.setView(layout);
                             toast.show();
 
-                            // Inicio del código que cambia los valores dependiendo de lo que seleccione
+                            
                             int nuevoNumero = 50;
                             numRamitasPrem.setText(String.valueOf(nuevoNumero));
 
@@ -977,7 +969,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                             spinnerTipoPrem.setSelection(3);
 
                             txtMasInfo.setText("Un pequeño premio para disfrutar de un episodio extra de tu serie o programa favorito. Ideal para relajarse y disfrutar de un momento de entretenimiento.");
-                            // Fin del código que cambia los valores dependiendo de lo que seleccione
+                            
 
                         } catch (Exception ex) {
                             Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
@@ -986,11 +978,11 @@ public class AgregarPremTutor extends AppCompatActivity {
 
                     case "30 minutos de videojuego":
                         try {
-                            // Inicio del código para mostrar el toast personalizado
+                            
                             LayoutInflater inflater = getLayoutInflater();
                             View layout = inflater.inflate(R.layout.toast_personalizado, null);
 
-                            // Se cambia la imágen
+                            
                             ImageView icon = layout.findViewById(R.id.toast_icon);
                             try (InputStream inputStream = getAssets().open("img/Iconos-recompensas/VideoJuego.svg")) {
                                 SVG svg = SVG.getFromInputStream(inputStream);
@@ -1002,25 +994,25 @@ public class AgregarPremTutor extends AppCompatActivity {
                                 e.printStackTrace();
                             }
 
-                            // Se cambia el texto
+                            
                             TextView text = layout.findViewById(R.id.toast_text);
                             text.setText("30 minutos de videojuego");
 
-                            // Se cambia el color de fondo
+                            
                             Drawable background = layout.getBackground();
                             background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
 
-                            // Cambia color del texto
+                            
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            // Lo crea y lo pone en la parte de arriba del cel
+                            
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
                             toast.setView(layout);
                             toast.show();
 
-                            // Inicio del código que cambia los valores dependiendo de lo que seleccione
+                            
                             int nuevoNumero = 100;
                             numRamitasPrem.setText(String.valueOf(nuevoNumero));
 
@@ -1031,7 +1023,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                             spinnerTipoPrem.setSelection(3);
 
                             txtMasInfo.setText("Más tiempo para sumergirte en el mundo de tus videojuegos favoritos. Un premio que proporciona diversión y entretenimiento adicional.");
-                            // Fin del código que cambia los valores dependiendo de lo que seleccione
+                            
 
                         } catch (Exception ex) {
                             Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
@@ -1040,11 +1032,11 @@ public class AgregarPremTutor extends AppCompatActivity {
 
                     case "Hora de dormir extendida":
                         try {
-                            // Inicio del código para mostrar el toast personalizado
+                            
                             LayoutInflater inflater = getLayoutInflater();
                             View layout = inflater.inflate(R.layout.toast_personalizado, null);
 
-                            // Se cambia la imágen
+                            
                             ImageView icon = layout.findViewById(R.id.toast_icon);
                             try (InputStream inputStream = getAssets().open("img/Iconos-recompensas/Dormir.svg")) {
                                 SVG svg = SVG.getFromInputStream(inputStream);
@@ -1056,25 +1048,25 @@ public class AgregarPremTutor extends AppCompatActivity {
                                 e.printStackTrace();
                             }
 
-                            // Se cambia el texto
+                            
                             TextView text = layout.findViewById(R.id.toast_text);
                             text.setText("Hora de dormir extendida");
 
-                            // Se cambia el color de fondo
+                            
                             Drawable background = layout.getBackground();
                             background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
 
-                            // Cambia color del texto
+                            
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            // Lo crea y lo pone en la parte de arriba del cel
+                            
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
                             toast.setView(layout);
                             toast.show();
 
-                            // Inicio del código que cambia los valores dependiendo de lo que seleccione
+                            
                             int nuevoNumero = 200;
                             numRamitasPrem.setText(String.valueOf(nuevoNumero));
 
@@ -1085,7 +1077,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                            spinnerTipoPrem.setSelection(6);
 
                             txtMasInfo.setText("Una hora extra para quedarte despierto y disfrutar de actividades tranquilas. Perfecto para un momento especial de conexión familiar antes de dormir.");
-                            // Fin del código que cambia los valores dependiendo de lo que seleccione
+                            
 
                         } catch (Exception ex) {
                             Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
@@ -1094,11 +1086,11 @@ public class AgregarPremTutor extends AppCompatActivity {
 
                     case "30 minutos de parque":
                         try {
-                            // Inicio del código para mostrar el toast personalizado
+                            
                             LayoutInflater inflater = getLayoutInflater();
                             View layout = inflater.inflate(R.layout.toast_personalizado, null);
 
-                            // Se cambia la imágen
+                            
                             ImageView icon = layout.findViewById(R.id.toast_icon);
                             try (InputStream inputStream = getAssets().open("img/Iconos-recompensas/Parque.svg")) {
                                 SVG svg = SVG.getFromInputStream(inputStream);
@@ -1110,25 +1102,25 @@ public class AgregarPremTutor extends AppCompatActivity {
                                 e.printStackTrace();
                             }
 
-                            // Se cambia el texto
+                            
                             TextView text = layout.findViewById(R.id.toast_text);
                             text.setText("30 minutos de parque");
 
-                            // Se cambia el color de fondo
+                            
                             Drawable background = layout.getBackground();
                             background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
 
-                            // Cambia color del texto
+                            
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            // Lo crea y lo pone en la parte de arriba del cel
+                            
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
                             toast.setView(layout);
                             toast.show();
 
-                            // Inicio del código que cambia los valores dependiendo de lo que seleccione
+                            
                             int nuevoNumero = 150;
                             numRamitasPrem.setText(String.valueOf(nuevoNumero));
 
@@ -1139,7 +1131,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                            spinnerTipoPrem.setSelection(1);
 
                             txtMasInfo.setText("Disfruta de un tiempo adicional al aire libre, jugando en el parque. Ideal para mantenerse activo, socializar y disfrutar de la naturaleza.");
-                            // Fin del código que cambia los valores dependiendo de lo que seleccione
+                            
 
                         } catch (Exception ex) {
                             Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
@@ -1147,11 +1139,11 @@ public class AgregarPremTutor extends AppCompatActivity {
                         break;
                     case "Una tarde en casa de amigos":
                         try {
-                            // Inicio del código para mostrar el toast personalizado
+                            
                             LayoutInflater inflater = getLayoutInflater();
                             View layout = inflater.inflate(R.layout.toast_personalizado, null);
 
-                            // Se cambia la imágen
+                            
                             ImageView icon = layout.findViewById(R.id.toast_icon);
                             try (InputStream inputStream = getAssets().open("img/Iconos-recompensas/Amigos.svg")) {
                                 SVG svg = SVG.getFromInputStream(inputStream);
@@ -1163,25 +1155,25 @@ public class AgregarPremTutor extends AppCompatActivity {
                                 e.printStackTrace();
                             }
 
-                            // Se cambia el texto
+                            
                             TextView text = layout.findViewById(R.id.toast_text);
                             text.setText("Una tarde en casa de amigos");
 
-                            // Se cambia el color de fondo
+                            
                             Drawable background = layout.getBackground();
                             background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
 
-                            // Cambia color del texto
+                            
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            // Lo crea y lo pone en la parte de arriba del cel
+                            
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
                             toast.setView(layout);
                             toast.show();
 
-                            // Inicio del código que cambia los valores dependiendo de lo que seleccione
+                            
                             int nuevoNumero = 200;
                             numRamitasPrem.setText(String.valueOf(nuevoNumero));
 
@@ -1192,7 +1184,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                          spinnerTipoPrem.setSelection(4);
 
                             txtMasInfo.setText("Un tiempo especial para jugar y compartir con amigos. Fomenta las relaciones sociales y crea recuerdos divertidos.");
-                            // Fin del código que cambia los valores dependiendo de lo que seleccione
+                            
 
                         } catch (Exception ex) {
                             Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
@@ -1201,11 +1193,11 @@ public class AgregarPremTutor extends AppCompatActivity {
 
                     case "Día libre de tareas escolares":
                         try {
-                            // Inicio del código para mostrar el toast personalizado
+                            
                             LayoutInflater inflater = getLayoutInflater();
                             View layout = inflater.inflate(R.layout.toast_personalizado, null);
 
-                            // Se cambia la imágen
+                            
                             ImageView icon = layout.findViewById(R.id.toast_icon);
                             try (InputStream inputStream = getAssets().open("img/Iconos-recompensas/Tareas.svg")) {
                                 SVG svg = SVG.getFromInputStream(inputStream);
@@ -1217,25 +1209,25 @@ public class AgregarPremTutor extends AppCompatActivity {
                                 e.printStackTrace();
                             }
 
-                            // Se cambia el texto
+                            
                             TextView text = layout.findViewById(R.id.toast_text);
                             text.setText("Día libre de tareas escolares");
 
-                            // Se cambia el color de fondo
+                            
                             Drawable background = layout.getBackground();
                             background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
 
-                            // Cambia color del texto
+                            
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            // Lo crea y lo pone en la parte de arriba del cel
+                            
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
                             toast.setView(layout);
                             toast.show();
 
-                            // Inicio del código que cambia los valores dependiendo de lo que seleccione
+                            
                             int nuevoNumero = 75;
                             numRamitasPrem.setText(String.valueOf(nuevoNumero));
 
@@ -1246,7 +1238,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                            spinnerTipoPrem.setSelection(3);
 
                             txtMasInfo.setText("Un día libre de todas las tareas escolares, perfecto para relajarse y disfrutar de tiempo libre.");
-                            // Fin del código que cambia los valores dependiendo de lo que seleccione
+                            
 
                         } catch (Exception ex) {
                             Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
@@ -1255,11 +1247,11 @@ public class AgregarPremTutor extends AppCompatActivity {
 
                     case "Una noche de películas con palomitas":
                         try {
-                            // Inicio del código para mostrar el toast personalizado
+                            
                             LayoutInflater inflater = getLayoutInflater();
                             View layout = inflater.inflate(R.layout.toast_personalizado, null);
 
-                            // Se cambia la imágen
+                            
                             ImageView icon = layout.findViewById(R.id.toast_icon);
                             try (InputStream inputStream = getAssets().open("img/Iconos-recompensas/Pelicula.svg")) {
                                 SVG svg = SVG.getFromInputStream(inputStream);
@@ -1271,25 +1263,25 @@ public class AgregarPremTutor extends AppCompatActivity {
                                 e.printStackTrace();
                             }
 
-                            // Se cambia el texto
+                            
                             TextView text = layout.findViewById(R.id.toast_text);
                             text.setText("Una noche de películas con palomitas");
 
-                            // Se cambia el color de fondo
+                            
                             Drawable background = layout.getBackground();
                             background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
 
-                            // Cambia color del texto
+                            
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            // Lo crea y lo pone en la parte de arriba del cel
+                            
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
                             toast.setView(layout);
                             toast.show();
 
-                            // Inicio del código que cambia los valores dependiendo de lo que seleccione
+                            
                             int nuevoNumero = 30;
                             numRamitasPrem.setText(String.valueOf(nuevoNumero));
 
@@ -1300,7 +1292,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                          spinnerTipoPrem.setSelection(4);
 
                             txtMasInfo.setText("Disfruta de una noche acogedora viendo tus películas favoritas acompañada de palomitas.");
-                            // Fin del código que cambia los valores dependiendo de lo que seleccione
+                            
 
                         } catch (Exception ex) {
                             Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
@@ -1309,11 +1301,11 @@ public class AgregarPremTutor extends AppCompatActivity {
 
                     case "Sesión de lectura extra":
                         try {
-                            // Inicio del código para mostrar el toast personalizado
+                            
                             LayoutInflater inflater = getLayoutInflater();
                             View layout = inflater.inflate(R.layout.toast_personalizado, null);
 
-                            // Se cambia la imágen
+                            
                             ImageView icon = layout.findViewById(R.id.toast_icon);
                             try (InputStream inputStream = getAssets().open("img/Iconos-recompensas/Libro.svg")) {
                                 SVG svg = SVG.getFromInputStream(inputStream);
@@ -1325,25 +1317,25 @@ public class AgregarPremTutor extends AppCompatActivity {
                                 e.printStackTrace();
                             }
 
-                            // Se cambia el texto
+                            
                             TextView text = layout.findViewById(R.id.toast_text);
                             text.setText("Sesión de lectura extra");
 
-                            // Se cambia el color de fondo
+                            
                             Drawable background = layout.getBackground();
                             background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
 
-                            // Cambia color del texto
+                            
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            // Lo crea y lo pone en la parte de arriba del cel
+                            
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
                             toast.setView(layout);
                             toast.show();
 
-                            // Inicio del código que cambia los valores dependiendo de lo que seleccione
+                            
                             int nuevoNumero = 20;
                             numRamitasPrem.setText(String.valueOf(nuevoNumero));
 
@@ -1354,7 +1346,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                            spinnerTipoPrem.setSelection(3);
 
                             txtMasInfo.setText("Dedica tiempo extra a la lectura de tus libros favoritos para relajarte y aprender.");
-                            // Fin del código que cambia los valores dependiendo de lo que seleccione
+                            
 
                         } catch (Exception ex) {
                             Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
@@ -1363,11 +1355,11 @@ public class AgregarPremTutor extends AppCompatActivity {
 
                     case "Día sin reglas de casa":
                         try {
-                            // Inicio del código para mostrar el toast personalizado
+                            
                             LayoutInflater inflater = getLayoutInflater();
                             View layout = inflater.inflate(R.layout.toast_personalizado, null);
 
-                            // Se cambia la imágen
+                            
                             ImageView icon = layout.findViewById(R.id.toast_icon);
                             try (InputStream inputStream = getAssets().open("img/Iconos-recompensas/No_Reglas.svg")) {
                                 SVG svg = SVG.getFromInputStream(inputStream);
@@ -1379,25 +1371,25 @@ public class AgregarPremTutor extends AppCompatActivity {
                                 e.printStackTrace();
                             }
 
-                            // Se cambia el texto
+                            
                             TextView text = layout.findViewById(R.id.toast_text);
                             text.setText("Día sin reglas de casa");
 
-                            // Se cambia el color de fondo
+                            
                             Drawable background = layout.getBackground();
                             background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
 
-                            // Cambia color del texto
+                            
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            // Lo crea y lo pone en la parte de arriba del cel
+                            
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
                             toast.setView(layout);
                             toast.show();
 
-                            // Inicio del código que cambia los valores dependiendo de lo que seleccione
+                            
                             int nuevoNumero = 50;
                             numRamitasPrem.setText(String.valueOf(nuevoNumero));
 
@@ -1408,7 +1400,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                          spinnerTipoPrem.setSelection(4);
 
                             txtMasInfo.setText("Un día especial donde puedes disfrutar de libertad total en casa, sin reglas que seguir.");
-                            // Fin del código que cambia los valores dependiendo de lo que seleccione
+                            
 
                         } catch (Exception ex) {
                             Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
@@ -1416,11 +1408,11 @@ public class AgregarPremTutor extends AppCompatActivity {
                         break;
                     case "Tarde de juegos de mesa en familia":
                         try {
-                            // Inicio del código para mostrar el toast personalizado
+                            
                             LayoutInflater inflater = getLayoutInflater();
                             View layout = inflater.inflate(R.layout.toast_personalizado, null);
 
-                            // Se cambia la imágen
+                            
                             ImageView icon = layout.findViewById(R.id.toast_icon);
                             try (InputStream inputStream = getAssets().open("img/Iconos-recompensas/Juegos_Familia.svg")) {
                                 SVG svg = SVG.getFromInputStream(inputStream);
@@ -1432,25 +1424,25 @@ public class AgregarPremTutor extends AppCompatActivity {
                                 e.printStackTrace();
                             }
 
-                            // Se cambia el texto
+                            
                             TextView text = layout.findViewById(R.id.toast_text);
                             text.setText("Tarde de juegos de mesa en familia");
 
-                            // Se cambia el color de fondo
+                            
                             Drawable background = layout.getBackground();
                             background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
 
-                            // Cambia color del texto
+                            
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            // Lo crea y lo pone en la parte de arriba del cel
+                            
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
                             toast.setView(layout);
                             toast.show();
 
-                            // Inicio del código que cambia los valores dependiendo de lo que seleccione
+                            
                             int nuevoNumero = 40;
                             numRamitasPrem.setText(String.valueOf(nuevoNumero));
 
@@ -1461,7 +1453,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                          spinnerTipoPrem.setSelection(4);
 
                             txtMasInfo.setText("Disfruta de una divertida tarde jugando juegos de mesa con la familia.");
-                            // Fin del código que cambia los valores dependiendo de lo que seleccione
+                            
 
                         } catch (Exception ex) {
                             Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
@@ -1470,11 +1462,11 @@ public class AgregarPremTutor extends AppCompatActivity {
 
                     case "Tiempo de relajación en la bañera":
                         try {
-                            // Inicio del código para mostrar el toast personalizado
+                            
                             LayoutInflater inflater = getLayoutInflater();
                             View layout = inflater.inflate(R.layout.toast_personalizado, null);
 
-                            // Se cambia la imágen
+                            
                             ImageView icon = layout.findViewById(R.id.toast_icon);
                             try (InputStream inputStream = getAssets().open("img/Iconos-recompensas/banera.svg")) {
                                 SVG svg = SVG.getFromInputStream(inputStream);
@@ -1486,25 +1478,25 @@ public class AgregarPremTutor extends AppCompatActivity {
                                 e.printStackTrace();
                             }
 
-                            // Se cambia el texto
+                            
                             TextView text = layout.findViewById(R.id.toast_text);
                             text.setText("Tiempo de relajación en la bañera");
 
-                            // Se cambia el color de fondo
+                            
                             Drawable background = layout.getBackground();
                             background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
 
-                            // Cambia color del texto
+                            
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            // Lo crea y lo pone en la parte de arriba del cel
+                            
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
                             toast.setView(layout);
                             toast.show();
 
-                            // Inicio del código que cambia los valores dependiendo de lo que seleccione
+                            
                             int nuevoNumero = 60;
                             numRamitasPrem.setText(String.valueOf(nuevoNumero));
 
@@ -1515,21 +1507,20 @@ public class AgregarPremTutor extends AppCompatActivity {
                            spinnerTipoPrem.setSelection(3);
 
                             txtMasInfo.setText("Dedica un tiempo para relajarte en la bañera, con burbujas y música suave.");
-                            // Fin del código que cambia los valores dependiendo de lo que seleccione
+                            
 
                         } catch (Exception ex) {
                             Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                         break;
 
-// Recompensas de Comida
                     case "Helado":
                         try {
-                            // Inicio del código para mostrar el toast personalizado
+                            
                             LayoutInflater inflater = getLayoutInflater();
                             View layout = inflater.inflate(R.layout.toast_personalizado, null);
 
-                            // Se cambia la imágen
+                            
                             ImageView icon = layout.findViewById(R.id.toast_icon);
                             try (InputStream inputStream = getAssets().open("img/Iconos-recompensas/Helado.svg")) {
                                 SVG svg = SVG.getFromInputStream(inputStream);
@@ -1541,25 +1532,25 @@ public class AgregarPremTutor extends AppCompatActivity {
                                 e.printStackTrace();
                             }
 
-                            // Se cambia el texto
+                            
                             TextView text = layout.findViewById(R.id.toast_text);
                             text.setText("Helado");
 
-                            // Se cambia el color de fondo
+                            
                             Drawable background = layout.getBackground();
                             background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
 
-                            // Cambia color del texto
+                            
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            // Lo crea y lo pone en la parte de arriba del cel
+                            
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
                             toast.setView(layout);
                             toast.show();
 
-                            // Inicio del código que cambia los valores dependiendo de lo que seleccione
+                            
                             int nuevoNumero = 5;
                             numRamitasPrem.setText(String.valueOf(nuevoNumero));
 
@@ -1570,7 +1561,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                          spinnerTipoPrem.setSelection(4);
 
                             txtMasInfo.setText("Un delicioso helado de tu sabor favorito, ideal para refrescarte en un día caluroso. Perfecto para compartir con amigos o disfrutar en un momento de relax.");
-                            // Fin del código que cambia los valores dependiendo de lo que seleccione
+                            
 
                         } catch (Exception ex) {
                             Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
@@ -1579,11 +1570,11 @@ public class AgregarPremTutor extends AppCompatActivity {
 
                     case "Pizza":
                         try {
-                            // Inicio del código para mostrar el toast personalizado
+                            
                             LayoutInflater inflater = getLayoutInflater();
                             View layout = inflater.inflate(R.layout.toast_personalizado, null);
 
-                            // Se cambia la imágen
+                            
                             ImageView icon = layout.findViewById(R.id.toast_icon);
                             try (InputStream inputStream = getAssets().open("img/Iconos-recompensas/Pizza.svg")) {
                                 SVG svg = SVG.getFromInputStream(inputStream);
@@ -1595,25 +1586,25 @@ public class AgregarPremTutor extends AppCompatActivity {
                                 e.printStackTrace();
                             }
 
-                            // Se cambia el texto
+                            
                             TextView text = layout.findViewById(R.id.toast_text);
                             text.setText("Pizza");
 
-                            // Se cambia el color de fondo
+                            
                             Drawable background = layout.getBackground();
                             background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
 
-                            // Cambia color del texto
+                            
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            // Lo crea y lo pone en la parte de arriba del cel
+                            
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
                             toast.setView(layout);
                             toast.show();
 
-                            // Inicio del código que cambia los valores dependiendo de lo que seleccione
+                            
                             int nuevoNumero = 25;
                             numRamitasPrem.setText(String.valueOf(nuevoNumero));
 
@@ -1624,7 +1615,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                          spinnerTipoPrem.setSelection(4);
 
                             txtMasInfo.setText("Una rica pizza con tus ingredientes preferidos, perfecta para disfrutar en una noche de juegos o una reunión familiar. Comparte con quienes más quieres.");
-                            // Fin del código que cambia los valores dependiendo de lo que seleccione
+                            
 
                         } catch (Exception ex) {
                             Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
@@ -1633,11 +1624,11 @@ public class AgregarPremTutor extends AppCompatActivity {
 
                     case "Chocolates":
                         try {
-                            // Inicio del código para mostrar el toast personalizado
+                            
                             LayoutInflater inflater = getLayoutInflater();
                             View layout = inflater.inflate(R.layout.toast_personalizado, null);
 
-                            // Se cambia la imágen
+                            
                             ImageView icon = layout.findViewById(R.id.toast_icon);
                             try (InputStream inputStream = getAssets().open("img/Iconos-recompensas/Chocolate.svg")) {
                                 SVG svg = SVG.getFromInputStream(inputStream);
@@ -1649,25 +1640,25 @@ public class AgregarPremTutor extends AppCompatActivity {
                                 e.printStackTrace();
                             }
 
-                            // Se cambia el texto
+                            
                             TextView text = layout.findViewById(R.id.toast_text);
                             text.setText("Chocolates");
 
-                            // Se cambia el color de fondo
+                            
                             Drawable background = layout.getBackground();
                             background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
 
-                            // Cambia color del texto
+                            
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            // Lo crea y lo pone en la parte de arriba del cel
+                            
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
                             toast.setView(layout);
                             toast.show();
 
-                            // Inicio del código que cambia los valores dependiendo de lo que seleccione
+                            
                             int nuevoNumero = 10;
                             numRamitasPrem.setText(String.valueOf(nuevoNumero));
 
@@ -1678,7 +1669,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                          spinnerTipoPrem.setSelection(4);
 
                             txtMasInfo.setText("Una selección de deliciosos chocolates para satisfacer tu antojo. Ideal para compartir con amigos o como un regalo especial.");
-                            // Fin del código que cambia los valores dependiendo de lo que seleccione
+                            
 
                         } catch (Exception ex) {
                             Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
@@ -1686,11 +1677,11 @@ public class AgregarPremTutor extends AppCompatActivity {
                         break;
                     case "Palomitas de maíz":
                         try {
-                            // Inicio del código para mostrar el toast personalizado
+                            
                             LayoutInflater inflater = getLayoutInflater();
                             View layout = inflater.inflate(R.layout.toast_personalizado, null);
 
-                            // Se cambia la imágen
+                            
                             ImageView icon = layout.findViewById(R.id.toast_icon);
                             try (InputStream inputStream = getAssets().open("img/Iconos-recompensas/Palomitas.svg")) {
                                 SVG svg = SVG.getFromInputStream(inputStream);
@@ -1702,25 +1693,25 @@ public class AgregarPremTutor extends AppCompatActivity {
                                 e.printStackTrace();
                             }
 
-                            // Se cambia el texto
+                            
                             TextView text = layout.findViewById(R.id.toast_text);
                             text.setText("Palomitas de maíz");
 
-                            // Se cambia el color de fondo
+                            
                             Drawable background = layout.getBackground();
                             background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
 
-                            // Cambia color del texto
+                            
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            // Lo crea y lo pone en la parte de arriba del cel
+                            
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
                             toast.setView(layout);
                             toast.show();
 
-                            // Inicio del código que cambia los valores dependiendo de lo que seleccione
+                            
                             int nuevoNumero = 5;
                             numRamitasPrem.setText(String.valueOf(nuevoNumero));
 
@@ -1731,7 +1722,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                          spinnerTipoPrem.setSelection(4);
 
                             txtMasInfo.setText("Un clásico de las noches de cine, estas palomitas son perfectas para disfrutar mientras miras tu película favorita. Comparte la diversión con tus amigos.");
-                            // Fin del código que cambia los valores dependiendo de lo que seleccione
+                            
 
                         } catch (Exception ex) {
                             Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
@@ -1740,11 +1731,11 @@ public class AgregarPremTutor extends AppCompatActivity {
 
                     case "Cena en tu restaurante favorito":
                         try {
-                            // Inicio del código para mostrar el toast personalizado
+                            
                             LayoutInflater inflater = getLayoutInflater();
                             View layout = inflater.inflate(R.layout.toast_personalizado, null);
 
-                            // Se cambia la imágen
+                            
                             ImageView icon = layout.findViewById(R.id.toast_icon);
                             try (InputStream inputStream = getAssets().open("img/Iconos-recompensas/Restaurante.svg")) {
                                 SVG svg = SVG.getFromInputStream(inputStream);
@@ -1756,25 +1747,25 @@ public class AgregarPremTutor extends AppCompatActivity {
                                 e.printStackTrace();
                             }
 
-                            // Se cambia el texto
+                            
                             TextView text = layout.findViewById(R.id.toast_text);
                             text.setText("Cena en tu restaurante favorito");
 
-                            // Se cambia el color de fondo
+                            
                             Drawable background = layout.getBackground();
                             background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
 
-                            // Cambia color del texto
+                            
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            // Lo crea y lo pone en la parte de arriba del cel
+                            
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
                             toast.setView(layout);
                             toast.show();
 
-                            // Inicio del código que cambia los valores dependiendo de lo que seleccione
+                            
                             int nuevoNumero = 50;
                             numRamitasPrem.setText(String.valueOf(nuevoNumero));
 
@@ -1785,7 +1776,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                          spinnerTipoPrem.setSelection(4);
 
                             txtMasInfo.setText("Una cena gourmet en tu restaurante favorito, donde podrás disfrutar de una experiencia culinaria única con un ambiente acogedor y excelente servicio.");
-                            // Fin del código que cambia los valores dependiendo de lo que seleccione
+                            
 
                         } catch (Exception ex) {
                             Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
@@ -1794,11 +1785,11 @@ public class AgregarPremTutor extends AppCompatActivity {
 
                     case "Tarta de cumpleaños extra":
                         try {
-                            // Inicio del código para mostrar el toast personalizado
+                            
                             LayoutInflater inflater = getLayoutInflater();
                             View layout = inflater.inflate(R.layout.toast_personalizado, null);
 
-                            // Se cambia la imágen
+                            
                             ImageView icon = layout.findViewById(R.id.toast_icon);
                             try (InputStream inputStream = getAssets().open("img/Iconos-recompensas/Pastel_cumpleaños.svg")) {
                                 SVG svg = SVG.getFromInputStream(inputStream);
@@ -1810,25 +1801,25 @@ public class AgregarPremTutor extends AppCompatActivity {
                                 e.printStackTrace();
                             }
 
-                            // Se cambia el texto
+                            
                             TextView text = layout.findViewById(R.id.toast_text);
                             text.setText("Tarta de cumpleaños extra");
 
-                            // Se cambia el color de fondo
+                            
                             Drawable background = layout.getBackground();
                             background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
 
-                            // Cambia color del texto
+                            
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            // Lo crea y lo pone en la parte de arriba del cel
+                            
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
                             toast.setView(layout);
                             toast.show();
 
-                            // Inicio del código que cambia los valores dependiendo de lo que seleccione
+                            
                             int nuevoNumero = 30;
                             numRamitasPrem.setText(String.valueOf(nuevoNumero));
 
@@ -1839,7 +1830,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                          spinnerTipoPrem.setSelection(4);
 
                             txtMasInfo.setText("Una deliciosa tarta de cumpleaños decorada de forma especial para hacer tu celebración aún más memorable. Ideal para compartir con amigos y familiares.");
-                            // Fin del código que cambia los valores dependiendo de lo que seleccione
+                            
 
                         } catch (Exception ex) {
                             Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
@@ -1848,11 +1839,11 @@ public class AgregarPremTutor extends AppCompatActivity {
 
                     case "Galletas caseras":
                         try {
-                            // Inicio del código para mostrar el toast personalizado
+                            
                             LayoutInflater inflater = getLayoutInflater();
                             View layout = inflater.inflate(R.layout.toast_personalizado, null);
 
-                            // Se cambia la imágen
+                            
                             ImageView icon = layout.findViewById(R.id.toast_icon);
                             try (InputStream inputStream = getAssets().open("img/Iconos-recompensas/Galleta.svg")) {
                                 SVG svg = SVG.getFromInputStream(inputStream);
@@ -1864,25 +1855,25 @@ public class AgregarPremTutor extends AppCompatActivity {
                                 e.printStackTrace();
                             }
 
-                            // Se cambia el texto
+                            
                             TextView text = layout.findViewById(R.id.toast_text);
                             text.setText("Galletas caseras");
 
-                            // Se cambia el color de fondo
+                            
                             Drawable background = layout.getBackground();
                             background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
 
-                            // Cambia color del texto
+                            
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            // Lo crea y lo pone en la parte de arriba del cel
+                            
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
                             toast.setView(layout);
                             toast.show();
 
-                            // Inicio del código que cambia los valores dependiendo de lo que seleccione
+                            
                             int nuevoNumero = 15;
                             numRamitasPrem.setText(String.valueOf(nuevoNumero));
 
@@ -1893,7 +1884,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                          spinnerTipoPrem.setSelection(4);
 
                             txtMasInfo.setText("Galletas recién horneadas, crujientes por fuera y suaves por dentro. Perfectas para acompañar con un vaso de leche o como un regalo para alguien especial.");
-                            // Fin del código que cambia los valores dependiendo de lo que seleccione
+                            
 
                         } catch (Exception ex) {
                             Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
@@ -1902,11 +1893,11 @@ public class AgregarPremTutor extends AppCompatActivity {
 
                     case "Una caja de dulces sorpresa":
                         try {
-                            // Inicio del código para mostrar el toast personalizado
+                            
                             LayoutInflater inflater = getLayoutInflater();
                             View layout = inflater.inflate(R.layout.toast_personalizado, null);
 
-                            // Se cambia la imágen
+                            
                             ImageView icon = layout.findViewById(R.id.toast_icon);
                             try (InputStream inputStream = getAssets().open("img/Iconos-recompensas/Dulces.svg")) {
                                 SVG svg = SVG.getFromInputStream(inputStream);
@@ -1918,25 +1909,25 @@ public class AgregarPremTutor extends AppCompatActivity {
                                 e.printStackTrace();
                             }
 
-                            // Se cambia el texto
+                            
                             TextView text = layout.findViewById(R.id.toast_text);
                             text.setText("Una caja de dulces sorpresa");
 
-                            // Se cambia el color de fondo
+                            
                             Drawable background = layout.getBackground();
                             background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
 
-                            // Cambia color del texto
+                            
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            // Lo crea y lo pone en la parte de arriba del cel
+                            
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
                             toast.setView(layout);
                             toast.show();
 
-                            // Inicio del código que cambia los valores dependiendo de lo que seleccione
+                            
                             int nuevoNumero = 10;
                             numRamitasPrem.setText(String.valueOf(nuevoNumero));
 
@@ -1947,7 +1938,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                          spinnerTipoPrem.setSelection(4);
 
                             txtMasInfo.setText("Una caja llena de deliciosos dulces variados que te sorprenderán en cada bocado. Ideal para disfrutar en cualquier ocasión especial.");
-                            // Fin del código que cambia los valores dependiendo de lo que seleccione
+                            
 
                         } catch (Exception ex) {
                             Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
@@ -1955,11 +1946,11 @@ public class AgregarPremTutor extends AppCompatActivity {
                         break;
                     case "Batidos de frutas":
                         try {
-                            // Inicio del código para mostrar el toast personalizado
+                            
                             LayoutInflater inflater = getLayoutInflater();
                             View layout = inflater.inflate(R.layout.toast_personalizado, null);
 
-                            // Se cambia la imágen
+                            
                             ImageView icon = layout.findViewById(R.id.toast_icon);
                             try (InputStream inputStream = getAssets().open("img/Iconos-recompensas/Batido_Frutas.svg")) {
                                 SVG svg = SVG.getFromInputStream(inputStream);
@@ -1971,25 +1962,25 @@ public class AgregarPremTutor extends AppCompatActivity {
                                 e.printStackTrace();
                             }
 
-                            // Se cambia el texto
+                            
                             TextView text = layout.findViewById(R.id.toast_text);
                             text.setText("Batidos de frutas");
 
-                            // Se cambia el color de fondo
+                            
                             Drawable background = layout.getBackground();
                             background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
 
-                            // Cambia color del texto
+                            
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            // Lo crea y lo pone en la parte de arriba del cel
+                            
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
                             toast.setView(layout);
                             toast.show();
 
-                            // Inicio del código que cambia los valores dependiendo de lo que seleccione
+                            
                             int nuevoNumero = 20;
                             numRamitasPrem.setText(String.valueOf(nuevoNumero));
 
@@ -1997,10 +1988,10 @@ public class AgregarPremTutor extends AppCompatActivity {
 
  spinnerCatPrem.setSelection(3); 
                             spinnerNivelPrem.setSelection(2);
-                            spinnerTipoPrem.setSelection(1); // Salud
+                            spinnerTipoPrem.setSelection(1);
 
                             txtMasInfo.setText("Batidos refrescantes de frutas frescas, perfectos para nutrir tu cuerpo y deleitar tu paladar. Una opción saludable para cualquier momento del día.");
-                            // Fin del código que cambia los valores dependiendo de lo que seleccione
+                            
 
                         } catch (Exception ex) {
                             Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
@@ -2009,11 +2000,11 @@ public class AgregarPremTutor extends AppCompatActivity {
 
                     case "Desayuno en la cama":
                         try {
-                            // Inicio del código para mostrar el toast personalizado
+                            
                             LayoutInflater inflater = getLayoutInflater();
                             View layout = inflater.inflate(R.layout.toast_personalizado, null);
 
-                            // Se cambia la imágen
+                            
                             ImageView icon = layout.findViewById(R.id.toast_icon);
                             try (InputStream inputStream = getAssets().open("img/Iconos-recompensas/Desayuno_Cama.svg")) {
                                 SVG svg = SVG.getFromInputStream(inputStream);
@@ -2025,25 +2016,25 @@ public class AgregarPremTutor extends AppCompatActivity {
                                 e.printStackTrace();
                             }
 
-                            // Se cambia el texto
+                            
                             TextView text = layout.findViewById(R.id.toast_text);
                             text.setText("Desayuno en la cama");
 
-                            // Se cambia el color de fondo
+                            
                             Drawable background = layout.getBackground();
                             background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
 
-                            // Cambia color del texto
+                            
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            // Lo crea y lo pone en la parte de arriba del cel
+                            
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
                             toast.setView(layout);
                             toast.show();
 
-                            // Inicio del código que cambia los valores dependiendo de lo que seleccione
+                            
                             int nuevoNumero = 15;
                             numRamitasPrem.setText(String.valueOf(nuevoNumero));
 
@@ -2054,22 +2045,21 @@ public class AgregarPremTutor extends AppCompatActivity {
                            spinnerTipoPrem.setSelection(3);
 
                             txtMasInfo.setText("Un delicioso desayuno servido en la cama, con todo lo que amas para comenzar el día con energía. Perfecto para mimarte en una mañana especial.");
-                            // Fin del código que cambia los valores dependiendo de lo que seleccione
+                            
 
                         } catch (Exception ex) {
                             Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                         break;
 
-// Recompensas Especiales
 
                     case "Salir al cine":
                         try {
-                            // Inicio del código para mostrar el toast personalizado
+                            
                             LayoutInflater inflater = getLayoutInflater();
                             View layout = inflater.inflate(R.layout.toast_personalizado, null);
 
-                            // Se cambia la imágen
+                            
                             ImageView icon = layout.findViewById(R.id.toast_icon);
                             try (InputStream inputStream = getAssets().open("img/Iconos-recompensas/Cine.svg")) {
                                 SVG svg = SVG.getFromInputStream(inputStream);
@@ -2081,25 +2071,25 @@ public class AgregarPremTutor extends AppCompatActivity {
                                 e.printStackTrace();
                             }
 
-                            // Se cambia el texto
+                            
                             TextView text = layout.findViewById(R.id.toast_text);
                             text.setText("Salir al cine");
 
-                            // Se cambia el color de fondo
+                            
                             Drawable background = layout.getBackground();
                             background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
 
-                            // Cambia color del texto
+                            
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            // Lo crea y lo pone en la parte de arriba del cel
+                            
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
                             toast.setView(layout);
                             toast.show();
 
-                            // Inicio del código que cambia los valores dependiendo de lo que seleccione
+                            
                             int nuevoNumero = 50;
                             numRamitasPrem.setText(String.valueOf(nuevoNumero));
 
@@ -2110,7 +2100,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                          spinnerTipoPrem.setSelection(4);
 
                             txtMasInfo.setText("Disfruta de una experiencia cinematográfica en la pantalla grande con entradas para la película que has estado esperando. Perfecto para una noche de diversión.");
-                            // Fin del código que cambia los valores dependiendo de lo que seleccione
+                            
 
                         } catch (Exception ex) {
                             Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
@@ -2119,11 +2109,11 @@ public class AgregarPremTutor extends AppCompatActivity {
 
                     case "Paseo a la playa":
                         try {
-                            // Inicio del código para mostrar el toast personalizado
+                            
                             LayoutInflater inflater = getLayoutInflater();
                             View layout = inflater.inflate(R.layout.toast_personalizado, null);
 
-                            // Se cambia la imágen
+                            
                             ImageView icon = layout.findViewById(R.id.toast_icon);
                             try (InputStream inputStream = getAssets().open("img/Iconos-recompensas/Playa.svg")) {
                                 SVG svg = SVG.getFromInputStream(inputStream);
@@ -2135,25 +2125,25 @@ public class AgregarPremTutor extends AppCompatActivity {
                                 e.printStackTrace();
                             }
 
-                            // Se cambia el texto
+                            
                             TextView text = layout.findViewById(R.id.toast_text);
                             text.setText("Paseo a la playa");
 
-                            // Se cambia el color de fondo
+                            
                             Drawable background = layout.getBackground();
                             background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
 
-                            // Cambia color del texto
+                            
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            // Lo crea y lo pone en la parte de arriba del cel
+                            
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
                             toast.setView(layout);
                             toast.show();
 
-                            // Inicio del código que cambia los valores dependiendo de lo que seleccione
+                            
                             int nuevoNumero = 70;
                             numRamitasPrem.setText(String.valueOf(nuevoNumero));
 
@@ -2164,7 +2154,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                            spinnerTipoPrem.setSelection(6);
 
                             txtMasInfo.setText("Un día completo en la playa, disfrutando del sol, el mar y la arena. Ideal para relajarte y desconectar de la rutina diaria.");
-                            // Fin del código que cambia los valores dependiendo de lo que seleccione
+                            
 
                         } catch (Exception ex) {
                             Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
@@ -2173,11 +2163,11 @@ public class AgregarPremTutor extends AppCompatActivity {
 
                     case "Día en el zoológico":
                         try {
-                            // Inicio del código para mostrar el toast personalizado
+                            
                             LayoutInflater inflater = getLayoutInflater();
                             View layout = inflater.inflate(R.layout.toast_personalizado, null);
 
-                            // Se cambia la imágen
+                            
                             ImageView icon = layout.findViewById(R.id.toast_icon);
                             try (InputStream inputStream = getAssets().open("img/Iconos-recompensas/Zoo.svg")) {
                                 SVG svg = SVG.getFromInputStream(inputStream);
@@ -2189,25 +2179,25 @@ public class AgregarPremTutor extends AppCompatActivity {
                                 e.printStackTrace();
                             }
 
-                            // Se cambia el texto
+                            
                             TextView text = layout.findViewById(R.id.toast_text);
                             text.setText("Día en el zoológico");
 
-                            // Se cambia el color de fondo
+                            
                             Drawable background = layout.getBackground();
                             background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
 
-                            // Cambia color del texto
+                            
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            // Lo crea y lo pone en la parte de arriba del cel
+                            
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
                             toast.setView(layout);
                             toast.show();
 
-                            // Inicio del código que cambia los valores dependiendo de lo que seleccione
+                            
                             int nuevoNumero = 60;
                             numRamitasPrem.setText(String.valueOf(nuevoNumero));
 
@@ -2218,7 +2208,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                          spinnerTipoPrem.setSelection(4);
 
                             txtMasInfo.setText("Un día emocionante observando a tus animales favoritos en el zoológico. Ideal para aprender y divertirte en un entorno familiar.");
-                            // Fin del código que cambia los valores dependiendo de lo que seleccione
+                            
 
                         } catch (Exception ex) {
                             Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
@@ -2226,11 +2216,11 @@ public class AgregarPremTutor extends AppCompatActivity {
                         break;
                     case "Visita al parque de diversiones":
                         try {
-                            // Inicio del código para mostrar el toast personalizado
+                            
                             LayoutInflater inflater = getLayoutInflater();
                             View layout = inflater.inflate(R.layout.toast_personalizado, null);
 
-                            // Se cambia la imágen
+                            
                             ImageView icon = layout.findViewById(R.id.toast_icon);
                             try (InputStream inputStream = getAssets().open("img/Iconos-recompensas/Parque_Diversiones.svg")) {
                                 SVG svg = SVG.getFromInputStream(inputStream);
@@ -2242,25 +2232,25 @@ public class AgregarPremTutor extends AppCompatActivity {
                                 e.printStackTrace();
                             }
 
-                            // Se cambia el texto
+                            
                             TextView text = layout.findViewById(R.id.toast_text);
                             text.setText("Visita al parque de diversiones");
 
-                            // Se cambia el color de fondo
+                            
                             Drawable background = layout.getBackground();
                             background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
 
-                            // Cambia color del texto
+                            
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            // Lo crea y lo pone en la parte de arriba del cel
+                            
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
                             toast.setView(layout);
                             toast.show();
 
-                            // Inicio del código que cambia los valores dependiendo de lo que seleccione
+                            
                             int nuevoNumero = 80;
                             numRamitasPrem.setText(String.valueOf(nuevoNumero));
 
@@ -2271,7 +2261,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                          spinnerTipoPrem.setSelection(4);
 
                             txtMasInfo.setText("Una aventura llena de emoción en un parque de diversiones. Disfruta de atracciones, juegos y deliciosas comidas con amigos o familiares.");
-                            // Fin del código que cambia los valores dependiendo de lo que seleccione
+                            
 
                         } catch (Exception ex) {
                             Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
@@ -2280,11 +2270,11 @@ public class AgregarPremTutor extends AppCompatActivity {
 
                     case "Día de picnic":
                         try {
-                            // Inicio del código para mostrar el toast personalizado
+                            
                             LayoutInflater inflater = getLayoutInflater();
                             View layout = inflater.inflate(R.layout.toast_personalizado, null);
 
-                            // Se cambia la imágen
+                            
                             ImageView icon = layout.findViewById(R.id.toast_icon);
                             try (InputStream inputStream = getAssets().open("img/Iconos-recompensas/Picnic.svg")) {
                                 SVG svg = SVG.getFromInputStream(inputStream);
@@ -2296,25 +2286,25 @@ public class AgregarPremTutor extends AppCompatActivity {
                                 e.printStackTrace();
                             }
 
-                            // Se cambia el texto
+                            
                             TextView text = layout.findViewById(R.id.toast_text);
                             text.setText("Día de picnic");
 
-                            // Se cambia el color de fondo
+                            
                             Drawable background = layout.getBackground();
                             background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
 
-                            // Cambia color del texto
+                            
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            // Lo crea y lo pone en la parte de arriba del cel
+                            
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
                             toast.setView(layout);
                             toast.show();
 
-                            // Inicio del código que cambia los valores dependiendo de lo que seleccione
+                            
                             int nuevoNumero = 40;
                             numRamitasPrem.setText(String.valueOf(nuevoNumero));
 
@@ -2325,7 +2315,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                          spinnerTipoPrem.setSelection(4);
 
                             txtMasInfo.setText("Un día al aire libre con un picnic delicioso en un parque. Disfruta de la naturaleza y la buena compañía mientras saboreas tus comidas favoritas.");
-                            // Fin del código que cambia los valores dependiendo de lo que seleccione
+                            
 
                         } catch (Exception ex) {
                             Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
@@ -2334,11 +2324,11 @@ public class AgregarPremTutor extends AppCompatActivity {
 
                     case "Día de compras":
                         try {
-                            // Inicio del código para mostrar el toast personalizado
+                            
                             LayoutInflater inflater = getLayoutInflater();
                             View layout = inflater.inflate(R.layout.toast_personalizado, null);
 
-                            // Se cambia la imágen
+                            
                             ImageView icon = layout.findViewById(R.id.toast_icon);
                             try (InputStream inputStream = getAssets().open("img/Iconos-recompensas/Compras.svg")) {
                                 SVG svg = SVG.getFromInputStream(inputStream);
@@ -2350,25 +2340,25 @@ public class AgregarPremTutor extends AppCompatActivity {
                                 e.printStackTrace();
                             }
 
-                            // Se cambia el texto
+                            
                             TextView text = layout.findViewById(R.id.toast_text);
                             text.setText("Día de compras");
 
-                            // Se cambia el color de fondo
+                            
                             Drawable background = layout.getBackground();
                             background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
 
-                            // Cambia color del texto
+                            
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            // Lo crea y lo pone en la parte de arriba del cel
+                            
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
                             toast.setView(layout);
                             toast.show();
 
-                            // Inicio del código que cambia los valores dependiendo de lo que seleccione
+                            
                             int nuevoNumero = 60;
                             numRamitasPrem.setText(String.valueOf(nuevoNumero));
 
@@ -2379,7 +2369,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                          spinnerTipoPrem.setSelection(4);
 
                             txtMasInfo.setText("Un día emocionante de compras donde podrás adquirir lo que desees. Ideal para consentirte con un nuevo atuendo o gadgets.");
-                            // Fin del código que cambia los valores dependiendo de lo que seleccione
+                            
 
                         } catch (Exception ex) {
                             Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
@@ -2388,11 +2378,11 @@ public class AgregarPremTutor extends AppCompatActivity {
 
                     case "Concierto de tu banda favorita":
                         try {
-                            // Inicio del código para mostrar el toast personalizado
+                            
                             LayoutInflater inflater = getLayoutInflater();
                             View layout = inflater.inflate(R.layout.toast_personalizado, null);
 
-                            // Se cambia la imágen
+                            
                             ImageView icon = layout.findViewById(R.id.toast_icon);
                             try (InputStream inputStream = getAssets().open("img/Iconos-recompensas/Concierto.svg")) {
                                 SVG svg = SVG.getFromInputStream(inputStream);
@@ -2404,25 +2394,25 @@ public class AgregarPremTutor extends AppCompatActivity {
                                 e.printStackTrace();
                             }
 
-                            // Se cambia el texto
+                            
                             TextView text = layout.findViewById(R.id.toast_text);
                             text.setText("Concierto de tu banda favorita");
 
-                            // Se cambia el color de fondo
+                            
                             Drawable background = layout.getBackground();
                             background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
 
-                            // Cambia color del texto
+                            
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            // Lo crea y lo pone en la parte de arriba del cel
+                            
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
                             toast.setView(layout);
                             toast.show();
 
-                            // Inicio del código que cambia los valores dependiendo de lo que seleccione
+                            
                             int nuevoNumero = 100;
                             numRamitasPrem.setText(String.valueOf(nuevoNumero));
 
@@ -2433,7 +2423,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                          spinnerTipoPrem.setSelection(4);
 
                             txtMasInfo.setText("Una noche inolvidable disfrutando de un concierto de tu banda favorita en vivo. Comparte la experiencia con amigos y vibra al ritmo de la música.");
-                            // Fin del código que cambia los valores dependiendo de lo que seleccione
+                            
 
                         } catch (Exception ex) {
                             Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
@@ -2442,11 +2432,11 @@ public class AgregarPremTutor extends AppCompatActivity {
 
                     case "Excursión al museo":
                         try {
-                            // Inicio del código para mostrar el toast personalizado
+                            
                             LayoutInflater inflater = getLayoutInflater();
                             View layout = inflater.inflate(R.layout.toast_personalizado, null);
 
-                            // Se cambia la imágen
+                            
                             ImageView icon = layout.findViewById(R.id.toast_icon);
                             try (InputStream inputStream = getAssets().open("img/Iconos-recompensas/Museo.svg")) {
                                 SVG svg = SVG.getFromInputStream(inputStream);
@@ -2458,25 +2448,25 @@ public class AgregarPremTutor extends AppCompatActivity {
                                 e.printStackTrace();
                             }
 
-                            // Se cambia el texto
+                            
                             TextView text = layout.findViewById(R.id.toast_text);
                             text.setText("Excursión al museo");
 
-                            // Se cambia el color de fondo
+                            
                             Drawable background = layout.getBackground();
                             background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
 
-                            // Cambia color del texto
+                            
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            // Lo crea y lo pone en la parte de arriba del cel
+                            
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
                             toast.setView(layout);
                             toast.show();
 
-                            // Inicio del código que cambia los valores dependiendo de lo que seleccione
+                            
                             int nuevoNumero = 100;
                             numRamitasPrem.setText(String.valueOf(nuevoNumero));
 
@@ -2487,7 +2477,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                          spinnerTipoPrem.setSelection(4);
 
                             txtMasInfo.setText("Un emocionante día de exploración en un museo, aprendiendo sobre historia, arte o ciencia.");
-                            // Fin del código que cambia los valores dependiendo de lo que seleccione
+                            
 
                         } catch (Exception ex) {
                             Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
@@ -2498,7 +2488,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                             LayoutInflater inflater = getLayoutInflater();
                             View layout = inflater.inflate(R.layout.toast_personalizado, null);
 
-                            // Se cambia la imagen
+                            
                             ImageView icon = layout.findViewById(R.id.toast_icon);
                             try (InputStream inputStream = getAssets().open("img/Iconos-recompensas/Viaje_Ciudad.svg")) {
                                 SVG svg = SVG.getFromInputStream(inputStream);
@@ -2510,25 +2500,25 @@ public class AgregarPremTutor extends AppCompatActivity {
                                 e.printStackTrace();
                             }
 
-                            // Se cambia el texto
+                            
                             TextView text = layout.findViewById(R.id.toast_text);
                             text.setText("Viaje de fin de semana a una ciudad cercana");
 
-                            // Se cambia el color de fondo
+                            
                             Drawable background = layout.getBackground();
                             background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
 
-                            // Cambia color del texto
+                            
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            // Lo crea y lo pone en la parte de arriba del celular
+                            ular
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
                             toast.setView(layout);
                             toast.show();
 
-                            // Valores actualizados para la recompensa
+                            
                             int nuevoNumero = 400;
                             numRamitasPrem.setText(String.valueOf(nuevoNumero));
 
@@ -2549,7 +2539,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                             LayoutInflater inflater = getLayoutInflater();
                             View layout = inflater.inflate(R.layout.toast_personalizado, null);
 
-                            // Se cambia la imagen
+                            
                             ImageView icon = layout.findViewById(R.id.toast_icon);
                             try (InputStream inputStream = getAssets().open("img/Iconos-recompensas/Spa.svg")) {
                                 SVG svg = SVG.getFromInputStream(inputStream);
@@ -2561,25 +2551,25 @@ public class AgregarPremTutor extends AppCompatActivity {
                                 e.printStackTrace();
                             }
 
-                            // Se cambia el texto
+                            
                             TextView text = layout.findViewById(R.id.toast_text);
                             text.setText("Día de spa en casa");
 
-                            // Se cambia el color de fondo
+                            
                             Drawable background = layout.getBackground();
                             background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
 
-                            // Cambia color del texto
+                            
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            // Lo crea y lo pone en la parte de arriba del celular
+                            ular
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
                             toast.setView(layout);
                             toast.show();
 
-                            // Valores actualizados para la recompensa
+                            
                             int nuevoNumero = 80;
                             numRamitasPrem.setText(String.valueOf(nuevoNumero));
 
@@ -2600,7 +2590,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                             LayoutInflater inflater = getLayoutInflater();
                             View layout = inflater.inflate(R.layout.toast_personalizado, null);
 
-                            // Se cambia la imagen
+                            
                             ImageView icon = layout.findViewById(R.id.toast_icon);
                             try (InputStream inputStream = getAssets().open("img/Iconos-recompensas/Granja.svg")) {
                                 SVG svg = SVG.getFromInputStream(inputStream);
@@ -2612,25 +2602,25 @@ public class AgregarPremTutor extends AppCompatActivity {
                                 e.printStackTrace();
                             }
 
-                            // Se cambia el texto
+                            
                             TextView text = layout.findViewById(R.id.toast_text);
                             text.setText("Visita a una granja o reserva natural");
 
-                            // Se cambia el color de fondo
+                            
                             Drawable background = layout.getBackground();
                             background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
 
-                            // Cambia color del texto
+                            
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            // Lo crea y lo pone en la parte de arriba del celular
+                            ular
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
                             toast.setView(layout);
                             toast.show();
 
-                            // Valores actualizados para la recompensa
+                            
                             int nuevoNumero = 150;
                             numRamitasPrem.setText(String.valueOf(nuevoNumero));
 
@@ -2651,7 +2641,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                             LayoutInflater inflater = getLayoutInflater();
                             View layout = inflater.inflate(R.layout.toast_personalizado, null);
 
-                            // Se cambia la imagen
+                            
                             ImageView icon = layout.findViewById(R.id.toast_icon);
                             try (InputStream inputStream = getAssets().open("img/Iconos-recompensas/Tablet.svg")) {
                                 SVG svg = SVG.getFromInputStream(inputStream);
@@ -2663,25 +2653,25 @@ public class AgregarPremTutor extends AppCompatActivity {
                                 e.printStackTrace();
                             }
 
-                            // Se cambia el texto
+                            
                             TextView text = layout.findViewById(R.id.toast_text);
                             text.setText("Nueva tablet o e-reader");
 
-                            // Se cambia el color de fondo
+                            
                             Drawable background = layout.getBackground();
                             background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
 
-                            // Cambia color del texto
+                            
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            // Lo crea y lo pone en la parte de arriba del celular
+                            ular
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
                             toast.setView(layout);
                             toast.show();
 
-                            // Valores actualizados para la recompensa
+                            
                             int nuevoNumero = 300;
                             numRamitasPrem.setText(String.valueOf(nuevoNumero));
 
@@ -2701,7 +2691,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                             LayoutInflater inflater = getLayoutInflater();
                             View layout = inflater.inflate(R.layout.toast_personalizado, null);
 
-                            // Se cambia la imagen
+                            
                             ImageView icon = layout.findViewById(R.id.toast_icon);
                             try (InputStream inputStream = getAssets().open("img/Iconos-recompensas/Auriculares.svg")) {
                                 SVG svg = SVG.getFromInputStream(inputStream);
@@ -2713,25 +2703,25 @@ public class AgregarPremTutor extends AppCompatActivity {
                                 e.printStackTrace();
                             }
 
-                            // Se cambia el texto
+                            
                             TextView text = layout.findViewById(R.id.toast_text);
                             text.setText("Auriculares inalámbricos");
 
-                            // Se cambia el color de fondo
+                            
                             Drawable background = layout.getBackground();
                             background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
 
-                            // Cambia color del texto
+                            
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            // Lo crea y lo pone en la parte de arriba del celular
+                            ular
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
                             toast.setView(layout);
                             toast.show();
 
-                            // Valores actualizados para la recompensa
+                            
                             int nuevoNumero = 150;
                             numRamitasPrem.setText(String.valueOf(nuevoNumero));
 
@@ -2752,7 +2742,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                             LayoutInflater inflater = getLayoutInflater();
                             View layout = inflater.inflate(R.layout.toast_personalizado, null);
 
-                            // Se cambia la imagen
+                            
                             ImageView icon = layout.findViewById(R.id.toast_icon);
                             try (InputStream inputStream = getAssets().open("img/Iconos-recompensas/Video_Nuevo.svg")) {
                                 SVG svg = SVG.getFromInputStream(inputStream);
@@ -2764,25 +2754,25 @@ public class AgregarPremTutor extends AppCompatActivity {
                                 e.printStackTrace();
                             }
 
-                            // Se cambia el texto
+                            
                             TextView text = layout.findViewById(R.id.toast_text);
                             text.setText("Juego de video nuevo");
 
-                            // Se cambia el color de fondo
+                            
                             Drawable background = layout.getBackground();
                             background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
 
-                            // Cambia color del texto
+                            
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            // Lo crea y lo pone en la parte de arriba del celular
+                            ular
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
                             toast.setView(layout);
                             toast.show();
 
-                            // Valores actualizados para la recompensa
+                            
                             int nuevoNumero = 60;
                             numRamitasPrem.setText(String.valueOf(nuevoNumero));
 
@@ -2803,7 +2793,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                             LayoutInflater inflater = getLayoutInflater();
                             View layout = inflater.inflate(R.layout.toast_personalizado, null);
 
-                            // Se cambia la imagen
+                            
                             ImageView icon = layout.findViewById(R.id.toast_icon);
                             try (InputStream inputStream = getAssets().open("img/Iconos-recompensas/Accesorios.svg")) {
                                 SVG svg = SVG.getFromInputStream(inputStream);
@@ -2815,25 +2805,25 @@ public class AgregarPremTutor extends AppCompatActivity {
                                 e.printStackTrace();
                             }
 
-                            // Se cambia el texto
+                            
                             TextView text = layout.findViewById(R.id.toast_text);
                             text.setText("Accesorios para la consola de videojuegos");
 
-                            // Se cambia el color de fondo
+                            
                             Drawable background = layout.getBackground();
                             background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
 
-                            // Cambia color del texto
+                            
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            // Lo crea y lo pone en la parte de arriba del celular
+                            ular
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
                             toast.setView(layout);
                             toast.show();
 
-                            // Valores actualizados para la recompensa
+                            
                             int nuevoNumero = 50;
                             numRamitasPrem.setText(String.valueOf(nuevoNumero));
 
@@ -2854,7 +2844,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                             LayoutInflater inflater = getLayoutInflater();
                             View layout = inflater.inflate(R.layout.toast_personalizado, null);
 
-                            // Se cambia la imagen
+                            
                             ImageView icon = layout.findViewById(R.id.toast_icon);
                             try (InputStream inputStream = getAssets().open("img/Iconos-recompensas/Camara.svg")) {
                                 SVG svg = SVG.getFromInputStream(inputStream);
@@ -2866,25 +2856,25 @@ public class AgregarPremTutor extends AppCompatActivity {
                                 e.printStackTrace();
                             }
 
-                            // Se cambia el texto
+                            
                             TextView text = layout.findViewById(R.id.toast_text);
                             text.setText("Cámara instantánea");
 
-                            // Se cambia el color de fondo
+                            
                             Drawable background = layout.getBackground();
                             background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
 
-                            // Cambia color del texto
+                            
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            // Lo crea y lo pone en la parte de arriba del celular
+                            ular
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
                             toast.setView(layout);
                             toast.show();
 
-                            // Valores actualizados para la recompensa
+                            
                             int nuevoNumero = 200;
                             numRamitasPrem.setText(String.valueOf(nuevoNumero));
 
@@ -2905,7 +2895,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                             LayoutInflater inflater = getLayoutInflater();
                             View layout = inflater.inflate(R.layout.toast_personalizado, null);
 
-                            // Se cambia la imagen
+                            
                             ImageView icon = layout.findViewById(R.id.toast_icon);
                             try (InputStream inputStream = getAssets().open("img/Iconos-recompensas/Streaming.svg")) {
                                 SVG svg = SVG.getFromInputStream(inputStream);
@@ -2917,25 +2907,25 @@ public class AgregarPremTutor extends AppCompatActivity {
                                 e.printStackTrace();
                             }
 
-                            // Se cambia el texto
+                            
                             TextView text = layout.findViewById(R.id.toast_text);
                             text.setText("Suscripción a un servicio de streaming");
 
-                            // Se cambia el color de fondo
+                            
                             Drawable background = layout.getBackground();
                             background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
 
-                            // Cambia color del texto
+                            
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            // Lo crea y lo pone en la parte de arriba del celular
+                            ular
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
                             toast.setView(layout);
                             toast.show();
 
-                            // Valores actualizados para la recompensa
+                            
                             int nuevoNumero = 12;
                             numRamitasPrem.setText(String.valueOf(nuevoNumero));
 
@@ -2955,7 +2945,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                             LayoutInflater inflater = getLayoutInflater();
                             View layout = inflater.inflate(R.layout.toast_personalizado, null);
 
-                            // Se cambia la imagen
+                            
                             ImageView icon = layout.findViewById(R.id.toast_icon);
                             try (InputStream inputStream = getAssets().open("img/Iconos-recompensas/Reloj.svg")) {
                                 SVG svg = SVG.getFromInputStream(inputStream);
@@ -2967,25 +2957,25 @@ public class AgregarPremTutor extends AppCompatActivity {
                                 e.printStackTrace();
                             }
 
-                            // Se cambia el texto
+                            
                             TextView text = layout.findViewById(R.id.toast_text);
                             text.setText("Reloj inteligente");
 
-                            // Se cambia el color de fondo
+                            
                             Drawable background = layout.getBackground();
                             background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
 
-                            // Cambia color del texto
+                            
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            // Lo crea y lo pone en la parte de arriba del celular
+                            ular
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
                             toast.setView(layout);
                             toast.show();
 
-                            // Valores actualizados para la recompensa
+                            
                             int nuevoNumero = 250;
                             numRamitasPrem.setText(String.valueOf(nuevoNumero));
 
@@ -3006,7 +2996,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                             LayoutInflater inflater = getLayoutInflater();
                             View layout = inflater.inflate(R.layout.toast_personalizado, null);
 
-                            // Se cambia la imagen
+                            
                             ImageView icon = layout.findViewById(R.id.toast_icon);
                             try (InputStream inputStream = getAssets().open("img/Iconos-recompensas/Laptop.svg")) {
                                 SVG svg = SVG.getFromInputStream(inputStream);
@@ -3018,25 +3008,25 @@ public class AgregarPremTutor extends AppCompatActivity {
                                 e.printStackTrace();
                             }
 
-                            // Se cambia el texto
+                            
                             TextView text = layout.findViewById(R.id.toast_text);
                             text.setText("Laptop nueva");
 
-                            // Se cambia el color de fondo
+                            
                             Drawable background = layout.getBackground();
                             background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
 
-                            // Cambia color del texto
+                            
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            // Lo crea y lo pone en la parte de arriba del celular
+                            ular
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
                             toast.setView(layout);
                             toast.show();
 
-                            // Valores actualizados para la recompensa
+                            
                             int nuevoNumero = 700;
                             numRamitasPrem.setText(String.valueOf(nuevoNumero));
 
@@ -3057,7 +3047,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                             LayoutInflater inflater = getLayoutInflater();
                             View layout = inflater.inflate(R.layout.toast_personalizado, null);
 
-                            // Se cambia la imagen
+                            
                             ImageView icon = layout.findViewById(R.id.toast_icon);
                             try (InputStream inputStream = getAssets().open("img/Iconos-recompensas/Altavoz.svg")) {
                                 SVG svg = SVG.getFromInputStream(inputStream);
@@ -3069,25 +3059,25 @@ public class AgregarPremTutor extends AppCompatActivity {
                                 e.printStackTrace();
                             }
 
-                            // Se cambia el texto
+                            
                             TextView text = layout.findViewById(R.id.toast_text);
                             text.setText("Altavoz Bluetooth");
 
-                            // Se cambia el color de fondo
+                            
                             Drawable background = layout.getBackground();
                             background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
 
-                            // Cambia color del texto
+                            
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            // Lo crea y lo pone en la parte de arriba del celular
+                            ular
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
                             toast.setView(layout);
                             toast.show();
 
-                            // Valores actualizados para la recompensa
+                            
                             int nuevoNumero = 100;
                             numRamitasPrem.setText(String.valueOf(nuevoNumero));
 
@@ -3108,7 +3098,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                             LayoutInflater inflater = getLayoutInflater();
                             View layout = inflater.inflate(R.layout.toast_personalizado, null);
 
-                            // Se cambia la imagen
+                            
                             ImageView icon = layout.findViewById(R.id.toast_icon);
                             try (InputStream inputStream = getAssets().open("img/Iconos-recompensas/Entradas.svg")) {
                                 SVG svg = SVG.getFromInputStream(inputStream);
@@ -3120,25 +3110,25 @@ public class AgregarPremTutor extends AppCompatActivity {
                                 e.printStackTrace();
                             }
 
-                            // Se cambia el texto
+                            
                             TextView text = layout.findViewById(R.id.toast_text);
                             text.setText("Entradas para un espectáculo");
 
-                            // Se cambia el color de fondo
+                            
                             Drawable background = layout.getBackground();
                             background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
 
-                            // Cambia color del texto
+                            
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            // Lo crea y lo pone en la parte de arriba del celular
+                            ular
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
                             toast.setView(layout);
                             toast.show();
 
-                            // Valores actualizados para la recompensa
+                            
                             int nuevoNumero = 200;
                             numRamitasPrem.setText(String.valueOf(nuevoNumero));
 
@@ -3159,7 +3149,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                             LayoutInflater inflater = getLayoutInflater();
                             View layout = inflater.inflate(R.layout.toast_personalizado, null);
 
-                            // Se cambia la imagen
+                            
                             ImageView icon = layout.findViewById(R.id.toast_icon);
                             try (InputStream inputStream = getAssets().open("img/Iconos-recompensas/Revista.svg")) {
                                 SVG svg = SVG.getFromInputStream(inputStream);
@@ -3171,25 +3161,25 @@ public class AgregarPremTutor extends AppCompatActivity {
                                 e.printStackTrace();
                             }
 
-                            // Se cambia el texto
+                            
                             TextView text = layout.findViewById(R.id.toast_text);
                             text.setText("Suscripción a una revista");
 
-                            // Se cambia el color de fondo
+                            
                             Drawable background = layout.getBackground();
                             background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
 
-                            // Cambia color del texto
+                            
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            // Lo crea y lo pone en la parte de arriba del celular
+                            ular
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
                             toast.setView(layout);
                             toast.show();
 
-                            // Valores actualizados para la recompensa
+                            
                             int nuevoNumero = 10;
                             numRamitasPrem.setText(String.valueOf(nuevoNumero));
 
@@ -3209,7 +3199,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                             LayoutInflater inflater = getLayoutInflater();
                             View layout = inflater.inflate(R.layout.toast_personalizado, null);
 
-                            // Se cambia la imagen
+                            
                             ImageView icon = layout.findViewById(R.id.toast_icon);
                             try (InputStream inputStream = getAssets().open("img/Iconos-recompensas/Curso_Linea.svg")) {
                                 SVG svg = SVG.getFromInputStream(inputStream);
@@ -3221,25 +3211,25 @@ public class AgregarPremTutor extends AppCompatActivity {
                                 e.printStackTrace();
                             }
 
-                            // Se cambia el texto
+                            
                             TextView text = layout.findViewById(R.id.toast_text);
                             text.setText("Curso en línea de un tema de interés");
 
-                            // Se cambia el color de fondo
+                            
                             Drawable background = layout.getBackground();
                             background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
 
-                            // Cambia color del texto
+                            
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            // Lo crea y lo pone en la parte de arriba del celular
+                            ular
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
                             toast.setView(layout);
                             toast.show();
 
-                            // Valores actualizados para la recompensa
+                            
                             int nuevoNumero = 50;
                             numRamitasPrem.setText(String.valueOf(nuevoNumero));
 
@@ -3260,7 +3250,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                             LayoutInflater inflater = getLayoutInflater();
                             View layout = inflater.inflate(R.layout.toast_personalizado, null);
 
-                            // Se cambia la imagen
+                            
                             ImageView icon = layout.findViewById(R.id.toast_icon);
                             try (InputStream inputStream = getAssets().open("img/Iconos-recompensas/Pase_Anual.svg")) {
                                 SVG svg = SVG.getFromInputStream(inputStream);
@@ -3272,25 +3262,25 @@ public class AgregarPremTutor extends AppCompatActivity {
                                 e.printStackTrace();
                             }
 
-                            // Se cambia el texto
+                            
                             TextView text = layout.findViewById(R.id.toast_text);
                             text.setText("Pase anual a un parque temático");
 
-                            // Se cambia el color de fondo
+                            
                             Drawable background = layout.getBackground();
                             background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
 
-                            // Cambia color del texto
+                            
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            // Lo crea y lo pone en la parte de arriba del celular
+                            ular
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
                             toast.setView(layout);
                             toast.show();
 
-                            // Valores actualizados para la recompensa
+                            
                             int nuevoNumero = 500;
                             numRamitasPrem.setText(String.valueOf(nuevoNumero));
 
@@ -3311,7 +3301,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                             LayoutInflater inflater = getLayoutInflater();
                             View layout = inflater.inflate(R.layout.toast_personalizado, null);
 
-                            // Se cambia la imagen
+                            
                             ImageView icon = layout.findViewById(R.id.toast_icon);
                             try (InputStream inputStream = getAssets().open("img/Iconos-recompensas/Tarjeta.svg")) {
                                 SVG svg = SVG.getFromInputStream(inputStream);
@@ -3323,25 +3313,25 @@ public class AgregarPremTutor extends AppCompatActivity {
                                 e.printStackTrace();
                             }
 
-                            // Se cambia el texto
+                            
                             TextView text = layout.findViewById(R.id.toast_text);
                             text.setText("Tarjeta de regalo para una tienda de entretenimiento");
 
-                            // Se cambia el color de fondo
+                            
                             Drawable background = layout.getBackground();
                             background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
 
-                            // Cambia color del texto
+                            
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            // Lo crea y lo pone en la parte de arriba del celular
+                            ular
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
                             toast.setView(layout);
                             toast.show();
 
-                            // Valores actualizados para la recompensa
+                            
                             int nuevoNumero = 100;
                             numRamitasPrem.setText(String.valueOf(nuevoNumero));
 
@@ -3362,7 +3352,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                             LayoutInflater inflater = getLayoutInflater();
                             View layout = inflater.inflate(R.layout.toast_personalizado, null);
 
-                            // Se cambia la imagen
+                            
                             ImageView icon = layout.findViewById(R.id.toast_icon);
                             try (InputStream inputStream = getAssets().open("img/Iconos-recompensas/Karaoke.svg")) {
                                 SVG svg = SVG.getFromInputStream(inputStream);
@@ -3374,25 +3364,25 @@ public class AgregarPremTutor extends AppCompatActivity {
                                 e.printStackTrace();
                             }
 
-                            // Se cambia el texto
+                            
                             TextView text = layout.findViewById(R.id.toast_text);
                             text.setText("Día de karaoke con amigos");
 
-                            // Se cambia el color de fondo
+                            
                             Drawable background = layout.getBackground();
                             background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
 
-                            // Cambia color del texto
+                            
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            // Lo crea y lo pone en la parte de arriba del celular
+                            ular
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
                             toast.setView(layout);
                             toast.show();
 
-                            // Valores actualizados para la recompensa
+                            
                             int nuevoNumero = 30;
                             numRamitasPrem.setText(String.valueOf(nuevoNumero));
 
@@ -3413,7 +3403,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                             LayoutInflater inflater = getLayoutInflater();
                             View layout = inflater.inflate(R.layout.toast_personalizado, null);
 
-                            // Se cambia la imagen
+                            
                             ImageView icon = layout.findViewById(R.id.toast_icon);
                             try (InputStream inputStream = getAssets().open("img/Iconos-recompensas/Manualidades.svg")) {
                                 SVG svg = SVG.getFromInputStream(inputStream);
@@ -3425,25 +3415,25 @@ public class AgregarPremTutor extends AppCompatActivity {
                                 e.printStackTrace();
                             }
 
-                            // Se cambia el texto
+                            
                             TextView text = layout.findViewById(R.id.toast_text);
                             text.setText("Taller de arte o manualidades");
 
-                            // Se cambia el color de fondo
+                            
                             Drawable background = layout.getBackground();
                             background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
 
-                            // Cambia color del texto
+                            
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            // Lo crea y lo pone en la parte de arriba del celular
+                            ular
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
                             toast.setView(layout);
                             toast.show();
 
-                            // Valores actualizados para la recompensa
+                            
                             int nuevoNumero = 40;
                             numRamitasPrem.setText(String.valueOf(nuevoNumero));
 
@@ -4149,7 +4139,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                             LayoutInflater inflater = getLayoutInflater();
                             View layout = inflater.inflate(R.layout.toast_personalizado, null);
 
-                            // Se cambia la imagen
+                            
                             ImageView icon = layout.findViewById(R.id.toast_icon);
                             try (InputStream inputStream = getAssets().open("img/Iconos-recompensas/Escalada.svg")) {
                                 SVG svg = SVG.getFromInputStream(inputStream);
@@ -4161,25 +4151,25 @@ public class AgregarPremTutor extends AppCompatActivity {
                                 e.printStackTrace();
                             }
 
-                            // Se cambia el texto
+                            
                             TextView text = layout.findViewById(R.id.toast_text);
                             text.setText("Escalada en roca");
 
-                            // Se cambia el color de fondo
+                            
                             Drawable background = layout.getBackground();
                             background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
 
-                            // Cambia color del texto
+                            
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            // Lo crea y lo pone en la parte de arriba del celular
+                            ular
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
                             toast.setView(layout);
                             toast.show();
 
-                            // Valores actualizados para la recompensa
+                            
                             int nuevoNumero = 250;
                             numRamitasPrem.setText(String.valueOf(nuevoNumero));
 
@@ -4200,7 +4190,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                             LayoutInflater inflater = getLayoutInflater();
                             View layout = inflater.inflate(R.layout.toast_personalizado, null);
 
-                            // Se cambia la imagen
+                            
                             ImageView icon = layout.findViewById(R.id.toast_icon);
                             try (InputStream inputStream = getAssets().open("img/Iconos-recompensas/Kayak.svg")) {
                                 SVG svg = SVG.getFromInputStream(inputStream);
@@ -4212,25 +4202,25 @@ public class AgregarPremTutor extends AppCompatActivity {
                                 e.printStackTrace();
                             }
 
-                            // Se cambia el texto
+                            
                             TextView text = layout.findViewById(R.id.toast_text);
                             text.setText("Paseo en kayak o canoa");
 
-                            // Se cambia el color de fondo
+                            
                             Drawable background = layout.getBackground();
                             background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
 
-                            // Cambia color del texto
+                            
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            // Lo crea y lo pone en la parte de arriba del celular
+                            ular
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
                             toast.setView(layout);
                             toast.show();
 
-                            // Valores actualizados para la recompensa
+                            
                             int nuevoNumero = 100;
                             numRamitasPrem.setText(String.valueOf(nuevoNumero));
 
@@ -4251,7 +4241,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                             LayoutInflater inflater = getLayoutInflater();
                             View layout = inflater.inflate(R.layout.toast_personalizado, null);
 
-                            // Se cambia la imagen
+                            
                             ImageView icon = layout.findViewById(R.id.toast_icon);
                             try (InputStream inputStream = getAssets().open("img/Iconos-recompensas/Safari.svg")) {
                                 SVG svg = SVG.getFromInputStream(inputStream);
@@ -4263,25 +4253,25 @@ public class AgregarPremTutor extends AppCompatActivity {
                                 e.printStackTrace();
                             }
 
-                            // Se cambia el texto
+                            
                             TextView text = layout.findViewById(R.id.toast_text);
                             text.setText("Safari en un parque nacional");
 
-                            // Se cambia el color de fondo
+                            
                             Drawable background = layout.getBackground();
                             background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
 
-                            // Cambia color del texto
+                            
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            // Lo crea y lo pone en la parte de arriba del celular
+                            ular
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
                             toast.setView(layout);
                             toast.show();
 
-                            // Valores actualizados para la recompensa
+                            
                             int nuevoNumero = 600;
                             numRamitasPrem.setText(String.valueOf(nuevoNumero));
 
@@ -4302,7 +4292,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                             LayoutInflater inflater = getLayoutInflater();
                             View layout = inflater.inflate(R.layout.toast_personalizado, null);
 
-                            // Se cambia la imagen
+                            
                             ImageView icon = layout.findViewById(R.id.toast_icon);
                             try (InputStream inputStream = getAssets().open("img/Iconos-recompensas/Cuevas.svg")) {
                                 SVG svg = SVG.getFromInputStream(inputStream);
@@ -4314,25 +4304,25 @@ public class AgregarPremTutor extends AppCompatActivity {
                                 e.printStackTrace();
                             }
 
-                            // Se cambia el texto
+                            
                             TextView text = layout.findViewById(R.id.toast_text);
                             text.setText("Exploración de cuevas");
 
-                            // Se cambia el color de fondo
+                            
                             Drawable background = layout.getBackground();
                             background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
 
-                            // Cambia color del texto
+                            
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            // Lo crea y lo pone en la parte de arriba del celular
+                            ular
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
                             toast.setView(layout);
                             toast.show();
 
-                            // Valores actualizados para la recompensa
+                            
                             int nuevoNumero = 180;
                             numRamitasPrem.setText(String.valueOf(nuevoNumero));
 
@@ -4353,7 +4343,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                             LayoutInflater inflater = getLayoutInflater();
                             View layout = inflater.inflate(R.layout.toast_personalizado, null);
 
-                            // Se cambia la imagen
+                            
                             ImageView icon = layout.findViewById(R.id.toast_icon);
                             try (InputStream inputStream = getAssets().open("img/Iconos-recompensas/Rafting.svg")) {
                                 SVG svg = SVG.getFromInputStream(inputStream);
@@ -4365,25 +4355,25 @@ public class AgregarPremTutor extends AppCompatActivity {
                                 e.printStackTrace();
                             }
 
-                            // Se cambia el texto
+                            
                             TextView text = layout.findViewById(R.id.toast_text);
                             text.setText("Día de rafting");
 
-                            // Se cambia el color de fondo
+                            
                             Drawable background = layout.getBackground();
                             background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
 
-                            // Cambia color del texto
+                            
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            // Lo crea y lo pone en la parte de arriba del celular
+                            ular
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
                             toast.setView(layout);
                             toast.show();
 
-                            // Valores actualizados para la recompensa
+                            
                             int nuevoNumero = 220;
                             numRamitasPrem.setText(String.valueOf(nuevoNumero));
 
@@ -4403,7 +4393,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                             LayoutInflater inflater = getLayoutInflater();
                             View layout = inflater.inflate(R.layout.toast_personalizado, null);
 
-                            // Se cambia la imagen
+                            
                             ImageView icon = layout.findViewById(R.id.toast_icon);
                             try (InputStream inputStream = getAssets().open("img/Iconos-recompensas/Tirolesa.svg")) {
                                 SVG svg = SVG.getFromInputStream(inputStream);
@@ -4415,25 +4405,25 @@ public class AgregarPremTutor extends AppCompatActivity {
                                 e.printStackTrace();
                             }
 
-                            // Se cambia el texto
+                            
                             TextView text = layout.findViewById(R.id.toast_text);
                             text.setText("Tirolesa en un parque de aventura");
 
-                            // Se cambia el color de fondo
+                            
                             Drawable background = layout.getBackground();
                             background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
 
-                            // Cambia color del texto
+                            
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            // Lo crea y lo pone en la parte de arriba del celular
+                            ular
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
                             toast.setView(layout);
                             toast.show();
 
-                            // Valores actualizados para la recompensa
+                            
                             int nuevoNumero = 120;
                             numRamitasPrem.setText(String.valueOf(nuevoNumero));
 
@@ -4454,7 +4444,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                             LayoutInflater inflater = getLayoutInflater();
                             View layout = inflater.inflate(R.layout.toast_personalizado, null);
 
-                            // Se cambia la imagen
+                            
                             ImageView icon = layout.findViewById(R.id.toast_icon);
                             try (InputStream inputStream = getAssets().open("img/Iconos-recompensas/Globo_Aerostatico.svg")) {
                                 SVG svg = SVG.getFromInputStream(inputStream);
@@ -4466,25 +4456,25 @@ public class AgregarPremTutor extends AppCompatActivity {
                                 e.printStackTrace();
                             }
 
-                            // Se cambia el texto
+                            
                             TextView text = layout.findViewById(R.id.toast_text);
                             text.setText("Un viaje en globo aerostático");
 
-                            // Se cambia el color de fondo
+                            
                             Drawable background = layout.getBackground();
                             background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
 
-                            // Cambia color del texto
+                            
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            // Lo crea y lo pone en la parte de arriba del celular
+                            ular
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
                             toast.setView(layout);
                             toast.show();
 
-                            // Valores actualizados para la recompensa
+                            
                             int nuevoNumero = 800;
                             numRamitasPrem.setText(String.valueOf(nuevoNumero));
 
@@ -4505,7 +4495,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                             LayoutInflater inflater = getLayoutInflater();
                             View layout = inflater.inflate(R.layout.toast_personalizado, null);
 
-                            // Se cambia la imagen
+                            
                             ImageView icon = layout.findViewById(R.id.toast_icon);
                             try (InputStream inputStream = getAssets().open("img/Iconos-recompensas/Supervivencia.svg")) {
                                 SVG svg = SVG.getFromInputStream(inputStream);
@@ -4517,25 +4507,25 @@ public class AgregarPremTutor extends AppCompatActivity {
                                 e.printStackTrace();
                             }
 
-                            // Se cambia el texto
+                            
                             TextView text = layout.findViewById(R.id.toast_text);
                             text.setText("Clases de supervivencia al aire libre");
 
-                            // Se cambia el color de fondo
+                            
                             Drawable background = layout.getBackground();
                             background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
 
-                            // Cambia color del texto
+                            
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            // Lo crea y lo pone en la parte de arriba del celular
+                            ular
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
                             toast.setView(layout);
                             toast.show();
 
-                            // Valores actualizados para la recompensa
+                            
                             int nuevoNumero = 200;
                             numRamitasPrem.setText(String.valueOf(nuevoNumero));
 
@@ -4556,7 +4546,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                             LayoutInflater inflater = getLayoutInflater();
                             View layout = inflater.inflate(R.layout.toast_personalizado, null);
 
-                            // Se cambia la imagen
+                            
                             ImageView icon = layout.findViewById(R.id.toast_icon);
                             try (InputStream inputStream = getAssets().open("img/Iconos-recompensas/Fotografia.svg")) {
                                 SVG svg = SVG.getFromInputStream(inputStream);
@@ -4568,25 +4558,25 @@ public class AgregarPremTutor extends AppCompatActivity {
                                 e.printStackTrace();
                             }
 
-                            // Se cambia el texto
+                            
                             TextView text = layout.findViewById(R.id.toast_text);
                             text.setText("Taller de fotografía");
 
-                            // Se cambia el color de fondo
+                            
                             Drawable background = layout.getBackground();
                             background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
 
-                            // Cambia color del texto
+                            
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            // Lo crea y lo pone en la parte de arriba del celular
+                            ular
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
                             toast.setView(layout);
                             toast.show();
 
-                            // Valores actualizados para la recompensa
+                            
                             int nuevoNumero = 120;
                             numRamitasPrem.setText(String.valueOf(nuevoNumero));
 
@@ -4607,7 +4597,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                             LayoutInflater inflater = getLayoutInflater();
                             View layout = inflater.inflate(R.layout.toast_personalizado, null);
 
-                            // Se cambia la imagen
+                            
                             ImageView icon = layout.findViewById(R.id.toast_icon);
                             try (InputStream inputStream = getAssets().open("img/Iconos-recompensas/escultura.svg")) {
                                 SVG svg = SVG.getFromInputStream(inputStream);
@@ -4619,25 +4609,25 @@ public class AgregarPremTutor extends AppCompatActivity {
                                 e.printStackTrace();
                             }
 
-                            // Se cambia el texto
+                            
                             TextView text = layout.findViewById(R.id.toast_text);
                             text.setText("Clases de pintura o escultura");
 
-                            // Se cambia el color de fondo
+                            
                             Drawable background = layout.getBackground();
                             background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
 
-                            // Cambia color del texto
+                            
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            // Lo crea y lo pone en la parte de arriba del celular
+                            ular
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
                             toast.setView(layout);
                             toast.show();
 
-                            // Valores actualizados para la recompensa
+                            
                             int nuevoNumero = 150;
                             numRamitasPrem.setText(String.valueOf(nuevoNumero));
 
@@ -4657,7 +4647,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                             LayoutInflater inflater = getLayoutInflater();
                             View layout = inflater.inflate(R.layout.toast_personalizado, null);
 
-                            // Se cambia la imagen
+                            
                             ImageView icon = layout.findViewById(R.id.toast_icon);
                             try (InputStream inputStream = getAssets().open("img/Iconos-recompensas/Escritura.svg")) {
                                 SVG svg = SVG.getFromInputStream(inputStream);
@@ -4669,25 +4659,25 @@ public class AgregarPremTutor extends AppCompatActivity {
                                 e.printStackTrace();
                             }
 
-                            // Se cambia el texto
+                            
                             TextView text = layout.findViewById(R.id.toast_text);
                             text.setText("Material de escritura (ej. cuadernos, plumas)");
 
-                            // Se cambia el color de fondo
+                            
                             Drawable background = layout.getBackground();
                             background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
 
-                            // Cambia color del texto
+                            
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            // Lo crea y lo pone en la parte de arriba del celular
+                            ular
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
                             toast.setView(layout);
                             toast.show();
 
-                            // Valores actualizados para la recompensa
+                            
                             int nuevoNumero = 15;
                             numRamitasPrem.setText(String.valueOf(nuevoNumero));
 
@@ -4708,7 +4698,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                             LayoutInflater inflater = getLayoutInflater();
                             View layout = inflater.inflate(R.layout.toast_personalizado, null);
 
-                            // Se cambia la imagen
+                            
                             ImageView icon = layout.findViewById(R.id.toast_icon);
                             try (InputStream inputStream = getAssets().open("img/Iconos-recompensas/Guitarra.svg")) {
                                 SVG svg = SVG.getFromInputStream(inputStream);
@@ -4720,25 +4710,25 @@ public class AgregarPremTutor extends AppCompatActivity {
                                 e.printStackTrace();
                             }
 
-                            // Se cambia el texto
+                            
                             TextView text = layout.findViewById(R.id.toast_text);
                             text.setText("Accesorios para música (ej. guitarra, teclado)");
 
-                            // Se cambia el color de fondo
+                            
                             Drawable background = layout.getBackground();
                             background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
 
-                            // Cambia color del texto
+                            
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            // Lo crea y lo pone en la parte de arriba del celular
+                            ular
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
                             toast.setView(layout);
                             toast.show();
 
-                            // Valores actualizados para la recompensa
+                            
                             int nuevoNumero = 300;
                             numRamitasPrem.setText(String.valueOf(nuevoNumero));
 
@@ -4759,7 +4749,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                             LayoutInflater inflater = getLayoutInflater();
                             View layout = inflater.inflate(R.layout.toast_personalizado, null);
 
-                            // Se cambia la imagen
+                            
                             ImageView icon = layout.findViewById(R.id.toast_icon);
                             try (InputStream inputStream = getAssets().open("img/Iconos-recompensas/Diseño_Grafico.svg")) {
                                 SVG svg = SVG.getFromInputStream(inputStream);
@@ -4771,25 +4761,25 @@ public class AgregarPremTutor extends AppCompatActivity {
                                 e.printStackTrace();
                             }
 
-                            // Se cambia el texto
+                            
                             TextView text = layout.findViewById(R.id.toast_text);
                             text.setText("Curso de diseño gráfico");
 
-                            // Se cambia el color de fondo
+                            
                             Drawable background = layout.getBackground();
                             background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
 
-                            // Cambia color del texto
+                            
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            // Lo crea y lo pone en la parte de arriba del celular
+                            ular
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
                             toast.setView(layout);
                             toast.show();
 
-                            // Valores actualizados para la recompensa
+                            
                             int nuevoNumero = 500;
                             numRamitasPrem.setText(String.valueOf(nuevoNumero));
 
@@ -4810,7 +4800,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                             LayoutInflater inflater = getLayoutInflater();
                             View layout = inflater.inflate(R.layout.toast_personalizado, null);
 
-                            // Se cambia la imagen
+                            
                             ImageView icon = layout.findViewById(R.id.toast_icon);
                             try (InputStream inputStream = getAssets().open("img/Iconos-recompensas/Jardineria.svg")) {
                                 SVG svg = SVG.getFromInputStream(inputStream);
@@ -4822,25 +4812,25 @@ public class AgregarPremTutor extends AppCompatActivity {
                                 e.printStackTrace();
                             }
 
-                            // Se cambia el texto
+                            
                             TextView text = layout.findViewById(R.id.toast_text);
                             text.setText("Kit de jardinería");
 
-                            // Se cambia el color de fondo
+                            
                             Drawable background = layout.getBackground();
                             background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
 
-                            // Cambia color del texto
+                            
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            // Lo crea y lo pone en la parte de arriba del celular
+                            ular
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
                             toast.setView(layout);
                             toast.show();
 
-                            // Valores actualizados para la recompensa
+                            
                             int nuevoNumero = 70;
                             numRamitasPrem.setText(String.valueOf(nuevoNumero));
 
@@ -4861,7 +4851,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                             LayoutInflater inflater = getLayoutInflater();
                             View layout = inflater.inflate(R.layout.toast_personalizado, null);
 
-                            // Se cambia la imagen
+                            
                             ImageView icon = layout.findViewById(R.id.toast_icon);
                             try (InputStream inputStream = getAssets().open("img/Iconos-recompensas/Club.svg")) {
                                 SVG svg = SVG.getFromInputStream(inputStream);
@@ -4873,25 +4863,25 @@ public class AgregarPremTutor extends AppCompatActivity {
                                 e.printStackTrace();
                             }
 
-                            // Se cambia el texto
+                            
                             TextView text = layout.findViewById(R.id.toast_text);
                             text.setText("Participación en un club de arte");
 
-                            // Se cambia el color de fondo
+                            
                             Drawable background = layout.getBackground();
                             background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
 
-                            // Cambia color del texto
+                            
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            // Lo crea y lo pone en la parte de arriba del celular
+                            ular
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
                             toast.setView(layout);
                             toast.show();
 
-                            // Valores actualizados para la recompensa
+                            
                             int nuevoNumero = 30;
                             numRamitasPrem.setText(String.valueOf(nuevoNumero));
 
@@ -4911,7 +4901,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                             LayoutInflater inflater = getLayoutInflater();
                             View layout = inflater.inflate(R.layout.toast_personalizado, null);
 
-                            // Se cambia la imagen
+                            
                             ImageView icon = layout.findViewById(R.id.toast_icon);
                             try (InputStream inputStream = getAssets().open("img/Iconos-recompensas/Joyas.svg")) {
                                 SVG svg = SVG.getFromInputStream(inputStream);
@@ -4923,25 +4913,25 @@ public class AgregarPremTutor extends AppCompatActivity {
                                 e.printStackTrace();
                             }
 
-                            // Se cambia el texto
+                            
                             TextView text = layout.findViewById(R.id.toast_text);
                             text.setText("Materiales para hacer joyas");
 
-                            // Se cambia el color de fondo
+                            
                             Drawable background = layout.getBackground();
                             background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
 
-                            // Cambia color del texto
+                            
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            // Lo crea y lo pone en la parte de arriba del celular
+                            ular
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
                             toast.setView(layout);
                             toast.show();
 
-                            // Valores actualizados para la recompensa
+                            
                             int nuevoNumero = 60;
                             numRamitasPrem.setText(String.valueOf(nuevoNumero));
 
@@ -4962,7 +4952,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                             LayoutInflater inflater = getLayoutInflater();
                             View layout = inflater.inflate(R.layout.toast_personalizado, null);
 
-                            // Se cambia la imagen
+                            
                             ImageView icon = layout.findViewById(R.id.toast_icon);
                             try (InputStream inputStream = getAssets().open("img/Iconos-recompensas/Teatral.svg")) {
                                 SVG svg = SVG.getFromInputStream(inputStream);
@@ -4974,25 +4964,25 @@ public class AgregarPremTutor extends AppCompatActivity {
                                 e.printStackTrace();
                             }
 
-                            // Se cambia el texto
+                            
                             TextView text = layout.findViewById(R.id.toast_text);
                             text.setText("Experiencias de improvisación teatral");
 
-                            // Se cambia el color de fondo
+                            
                             Drawable background = layout.getBackground();
                             background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.azulito_toast), PorterDuff.Mode.SRC_IN);
 
-                            // Cambia color del texto
+                            
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            // Lo crea y lo pone en la parte de arriba del celular
+                            ular
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
                             toast.setView(layout);
                             toast.show();
 
-                            // Valores actualizados para la recompensa
+                            
                             int nuevoNumero = 150;
                             numRamitasPrem.setText(String.valueOf(nuevoNumero));
 
@@ -5014,7 +5004,6 @@ public class AgregarPremTutor extends AppCompatActivity {
                 }
             });
 
-            //Se declara variable para el número de ramitas:
             numRamitasPrem = findViewById(R.id.numRamitasPrem);
             numRamitasPrem.addTextChangedListener(new TextWatcher() {
                 @Override
@@ -5035,7 +5024,7 @@ public class AgregarPremTutor extends AppCompatActivity {
 
 
 
-            //Botón que se encarga de abrir el modal de las imágenes y el círculo que cambia de color
+        
             btnAgregarImgPrem = findViewById(R.id.btnAgregarImgPrem);
             btnAgregarImgPrem.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -5045,10 +5034,10 @@ public class AgregarPremTutor extends AppCompatActivity {
             });
 
 
-            //Declaración del input de info extra del modal:
+           
             txtMasInfo = findViewById(R.id.txtMasInfoPrem);
-            //Se agrega un listener a cambio del texto para el contador de caractéres
-            //y se declara el contador de caractéres
+            
+            
             contCaractInfoExtr = findViewById(R.id.contCaractInfoExtr);
             txtMasInfo.addTextChangedListener(new TextWatcher() {
                 @Override
@@ -5069,7 +5058,6 @@ public class AgregarPremTutor extends AppCompatActivity {
             });
 
 
-            //Declaración del botón que crea el premio
             btnCrearPremMandar = findViewById(R.id.btnCrearPremMandar);
            btnCrearPremMandar.setOnClickListener(this::crearPremio);
 
@@ -5078,61 +5066,54 @@ public class AgregarPremTutor extends AppCompatActivity {
     }
 
     private void showImageSelectionDialog() {
-        // Crear el BottomSheetDialog
         BottomSheetDialog modal = new BottomSheetDialog(AgregarPremTutor.this);
         LayoutInflater inflater = getLayoutInflater();
         View view = inflater.inflate(R.layout.modal_iconos_actis_view, null);
         modal.setContentView(view);
 
-        // Deshabilitar el desplazamiento del modal
         BottomSheetBehavior<View> bottomSheetBehavior = BottomSheetBehavior.from((View) view.getParent());
-        bottomSheetBehavior.setDraggable(false);  // Deshabilitar la capacidad de arrastrar el modal
+        bottomSheetBehavior.setDraggable(false);
 
-        // Se infla el elemento para poner las imágenes
         GridView gridViewImages = view.findViewById(R.id.gridViewImages);
 
-        // Configurar las imágenes en el GridView
         ArrayList<String> imageFiles = new ArrayList<>();
         try {
             String[] files = getAssets().list("img/Iconos-recompensas");
             if (files != null) {
                 for (String file : files) {
-                    imageFiles.add(file);  // Agregar archivo a la lista
+                    imageFiles.add(file);
                 }
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        // Configurar el adaptador para el GridView
         ImageAdapter imageAdapter = new ImageAdapter(imageFiles, modal);
         gridViewImages.setAdapter(imageAdapter);
 
-        // Configurar el evento de selección de imagen
         gridViewImages.setOnItemClickListener((parent, view1, position, id) -> {
-            String selectedImage = imageFiles.get(position);  // Obtener la imagen seleccionada
+            String selectedImage = imageFiles.get(position);
 
-            updateButtonImage(selectedImage);  // Actualizar la imagen del botón
-            modal.dismiss();  // Cerrar el modal
+            updateButtonImage(selectedImage);
+            modal.dismiss();
         });
 
-        modal.show();  // Mostrar el modal
+        modal.show();
     }
 
     private void updateButtonImage(String imageName) {
-        // Asegurarse de que la imagen tiene la extensión .svg
         if (!imageName.endsWith(".svg")) {
-            imageName += ".svg";  // Agregar la extensión .svg si no está presente
+            imageName += ".svg";
         }
 
-        String imagePath = "img/Iconos-recompensas/" + imageName;  // Construir la ruta de la imagen
-        imagenPremSelected = imagePath;  // Guardar la ruta seleccionada
+        String imagePath = "img/Iconos-recompensas/" + imageName;
+        imagenPremSelected = imagePath;
 
         try {
-            InputStream inputStream = getAssets().open(imagePath);  // Intentar abrir el archivo
-            SVG svg = SVG.getFromInputStream(inputStream);  // Cargar el SVG
-            Drawable drawable = new PictureDrawable(svg.renderToPicture());  // Convertir el SVG en Drawable
-            btnAgregarImgPrem.setImageDrawable(drawable);  // Asignar el Drawable al botón
+            InputStream inputStream = getAssets().open(imagePath);
+            SVG svg = SVG.getFromInputStream(inputStream);
+            Drawable drawable = new PictureDrawable(svg.renderToPicture());
+            btnAgregarImgPrem.setImageDrawable(drawable);
         } catch (IOException | SVGParseException e) {
             e.printStackTrace();
         }
@@ -5157,26 +5138,26 @@ public class AgregarPremTutor extends AppCompatActivity {
             LayoutInflater inflater = getLayoutInflater();
             View layout = inflater.inflate(R.layout.toast_personalizado, null);
 
-            //Inicio de código para cambiar elementos del toast personalizado
+            
 
-            //Se cambia la imágen
+            
             ImageView icon = layout.findViewById(R.id.toast_icon);
             icon.setImageResource(R.drawable.img_circ_tache_rojo);
 
-            //Se cambia el texto
+         
             TextView text = layout.findViewById(R.id.toast_text);
             text.setText("Ingrese un número mayor a 1");
 
-            //Se cambia el color de fondo
+           
             Drawable background = layout.getBackground();
             background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.rojito_toast), PorterDuff.Mode.SRC_IN);
 
-            // Cambia color del texto
+            
             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-            //Fin del código que se encarga de cambiar los elementos del toast personalizado
+           
 
-            //Lo crea y lo pone en la parte de arriba del cel
+            
             Toast toast = new Toast(getApplicationContext());
             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
             toast.setDuration(Toast.LENGTH_LONG);
@@ -5188,19 +5169,16 @@ public class AgregarPremTutor extends AppCompatActivity {
 
 
     private void mostrarModalCerrarView(String titulo, String mensaje) {
-        //Se crea el modal al momento de hacer click en el botón
         Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.modal_cerrar_view_confirm);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.setCancelable(true);
 
-        // Se obtienen los elementos del modal
         TextView txtTitle = dialog.findViewById(R.id.txtDialogTitle);
         TextView txtMessage = dialog.findViewById(R.id.txtDialogMessage);
         Button btnClose = dialog.findViewById(R.id.btnCerrarModal);
         Button btnConfirm = dialog.findViewById(R.id.btnConfirm);
 
-        // Asignar valores personalizados
         txtTitle.setText(titulo);
         txtMessage.setText(mensaje);
 
@@ -5217,11 +5195,9 @@ public class AgregarPremTutor extends AppCompatActivity {
 
         });
 
-        // Mostrar el modal
         dialog.show();
     }
 
-    //Clase para poder procesar las imagenes como svg y de assets
     private class ImageAdapter extends BaseAdapter {
         private ArrayList<String> images;
         private BottomSheetDialog modal;
@@ -5259,31 +5235,26 @@ public class AgregarPremTutor extends AppCompatActivity {
 
             String imagePath = "img/Iconos-recompensas/" + images.get(position);
             try {
-                // Abre el archivo SVG
                 InputStream is = getAssets().open(imagePath);
 
-                // Usa AndroidSVG para convertir el archivo SVG a Drawable
                 SVG svg = SVG.getFromInputStream(is);
                 Drawable drawable = new PictureDrawable(svg.renderToPicture());
 
-                // Establece el Drawable en el ImageView
                 imageView.setImageDrawable(drawable);
 
-                // Cierra el InputStream
                 is.close();
             } catch (IOException | SVGParseException e) {
                 e.printStackTrace();
             }
 
 
-            //se le agrega el onlistener a las imágenes para que se de click y se guarde la imágen
             imageView.setOnClickListener(v -> {
-                String selectedImage = images.get(position);  // Obtener la imagen seleccionada
-                Log.d("IMAGE_SELECT", "Imagen seleccionada: " + selectedImage);  // Log para ver la imagen seleccionada
-                String nuevaRuta = selectedImage.replace(".svg", "");  // Eliminar la extensión .svg si está presente
-                Log.d("IMAGE_SELECT", "Ruta de la imagen sin extensión: " + nuevaRuta);  // Log para ver la ruta modificada
-                updateButtonImage(nuevaRuta);  // Actualizar la imagen del botón
-                modal.dismiss();  // Cerrar el modal
+                String selectedImage = images.get(position);
+                Log.d("IMAGE_SELECT", "Imagen seleccionada: " + selectedImage);
+                String nuevaRuta = selectedImage.replace(".svg", "");
+                Log.d("IMAGE_SELECT", "Ruta de la imagen sin extensión: " + nuevaRuta);
+                updateButtonImage(nuevaRuta);
+                modal.dismiss();
             });
 
             return imageView;
@@ -5293,7 +5264,7 @@ public class AgregarPremTutor extends AppCompatActivity {
     private void crearPremio(View view) {
         Log.d("API_LOG", "🟢 Iniciando método crearPremio...");
 
-        // Obtener valores del formulario
+
         String nombrePremio = nombrePremInput.getText().toString().trim();
         String tipo = spinnerTipoPrem.getSelectedItem().toString();
         String categoria = spinnerCatPrem.getSelectedItem().toString();
@@ -5306,7 +5277,6 @@ public class AgregarPremTutor extends AppCompatActivity {
                 "\nNivel: " + nivel + "\nRamitas: " + numeroRamitas +
                 "\nInfo extra: " + masInfo + "\nImagen: " + imagenPremSelected);
 
-        // Validar campos
         if (nombrePremio.isEmpty() || numeroRamitas.isEmpty() || imagenPremSelected.isEmpty() || masInfo.isEmpty()
                 || tipo.contains("- Selecciona un tipo de premio -") || categoria.contains("- Selecciona una categoria de premio -") || nivel.contains("- Selecciona un nivel de premio -")) {
 
@@ -5326,7 +5296,6 @@ public class AgregarPremTutor extends AppCompatActivity {
             return;
         }
 
-        // Verificar si el premio con el mismo nombre ya existe
         verificarPremioExistente(nombrePremio);
 
     }
@@ -5334,7 +5303,6 @@ public class AgregarPremTutor extends AppCompatActivity {
     private void verificarPremioExistente(String nombrePremio) {
         ApiService apiService = RetrofitClient.getApiService();
 
-        // Consultar los premios existentes
         apiService.getAllPremios().enqueue(new Callback<List<Premios>>() {
             @Override
             public void onResponse(Call<List<Premios>> call, Response<List<Premios>> response) {
@@ -5350,7 +5318,6 @@ public class AgregarPremTutor extends AppCompatActivity {
                     if (existe) {
                         mostrarToastPersonalizado("Ya existe un premio con ese nombre", R.drawable.img_circ_tache_rojo, R.color.rojito_toast);
                     } else {
-                        // Si no existe, continuar con la creación del premio
                         continuarCreacionPremio();
                     }
                 } else {
@@ -5366,7 +5333,6 @@ public class AgregarPremTutor extends AppCompatActivity {
     }
 
     private void continuarCreacionPremio() {
-        // Obtener idKit de SharedPreferences
         SharedPreferences preferences = getSharedPreferences("usrKitCuentaTutor", MODE_PRIVATE);
         int idKit = preferences.getInt("idKit", 0);
         if (idKit == 0) {
@@ -5374,7 +5340,6 @@ public class AgregarPremTutor extends AppCompatActivity {
             return;
         }
 
-        // Continuar con la creación del premio
         obtenerIdCastorYCrearPremio(idKit, nombrePremInput.getText().toString().trim(), spinnerTipoPrem.getSelectedItem().toString(),
                 spinnerCatPrem.getSelectedItem().toString(), spinnerNivelPrem.getSelectedItem().toString(),
                 Integer.parseInt(numRamitasPrem.getText().toString().trim()), txtMasInfo.getText().toString().trim(), imagenPremSelected);
@@ -5396,12 +5361,11 @@ public class AgregarPremTutor extends AppCompatActivity {
                 SharedPreferences preferences = getSharedPreferences("User", MODE_PRIVATE);
                 String emailGuardado = preferences.getString("email", "");
 
-                // Hacer la variable 'idCastor' final
-                final int[] idCastor = {-1};  // Usamos un arreglo para que se pueda modificar
+                final int[] idCastor = {-1};
 
                 for (Castor castor : response.body()) {
                     if (castor.getEmail().equals(emailGuardado)) {
-                        idCastor[0] = castor.getIdCastor();  // Asignamos el valor al arreglo
+                        idCastor[0] = castor.getIdCastor();
                         break;
                     }
                 }
@@ -5411,7 +5375,6 @@ public class AgregarPremTutor extends AppCompatActivity {
                     return;
                 }
 
-                // Crear objeto Premios
                 Premios premio = new Premios();
                 premio.setIdCastor(idCastor[0]);
                 premio.setNombrePremio(nombrePremio);
@@ -5433,7 +5396,6 @@ public class AgregarPremTutor extends AppCompatActivity {
                     Log.e("CHECK", "❌ Error al establecer ruta de imagen: " + e.getMessage());
                 }
 
-                // Enviar premio al servidor
                 ApiService apiService = RetrofitClient.getApiService();
 
                 apiService.createPremio(premio).enqueue(new Callback<Premios>() {
@@ -5539,7 +5501,6 @@ public class AgregarPremTutor extends AppCompatActivity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        // Guardamos las posiciones seleccionadas de los spinners
         outState.putInt("spinnerTipoPrem", spinnerTipoPrem.getSelectedItemPosition());
         outState.putInt("spinnerCatPrem", spinnerCatPrem.getSelectedItemPosition());
         outState.putInt("spinnerNivelPrem", spinnerNivelPrem.getSelectedItemPosition());
@@ -5548,13 +5509,11 @@ public class AgregarPremTutor extends AppCompatActivity {
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
 
-        // Restauramos las posiciones seleccionadas de los spinners
         if (savedInstanceState != null) {
             int tipoPremPosition = savedInstanceState.getInt("spinnerTipoPrem");
             int catPremPosition = savedInstanceState.getInt("spinnerCatPrem");
             int nivelPremPosition = savedInstanceState.getInt("spinnerNivelPrem");
 
-            // Restauramos la selección en cada Spinner
             spinnerTipoPrem.setSelection(tipoPremPosition);
             spinnerCatPrem.setSelection(catPremPosition);
             spinnerNivelPrem.setSelection(nivelPremPosition);

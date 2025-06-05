@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
@@ -43,6 +44,28 @@ public class HomeKit extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_kit);
 
+
+        //Al abrir intentar recibir el valor de modal trás actividad creada
+        String fragmentName = getIntent().getStringExtra("fragmentActiCrear");
+        String fragmentNamePremio = getIntent().getStringExtra("fragmenPremCrear");
+
+        Fragment fragment = null;
+
+        if (fragmentName != null && fragmentName.equals("ActividadesFragmentKit")) {
+            fragment = new ActividadesFragmentKit();
+        }
+
+        if (fragmentNamePremio != null && fragmentNamePremio.equals("RecompensasFragmenKit1")) {
+            fragment = new RecompensasFragmentKit1();
+        }
+
+// Si se recibe un fragmento válido, lo mostramos
+        if (fragment != null) {
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.frame_container, fragment); // Asegúrate de tener un contenedor adecuado
+            transaction.commit();
+        }
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getWindow();
             window.setStatusBarColor(Color.TRANSPARENT);
@@ -74,28 +97,42 @@ public class HomeKit extends AppCompatActivity {
         call.enqueue(new Callback<List<Kit>>() {
             @Override
             public void onResponse(Call<List<Kit>> call, Response<List<Kit>> response) {
-                List<Kit> kits = response.body();
-                if (kits != null) {
+                if (response.isSuccessful() && response.body() != null) { // ✅ Validar que la respuesta fue exitosa y no es nula
+                    List<Kit> kits = response.body();
+
                     SharedPreferences preferences = getSharedPreferences("User", MODE_PRIVATE);
+                    String nombreUsuario = preferences.getString("nombreUsuario", "");
+
                     for (Kit kit : kits) {
-                        if(kit.getNombreUsuario().equals(preferences.getString("nombreUsuario", ""))){
+                        if (kit.getNombreUsuario().equals(nombreUsuario)) { // ✅ Evita llamar dos veces a getString()
 
+                            // ✅ Obtener datos del Kit
                             int ramitas = kit.getRamitas();
-                            String stringNumRamitas = String.valueOf(ramitas);
-
                             int hjsCongeladas = kit.getHojasCongeladas();
-                            String stringHjsCongeldas = String.valueOf(hjsCongeladas);
+                            int idKit = kit.getIdKit(); // ✅ Asegurar que se obtiene el idKit del objeto actual
 
-                            txt_hjs_congeladas = findViewById(R.id.txt_hjs_congeladas);
-                            txt_hjs_congeladas.setText(stringHjsCongeldas);
+                            // ✅ Guardar idKit en SharedPreferences
+                            SharedPreferences sharedPreferences = getSharedPreferences("usrKitCuentaKit", MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.putInt("idKit", idKit);
+                            editor.apply();
 
-                            txt_ramas = findViewById(R.id.txt_ramas);
-                            txt_ramas.setText(stringNumRamitas);
-                            break;
+                            // ✅ Actualizar UI con findViewById y setText
+                            TextView txtHojas = findViewById(R.id.txt_hjs_congeladas);
+                            txtHojas.setText(String.valueOf(hjsCongeladas));
+
+                            TextView txtRamas = findViewById(R.id.txt_ramas);
+                            txtRamas.setText(String.valueOf(ramitas));
+
+                            break; // ✅ Sale del bucle tras encontrar el kit correspondiente
                         }
                     }
+                } else {
+                    // ⚠️ Puedes agregar un log o Toast para indicar error en la respuesta
+                    Log.e("API_RESPONSE", "Error en la respuesta o lista nula");
                 }
             }
+
             @Override
             public void onFailure(Call<List<Kit>> call, Throwable t) {
                 Toast.makeText(HomeKit.this, "Error en la conexión", Toast.LENGTH_SHORT).show();
@@ -122,6 +159,37 @@ public class HomeKit extends AppCompatActivity {
             switchFragment(view.getId());
         }
     };
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // Obtener el nombre del fragmento desde cualquiera de los extras
+        String fragmentName = getIntent().getStringExtra("fragmentActiCrear");
+        String fragmentNamePremio = getIntent().getStringExtra("fragmenPremCrear");
+
+        Fragment fragment = null;
+        ImageView iconToSelect = null;
+
+        // Verificar cuál fragmento se debe cargar
+        if (fragmentName != null && fragmentName.equals("ActividadesFragmentKit")) {
+            fragment = new ActividadesFragmentKit();
+            iconToSelect = iconActividades;
+        } else if (fragmentNamePremio != null && fragmentNamePremio.equals("RecompensasFragmentKit1")) {
+            fragment = new RecompensasFragmentKit1();
+            iconToSelect = iconRecompensas;
+        }
+        // Cargar el fragmento seleccionado y seleccionar el icono correspondiente
+        if (fragment != null) {
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.frame_container, fragment);
+            transaction.commit();
+
+            if (iconToSelect != null) {
+                selectIcon(iconToSelect);
+            }
+        }
+
+    }
 
     private void selectIcon(ImageView selectedIcon) {
         if (lastSelectedIcon != null) {

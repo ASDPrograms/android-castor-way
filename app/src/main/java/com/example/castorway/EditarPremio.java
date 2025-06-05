@@ -39,12 +39,9 @@ import com.example.castorway.modelsDB.Premios;
 import com.example.castorway.retrofit.RetrofitClient;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -73,7 +70,6 @@ public class EditarPremio extends AppCompatActivity {
         setContentView(R.layout.activity_editar_prem_tutor);
 
 
-        //btn para cerrar la activity;
         btnSalirAddPrem = findViewById(R.id.btnSalirAddPrem);
         btnSalirAddPrem.setOnClickListener(v1 -> mostrarModalCerrarView("¡Atención!", "Si das click en aceptar saldrás del formulario y no se guardará la información ingresada."));
 
@@ -134,7 +130,6 @@ public class EditarPremio extends AppCompatActivity {
 
 
 
-        //número de ramitas:
         numRamitasPrem = findViewById(R.id.numRamitasPrem);
         numRamitasPrem.addTextChangedListener(new TextWatcher() {
             @Override
@@ -153,7 +148,6 @@ public class EditarPremio extends AppCompatActivity {
             }
         });
 
-        //Para que se cambie el ícono de la imagen y su color
         btnAgregarImgPrem = findViewById(R.id.btnAgregarImgPrem);
 
         btnAgregarImgPrem.setOnClickListener(new View.OnClickListener() {
@@ -164,7 +158,6 @@ public class EditarPremio extends AppCompatActivity {
         });
 
 
-        //para la info extra:
         contCaractInfoExtr = findViewById(R.id.contCaractInfoExtr);
         txtMasInfo = findViewById(R.id.txtMasInfoPrem);
         txtMasInfo.addTextChangedListener(new TextWatcher() {
@@ -185,11 +178,9 @@ public class EditarPremio extends AppCompatActivity {
             }
         });
 
-        //Se establecen los valores de la actividad
         establecerDatosPrem();
 
 
-        //btn para actualizar acti
         btnCrearPremMandar = findViewById(R.id.btnCrearPremMandar);
         btnCrearPremMandar.setOnClickListener(this::editarPremio);
     }
@@ -199,7 +190,7 @@ public class EditarPremio extends AppCompatActivity {
     }
     public void establecerDatosPrem() {
         ApiService apiService = RetrofitClient.getApiService();
-        Call<List<Premios>> call = apiService.getAllPremios(); // Asegúrate que el método se llame así en tu ApiService
+        Call<List<Premios>> call = apiService.getAllPremios();
 
         call.enqueue(new Callback<List<Premios>>() {
             @Override
@@ -215,11 +206,10 @@ public class EditarPremio extends AppCompatActivity {
                         if (premio.getIdPremio() == idPremioGuardado) {
                             Log.e("DEBUG", "Sí entró");
 
-                            // Cambiar nombre del premio
                             String nombrePrem = premio.getNombrePremio();
                             nombrePremInput.setText(nombrePrem);
 
-                            // Cambiar tipo
+
                             String tipoPrem = premio.getTipoPremio();
                             if (tipoPrem.equals("Salud")) {
                                 spinnerTipoPrem.setSelection(1);
@@ -253,7 +243,6 @@ public class EditarPremio extends AppCompatActivity {
                                 spinnerTipoPrem.setSelection(15);
                             }
 
-                            //cambiar categoria
                             String categoriaPrem = premio.getCategoriaPremio();
                             if (categoriaPrem.equals("Juguetes")) {
                                 spinnerCatPrem.setSelection(1);
@@ -279,7 +268,6 @@ public class EditarPremio extends AppCompatActivity {
                                 spinnerCatPrem.setSelection(11);
                             }
 
-                            //Cambiar nivel
                             String nivelPrem = premio.getNivelPremio();
                             if (nivelPrem.equals("Común")) {
                                 spinnerNivelPrem.setSelection(1);
@@ -292,17 +280,14 @@ public class EditarPremio extends AppCompatActivity {
                             }
 
 
-                            // Cambiar número de ramitas
                             String ramitasBD = String.valueOf(premio.getCostoPremio());
                             numRamitasPrem.setText(ramitasBD);
 
-                            // Cambiar imagen del premio
-                            String urlImgPremioBD = premio.getRutaImagenHabito(); // ruta completa
-                            String nombreIcono = extraerContenidoImg(urlImgPremioBD); // nombre del archivo
+                            String urlImgPremioBD = premio.getRutaImagenHabito();
+                            String nombreIcono = extraerContenidoImg(urlImgPremioBD);
                             updateButtonImage(nombreIcono);
 
 
-                            // Info extra
                             byte[] byteArray = premio.getInfoExtraPremio().getBytes();
                             String infoExtra = new String(byteArray, StandardCharsets.UTF_8);
                             Log.e("InfoExtra", infoExtra);
@@ -321,19 +306,16 @@ public class EditarPremio extends AppCompatActivity {
 
 
     private void mostrarModalCerrarView(String titulo, String mensaje) {
-        //Se crea el modal al momento de hacer click en el botón
         Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.modal_cerrar_view_confirm);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.setCancelable(true);
 
-        // Se obtienen los elementos del modal
         TextView txtTitle = dialog.findViewById(R.id.txtDialogTitle);
         TextView txtMessage = dialog.findViewById(R.id.txtDialogMessage);
         Button btnClose = dialog.findViewById(R.id.btnCerrarModal);
         Button btnConfirm = dialog.findViewById(R.id.btnConfirm);
 
-        // Asignar valores personalizados
         txtTitle.setText(titulo);
         txtMessage.setText(mensaje);
 
@@ -352,7 +334,6 @@ public class EditarPremio extends AppCompatActivity {
 
         });
 
-        // Mostrar el modal
         dialog.show();
     }
 
@@ -368,26 +349,19 @@ public class EditarPremio extends AppCompatActivity {
             LayoutInflater inflater = getLayoutInflater();
             View layout = inflater.inflate(R.layout.toast_personalizado, null);
 
-            //Inicio de código para cambiar elementos del toast personalizado
 
-            //Se cambia la imágen
             ImageView icon = layout.findViewById(R.id.toast_icon);
             icon.setImageResource(R.drawable.img_circ_tache_rojo);
 
-            //Se cambia el texto
             TextView text = layout.findViewById(R.id.toast_text);
             text.setText("Ingrese un número mayor a 1");
 
-            //Se cambia el color de fondo
             Drawable background = layout.getBackground();
             background.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.rojito_toast), PorterDuff.Mode.SRC_IN);
 
-            // Cambia color del texto
             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-            //Fin del código que se encarga de cambiar los elementos del toast personalizado
 
-            //Lo crea y lo pone en la parte de arriba del cel
             Toast toast = new Toast(getApplicationContext());
             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
             toast.setDuration(Toast.LENGTH_LONG);
@@ -397,61 +371,54 @@ public class EditarPremio extends AppCompatActivity {
         }
     }
     private void showImageSelectionDialog() {
-        // Crear el BottomSheetDialog
         BottomSheetDialog modal = new BottomSheetDialog(EditarPremio.this);
         LayoutInflater inflater = getLayoutInflater();
         View view = inflater.inflate(R.layout.modal_iconos_actis_view, null);
         modal.setContentView(view);
 
-        // Deshabilitar el desplazamiento del modal
         BottomSheetBehavior<View> bottomSheetBehavior = BottomSheetBehavior.from((View) view.getParent());
-        bottomSheetBehavior.setDraggable(false);  // Deshabilitar la capacidad de arrastrar el modal
+        bottomSheetBehavior.setDraggable(false);
 
-        // Se infla el elemento para poner las imágenes
         GridView gridViewImages = view.findViewById(R.id.gridViewImages);
 
-        // Configurar las imágenes en el GridView
         ArrayList<String> imageFiles = new ArrayList<>();
         try {
             String[] files = getAssets().list("img/Iconos-recompensas");
             if (files != null) {
                 for (String file : files) {
-                    imageFiles.add(file);  // Agregar archivo a la lista
+                    imageFiles.add(file);
                 }
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        // Configurar el adaptador para el GridView
         EditarPremio.ImageAdapter imageAdapter = new EditarPremio.ImageAdapter(imageFiles, modal);
         gridViewImages.setAdapter(imageAdapter);
 
-        // Configurar el evento de selección de imagen
         gridViewImages.setOnItemClickListener((parent, view1, position, id) -> {
-            String selectedImage = imageFiles.get(position);  // Obtener la imagen seleccionada
+            String selectedImage = imageFiles.get(position);
 
-            updateButtonImage(selectedImage);  // Actualizar la imagen del botón
-            modal.dismiss();  // Cerrar el modal
+            updateButtonImage(selectedImage);
+            modal.dismiss();
         });
 
-        modal.show();  // Mostrar el modal
+        modal.show();
     }
 
     private void updateButtonImage(String imageName) {
-        // Asegurarse de que la imagen tiene la extensión .svg
         if (!imageName.endsWith(".svg")) {
-            imageName += ".svg";  // Agregar la extensión .svg si no está presente
+            imageName += ".svg";
         }
 
-        String imagePath = "img/Iconos-recompensas/" + imageName;  // Construir la ruta de la imagen
-        imagenPremSelected = imagePath;  // Guardar la ruta seleccionada
+        String imagePath = "img/Iconos-recompensas/" + imageName;
+        imagenPremSelected = imagePath;
 
         try {
-            InputStream inputStream = getAssets().open(imagePath);  // Intentar abrir el archivo
-            SVG svg = SVG.getFromInputStream(inputStream);  // Cargar el SVG
-            Drawable drawable = new PictureDrawable(svg.renderToPicture());  // Convertir el SVG en Drawable
-            btnAgregarImgPrem.setImageDrawable(drawable);  // Asignar el Drawable al botón
+            InputStream inputStream = getAssets().open(imagePath);
+            SVG svg = SVG.getFromInputStream(inputStream);
+            Drawable drawable = new PictureDrawable(svg.renderToPicture());
+            btnAgregarImgPrem.setImageDrawable(drawable);
         } catch (IOException | SVGParseException e) {
             e.printStackTrace();
         }
@@ -461,15 +428,11 @@ public class EditarPremio extends AppCompatActivity {
 
 
     private String extraerContenidoImg(String cadena) {
-        // Encontrar la última aparición de "/"
         int index = cadena.lastIndexOf("/");
 
-        // Si se encuentra el carácter "/"
         if (index != -1) {
-            // Extraer la subcadena después del "/"
             return cadena.substring(index + 1);
         } else {
-            // Si no se encuentra el "/", devolver la cadena completa
             return cadena;
         }
     }
@@ -496,11 +459,9 @@ public class EditarPremio extends AppCompatActivity {
     }
 
 
-    //para actualizar la acti:
     private void editarPremio(View view) {
         Log.d("API_LOG", "🟢 Iniciando método editarPremio...");
 
-        // Obtener valores del formulario
         String nombrePremio = nombrePremInput.getText().toString().trim();
         String tipo = spinnerTipoPrem.getSelectedItem().toString();
         String categoria = spinnerCatPrem.getSelectedItem().toString();
@@ -513,7 +474,6 @@ public class EditarPremio extends AppCompatActivity {
                 "\nNivel: " + nivel + "\nRamitas: " + numeroRamitas +
                 "\nInfo extra: " + masInfo + "\nImagen: " + imagenPremSelected);
 
-        // Validar campos
         if (nombrePremio.isEmpty() || numeroRamitas.isEmpty() || imagenPremSelected.isEmpty() || masInfo.isEmpty()
                 || tipo.contains("- Selecciona un tipo de premio -") || categoria.contains("- Selecciona una categoria de premio -") || nivel.contains("- Selecciona un nivel de premio -")) {
 
@@ -533,7 +493,6 @@ public class EditarPremio extends AppCompatActivity {
             return;
         }
 
-        // Verificar si el nombre ya existe (para evitar duplicados)
         verificarPremioExistenteParaEditar(nombrePremio);
     }
 
@@ -569,7 +528,6 @@ public class EditarPremio extends AppCompatActivity {
                     }
 
                     if (premioOriginal != null) {
-                        // Comparar los campos
                         String tipoNuevo = spinnerTipoPrem.getSelectedItem().toString();
                         String categoriaNueva = spinnerCatPrem.getSelectedItem().toString();
                         String nivelNuevo = spinnerNivelPrem.getSelectedItem().toString();
@@ -785,7 +743,6 @@ public class EditarPremio extends AppCompatActivity {
         Log.d("Cambiecito","Se envia editar");
         startActivity(intent);
     }
-    //la clasesita pa la imágen
     private class ImageAdapter extends BaseAdapter {
         private ArrayList<String> images;
         private BottomSheetDialog modal;
@@ -823,31 +780,26 @@ public class EditarPremio extends AppCompatActivity {
 
             String imagePath = "img/Iconos-recompensas/" + images.get(position);
             try {
-                // Abre el archivo SVG
                 InputStream is = getAssets().open(imagePath);
 
-                // Usa AndroidSVG para convertir el archivo SVG a Drawable
                 SVG svg = SVG.getFromInputStream(is);
                 Drawable drawable = new PictureDrawable(svg.renderToPicture());
 
-                // Establece el Drawable en el ImageView
                 imageView.setImageDrawable(drawable);
 
-                // Cierra el InputStream
                 is.close();
             } catch (IOException | SVGParseException e) {
                 e.printStackTrace();
             }
 
 
-            //se le agrega el onlistener a las imágenes para que se de click y se guarde la imágen
             imageView.setOnClickListener(v -> {
-                String selectedImage = images.get(position);  // Obtener la imagen seleccionada
-                Log.d("IMAGE_SELECT", "Imagen seleccionada: " + selectedImage);  // Log para ver la imagen seleccionada
-                String nuevaRuta = selectedImage.replace(".svg", "");  // Eliminar la extensión .svg si está presente
-                Log.d("IMAGE_SELECT", "Ruta de la imagen sin extensión: " + nuevaRuta);  // Log para ver la ruta modificada
-                updateButtonImage(nuevaRuta);  // Actualizar la imagen del botón
-                modal.dismiss();  // Cerrar el modal
+                String selectedImage = images.get(position);
+                Log.d("IMAGE_SELECT", "Imagen seleccionada: " + selectedImage);
+                String nuevaRuta = selectedImage.replace(".svg", "");
+                Log.d("IMAGE_SELECT", "Ruta de la imagen sin extensión: " + nuevaRuta);
+                updateButtonImage(nuevaRuta);
+                modal.dismiss();
             });
 
             return imageView;

@@ -1,14 +1,226 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".HomeFragmentKit">
-
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    android:layout_height="wrap_content"
+    android:scrollbars="none">
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Kit Home" />
+        android:background="@color/azul_fondo"
+        android:orientation="vertical"
+        tools:context=".HomeFragmentKit">
 
-</FrameLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="20dp"
+            android:orientation="vertical">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+
+                <TextView
+                    android:id="@+id/Hola"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Hola, "
+                    android:fontFamily="@font/dongle_bold"
+                    android:textSize="55sp"
+                    android:textColor="#1A1A1A"/>
+
+                <TextView
+                    android:id="@+id/NameKit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Usuario"
+                    android:fontFamily="@font/dongle_bold"
+                    android:textSize="55sp"
+                    android:textColor="@color/aguita"/>
+
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/Bienvenido"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="¡Bienvenido(a) de vuelta!"
+                    android:fontFamily="@font/gayathri_bold"
+                    android:textSize="25sp"
+                    android:lineHeight="40dp"
+                    android:textColor="#1A1A1A"/>
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:minHeight="200dp">
+
+
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="15dp">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/gayathri_bold"
+                            android:text="Raudy dice"
+                            android:textAlignment="textEnd"
+                            android:textColor="#1A1A1A"
+                            android:textSize="25sp"
+
+
+                            />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.8"
+                        android:orientation="horizontal">
+                        <ImageView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.5"
+                            android:rotationY="180"
+                            android:src="@drawable/raudy"
+                            android:layout_gravity="bottom"
+                            android:layout_marginEnd="15dp"
+                            />
+                        <TextView
+                            android:layout_weight="0.5"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/dongle_bold"
+                            android:text="Frases de acuerdo al tipo de usuario(consejos,recomendaciones o motivación)"
+                            android:textAlignment="center"
+                            android:textColor="#1A1A1A"
+                            android:textSize="30sp"
+                            android:background="@drawable/border_raudy_consejo"
+                            android:lineHeight="35dp"
+                            android:padding="4dp"
+                            android:breakStrategy="simple"
+
+                            />
+                    </LinearLayout>
+
+                </LinearLayout>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Actividades"
+                    android:textSize="45sp"
+                    android:textColor="@color/cafe_subtono"
+                    android:fontFamily="@font/dongle_bold"
+                    />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+
+                >
+
+                <LinearLayout
+                    android:id="@+id/contenedorActividades"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/border_mover_modal_bottom"
+                    android:minHeight="130dp"
+                    android:orientation="vertical"
+                    >
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Premios"
+                        android:textSize="45sp"
+                        android:textColor="@color/amarillo_actis"
+                        android:fontFamily="@font/dongle_bold"
+                        />
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/contenedorPremioMasCostoso"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/border_mover_modal_bottom"
+                    android:layout_marginBottom="15sp"
+                    android:minHeight="130dp"
+                    android:orientation="vertical"
+                    android:gravity="center"/>
+
+
+
+            </LinearLayout>
+                        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+
+                >
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Stats"
+                    android:fontFamily="@font/dongle_bold"
+                    android:textColor="@color/verdecito"
+                    android:textSize="45sp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/border_mover_modal_bottom"
+                    android:layout_marginBottom="15sp"
+                    android:gravity="center"
+                    >
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/img_estadisticasstats"
+                        android:padding="20dp"
+
+                        />
+
+                </LinearLayout>
+            </LinearLayout>
+
+
+
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

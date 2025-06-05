@@ -102,7 +102,7 @@ public class RecompensasFragmentTutor extends Fragment {
         Contenedor_Premios = view.findViewById(R.id.Contenedor_Premios);
         btnAgregarPrem = view.findViewById(R.id.btnAgregarPrem);
         prem=view.findViewById(R.id.Prem);
-        prem.setText("Premios Reclamados");
+        prem.setText("Premios reclamados");
 
         btnAgregarPrem.setOnClickListener(this::abrirFormRecompensas);
 
@@ -118,7 +118,7 @@ public class RecompensasFragmentTutor extends Fragment {
                     transaction.replace(R.id.frame_container, nuevoFragment);
                     transaction.addToBackStack(null);
                     transaction.commit();
-                }, 300); // Espera 300ms para que termine la animación
+                }, 300);
             }
         });
 
@@ -134,7 +134,7 @@ public class RecompensasFragmentTutor extends Fragment {
                     transaction.replace(R.id.frame_container, nuevoFragment);
                     transaction.addToBackStack(null);
                     transaction.commit();
-                }, 300); // Igual, espera 300ms
+                }, 300);
             }
         });
 
@@ -157,7 +157,7 @@ public class RecompensasFragmentTutor extends Fragment {
                 Intent intent = new Intent(view.getContext(), AgregarPremTutor.class);
                 startActivity(intent);
             }
-        }, 300); // Espera 300ms antes de lanzar la nueva Activity
+        }, 300);
     }
 
 
@@ -215,7 +215,7 @@ public class RecompensasFragmentTutor extends Fragment {
         imgMensaje.setLayoutParams(imgParams);
 
         TextView mensajeNoPremios = new TextView(requireContext());
-        mensajeNoPremios.setText("No hay Premios Reclamados");
+        mensajeNoPremios.setText("No hay premios reclamados");
         mensajeNoPremios.setTextSize(35);
         mensajeNoPremios.setTypeface(ResourcesCompat.getFont(requireContext(), R.font.dongle_bold));
         mensajeNoPremios.setTextColor(Color.BLACK);
@@ -236,7 +236,6 @@ public class RecompensasFragmentTutor extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        // Verificar si el fragmento está adjunto y si el contexto está disponible
         if (isAdded() && getContext() != null) {
             Log.e("PAVER", "SIPAPI 1");
 
@@ -246,18 +245,16 @@ public class RecompensasFragmentTutor extends Fragment {
             Log.e("PAVER", "estado modal: " + isModalOpened);
 
             if(isModalOpened){
-                // Asegurarse de que la vista del fragmento esté disponible
-                if (getView() != null) {
+                if (isModalOpened && getView() != null) {
                     Log.e("PAVER", "SIPAPI 3");
 
-                    // Mostrar el modal en el hilo principal usando un Handler
-                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                         @Override
                         public void run() {
                             Log.e("PAVER", "SIPAPI 4");
                             desplegarModal(getView());
                         }
-                    });
+                    }, 500);
                 }
             }
         }else{
@@ -434,7 +431,6 @@ public class RecompensasFragmentTutor extends Fragment {
     }
 
     private void fetchRecompensaMasCostosa() {
-        // Mostrar mensaje "No hay premios" primero
         requireActivity().runOnUiThread(this::mostrarMensajeNoPremios);
 
         ApiService apiService = RetrofitClient.getApiService();
@@ -574,7 +570,6 @@ public class RecompensasFragmentTutor extends Fragment {
                 animarLinear(Linear_Img_Prem);
 
                 new Handler(Looper.getMainLooper()).postDelayed(() -> {
-                    // Guardar sesión activa del modal
                     SharedPreferences sharedPreferences = requireContext().getSharedPreferences("sesionModalPrem", MODE_PRIVATE);
                     SharedPreferences.Editor editorP = sharedPreferences.edit();
                     editorP.putBoolean("sesion_activa_prem", true);
@@ -585,7 +580,6 @@ public class RecompensasFragmentTutor extends Fragment {
                     modal.setContentView(view);
 
                     modal.setOnDismissListener(dialog -> {
-                        // Cerrar sesión del modal
                         SharedPreferences sharedPreferencesCerrar = requireContext().getSharedPreferences("sesionModalPrem", MODE_PRIVATE);
                         SharedPreferences.Editor editorCerrarP = sharedPreferencesCerrar.edit();
                         editorCerrarP.putBoolean("sesion_activa_prem", false);
@@ -736,9 +730,7 @@ public class RecompensasFragmentTutor extends Fragment {
                 if (response.isSuccessful()) {
                     Log.d("API_LOG", "Relaciones eliminadas exitosamente. Código: " + response.code());
 
-                    // Ahora sí, eliminamos el premio
                     eliminarPremio(idPremio);
-                    limpiarCachePremio(idPremio);
 
                 } else {
                     Log.e("API_ERROR", "Error al eliminar relaciones. Código: " + response.code());
@@ -759,32 +751,6 @@ public class RecompensasFragmentTutor extends Fragment {
                 Toast.makeText(requireContext(), "Error de conexión al eliminar relaciones", Toast.LENGTH_SHORT).show();
             }
         });
-    }
-    private void limpiarCachePremio(int idPremio) {
-        SharedPreferences cache = requireContext().getSharedPreferences("cachePremiosEstado1", Context.MODE_PRIVATE);
-        String premiosJson = cache.getString("premios_estado_1", null);
-
-        if (premiosJson != null) {
-            Gson gson = new Gson();
-            Type type = new TypeToken<List<Premios>>(){}.getType();
-            List<Premios> premiosCache = gson.fromJson(premiosJson, type);
-
-            // Filtrar la lista y eliminar el premio con el ID especificado
-            List<Premios> nuevaLista = new ArrayList<>();
-            for (Premios premio : premiosCache) {
-                if (premio.getIdPremio() != idPremio) {
-                    nuevaLista.add(premio);
-                }
-            }
-
-            // Guardar la lista actualizada en caché
-            SharedPreferences.Editor editor = cache.edit();
-            String nuevaListaJson = gson.toJson(nuevaLista);
-            editor.putString("premios_estado_1", nuevaListaJson);
-            editor.apply();
-
-            Log.d("CACHE", "Premio ID " + idPremio + " eliminado del caché.");
-        }
     }
 
     private void eliminarPremio(int idPremio) {
@@ -914,7 +880,6 @@ public class RecompensasFragmentTutor extends Fragment {
         animatorSet.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
-                // Regresar al tamaño original
                 ObjectAnimator.ofFloat(imageView, "scaleX", 1.1f, 1f).setDuration(150).start();
                 ObjectAnimator.ofFloat(imageView, "scaleY", 1.1f, 1f).setDuration(150).start();
             }

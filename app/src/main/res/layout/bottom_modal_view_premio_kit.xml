@@ -1,0 +1,370 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/border_bottom_modal_premio"
+    android:padding="15dp"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:id="@+id/modalBottomSheetActis">
+
+    <View
+        android:layout_width="40dp"
+        android:layout_height="5dp"
+        android:background="@drawable/border_mover_modal_bottom"
+        android:layout_marginBottom="8dp"
+        android:layout_gravity="center"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        >
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="205dp"
+            android:layout_gravity="center"
+            android:minWidth="138dp"
+            android:background="@drawable/fondo_prem_img"
+
+            android:layout_marginRight="10dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:background="@drawable/fondo_prem_img"
+                android:elevation="10dp"
+                android:gravity="center"
+                android:outlineProvider="bounds"
+                android:layout_marginBottom="8dp">
+
+                <ImageView
+                    android:id="@+id/imgPremio"
+                    android:layout_width="110dp"
+                    android:layout_height="110dp"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:orientation="horizontal"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:background="@drawable/fondito_blanco_prem">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:background="@drawable/fondito_costo_prem"
+                    android:padding="5dp"
+                    android:layout_marginRight="10dp">
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_gravity="center"
+
+                        android:src="@drawable/img_ramita"></ImageView>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/ramitas_Kit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_gravity="top"
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        android:fontFamily="@font/dongle_bold"
+                        android:text=""
+                        android:textColor="@color/black"
+                        android:textSize="28sp"
+                        android:textStyle="bold"
+                        android:gravity="center"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_gravity="top"
+                        android:maxLines="1"
+                        android:fontFamily="@font/dongle_bold"
+                        android:text=" / "
+                        android:textColor="@color/black"
+                        android:textSize="28sp"
+                        android:textStyle="bold"
+                        android:gravity="center"
+                        />
+                    <TextView
+                        android:id="@+id/ramitas_costo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_gravity="top"
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        android:fontFamily="@font/dongle_bold"
+                        android:text=""
+                        android:textColor="@color/black"
+                        android:textSize="28sp"
+                        android:textStyle="bold"
+                        android:gravity="center"
+                        android:layout_marginRight="5dp"/>
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/txtTitle"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:text="Nombre Premio"
+                android:textSize="35sp"
+                android:fontFamily="@font/dongle_bold"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:gravity="start"
+                />
+            <TextView
+                android:id="@+id/txtNivel"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:text="Nivel Premio"
+                android:textSize="30sp"
+                android:fontFamily="@font/dongle_bold"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:gravity="start"
+                />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="0.5"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp"
+                        android:text="Categoria"
+
+                        android:textSize="30sp"
+                        android:fontFamily="@font/dongle_bold"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:gravity="start"
+                        android:layout_marginBottom="5dp"/>
+                    <TextView
+                        android:id="@+id/txtCategoria"
+                        android:layout_width="match_parent"
+                        android:layout_height="35dp"
+                        android:text="Común"
+                        android:background="@drawable/fondo_cat_prem"
+                        android:textSize="24sp"
+                        android:layout_marginRight="5dp"
+                        android:layout_marginLeft="5dp"
+                        android:fontFamily="@font/dongle_bold"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:gravity="center"
+                        android:layout_marginBottom="10dp"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="0.5"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp"
+                        android:text="Tipo"
+                        android:textSize="30sp"
+                        android:fontFamily="@font/dongle_bold"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:gravity="start"
+                        android:layout_marginBottom="5dp"/>
+                    <TextView
+                        android:id="@+id/txtTipo"
+                        android:layout_width="match_parent"
+                        android:layout_height="35dp"
+                        android:text="Experiencia"
+                        android:background="@drawable/fondo_cat_prem"
+                        android:textSize="24sp"
+                        android:fontFamily="@font/dongle_bold"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:gravity="center"
+                        android:layout_marginRight="5dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginBottom="10dp"
+                        />
+                </LinearLayout>
+
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:orientation="horizontal"
+                android:layout_gravity="center"
+                android:id="@+id/ReclamarPremio"
+                android:background="@drawable/fondito_costo_prem"
+                android:padding="5dp">
+
+                <TextView
+                    android:id="@+id/CostoPrem"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginRight="10dp"
+                    android:fontFamily="@font/dongle_bold"
+                    android:gravity="center"
+                    android:maxHeight="50dp"
+                    android:text="350"
+                    android:textColor="@color/black"
+                    android:textSize="30sp"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:src="@drawable/img_ramita"
+                    android:layout_width="30dp"
+                    android:layout_gravity="center"
+                    android:layout_height="25dp"
+                    android:layout_marginRight="25dp">
+                </ImageView>
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="0.6">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Estatus"
+                android:lineHeight="25dp"
+                android:textSize="30sp"
+                android:fontFamily="@font/dongle_bold"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:gravity="start"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:layout_marginBottom="8dp">
+                    <ImageView
+                        android:id="@+id/Img_Favorito_M"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/corazon_relleno"
+                        android:layout_marginEnd="10dp"
+                        />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Favoritos"
+                        android:textSize="18sp"
+                        android:fontFamily="@font/gayathri_bold"
+                        android:textColor="@color/black"
+                        android:gravity="left"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="0.5"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:id="@+id/Img_Estado_M"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/trofeo_relleno"
+                        android:layout_marginEnd="10dp"
+                        />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Canjeados"
+                        android:textSize="18sp"
+                        android:fontFamily="@font/gayathri_bold"
+                        android:textColor="@color/black"
+                        android:gravity="left"/>
+                </LinearLayout>
+        </LinearLayout>
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Informacion Extra"
+                android:lineHeight="25dp"
+                android:textSize="30sp"
+                android:fontFamily="@font/dongle_bold"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:gravity="start"/>
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fillViewport="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/info_extra"
+                        android:layout_width="match_parent"
+                        android:layout_height="80dp"
+                        android:text="Descripcion"
+                        android:textSize="15sp"
+                        android:fontFamily="@font/gayathri_bold"
+                        android:textColor="@color/black"
+                        android:gravity="start"/>
+                </LinearLayout>
+
+            </ScrollView>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

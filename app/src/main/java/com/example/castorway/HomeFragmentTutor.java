@@ -225,7 +225,6 @@ public class HomeFragmentTutor extends Fragment {
     }
 
     private void fetchRecompensaMasCostosa() {
-        // Mostrar desde caché primero
         SharedPreferences cache = requireContext().getSharedPreferences("cachePremioCostoso", MODE_PRIVATE);
         String premioJson = cache.getString("premio_mas_costoso", null);
 
@@ -234,11 +233,9 @@ public class HomeFragmentTutor extends Fragment {
             Premios premioCache = gson.fromJson(premioJson, Premios.class);
             mostrarPremio(premioCache);
         } else {
-            // Mostrar mensaje mientras carga si no hay nada en caché
             requireActivity().runOnUiThread(this::mostrarMensajeNoPremios);
         }
 
-        // Luego realizar la llamada a la API
         ApiService apiService = RetrofitClient.getApiService();
 
         CompletableFuture<List<Premios>> premiosFuture = CompletableFuture.supplyAsync(() -> {
@@ -284,7 +281,6 @@ public class HomeFragmentTutor extends Fragment {
 
             requireActivity().runOnUiThread(() -> {
                 if (premioMayorCosto != null) {
-                    // Guardar en caché
                     Gson gson = new Gson();
                     String jsonPremio = gson.toJson(premioMayorCosto);
                     cache.edit().putString("premio_mas_costoso", jsonPremio).apply();
@@ -388,7 +384,7 @@ public class HomeFragmentTutor extends Fragment {
         contenedorPremioMasCostoso.removeAllViews();
 
         TextView mensajeNoPremios = new TextView(requireContext());
-        mensajeNoPremios.setText("No hay Premios para este kit");
+        mensajeNoPremios.setText("No hay premios para este kit");
         mensajeNoPremios.setTextSize(35);
         mensajeNoPremios.setTypeface(ResourcesCompat.getFont(requireContext(), R.font.dongle_bold));
         mensajeNoPremios.setTextColor(Color.WHITE);
@@ -451,7 +447,6 @@ public class HomeFragmentTutor extends Fragment {
             return;
         }
 
-        // Mostrar primero actividades guardadas en caché
         SharedPreferences cachePrefs = getActivity().getSharedPreferences("cacheActividades", MODE_PRIVATE);
         String actividadesJson = cachePrefs.getString("actividades", null);
         if (actividadesJson != null) {
@@ -467,7 +462,6 @@ public class HomeFragmentTutor extends Fragment {
             }
         }
 
-        // Luego hacer la petición real a la API y actualizar el caché
         ApiService apiService = RetrofitClient.getApiService();
         apiService.getAllActividades().enqueue(new Callback<List<Actividad>>() {
             @Override
@@ -479,7 +473,6 @@ public class HomeFragmentTutor extends Fragment {
                         .sorted(Comparator.comparing(Actividad::getHoraInicioHabito, Comparator.nullsLast(String::compareTo)))
                         .collect(Collectors.toList());
 
-                // Guardar en caché
                 String actividadesJson = new Gson().toJson(response.body());
                 SharedPreferences.Editor editor = cachePrefs.edit();
                 editor.putString("actividades", actividadesJson);
@@ -490,7 +483,6 @@ public class HomeFragmentTutor extends Fragment {
 
             @Override
             public void onFailure(Call<List<Actividad>> call, Throwable t) {
-                // Podrías mostrar un Toast si lo deseas
             }
         });
     }
@@ -606,7 +598,6 @@ public class HomeFragmentTutor extends Fragment {
                 }
             } else {
             }
-            //Fin del código de cargar imágen svg desde asset
 
             contenedorActividades.addView(actividadView);
         }
