@@ -83,7 +83,7 @@ public class AgregarPremTutor extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
 
             btnSalirAddPrem = findViewById(R.id.btnSalirAddPrem);
-            btnSalirAddPrem.setOnClickListener(v1 -> mostrarModalCerrarView("¡Atención!", "Si das click en aceptar saldrás del formulario y no se guardará la información ingresada."));
+            btnSalirAddPrem.setOnClickListener(v1 -> mostrarModalCerrarView("¡Atención!", "Si das click en aceptar saldrás del formio y no se guardará la información ingresada."));
             spinnerTipoPrem = findViewById(R.id.spinnerTipPremio);
             spinnerCatPrem = findViewById(R.id.spinnerCatPremio);
             spinnerNivelPrem = findViewById(R.id.spinnerNivPremio);
@@ -168,7 +168,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                     "Día de spa en casa",
                     "Visita a una granja o reserva natural",
                     "Nueva tablet o e-reader",
-                    "Auriculares inalámbricos",
+                    "Aurices inalámbricos",
                     "Juego de video nuevo",
                     "Accesorios para la consola de videojuegos",
                     "Cámara instantánea",
@@ -2511,7 +2511,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                             
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            ular
+                            
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
@@ -2562,7 +2562,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                             
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            ular
+                            
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
@@ -2613,7 +2613,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                             
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            ular
+                            
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
@@ -2664,7 +2664,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                             
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            ular
+                            
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
@@ -2686,14 +2686,14 @@ public class AgregarPremTutor extends AppCompatActivity {
                             Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                         break;
-                    case "Auriculares inalámbricos":
+                    case "Aurices inalámbricos":
                         try {
                             LayoutInflater inflater = getLayoutInflater();
                             View layout = inflater.inflate(R.layout.toast_personalizado, null);
 
                             
                             ImageView icon = layout.findViewById(R.id.toast_icon);
-                            try (InputStream inputStream = getAssets().open("img/Iconos-recompensas/Auriculares.svg")) {
+                            try (InputStream inputStream = getAssets().open("img/Iconos-recompensas/Aurices.svg")) {
                                 SVG svg = SVG.getFromInputStream(inputStream);
                                 if (svg != null) {
                                     Drawable drawable = new PictureDrawable(svg.renderToPicture());
@@ -2705,7 +2705,7 @@ public class AgregarPremTutor extends AppCompatActivity {
 
                             
                             TextView text = layout.findViewById(R.id.toast_text);
-                            text.setText("Auriculares inalámbricos");
+                            text.setText("Aurices inalámbricos");
 
                             
                             Drawable background = layout.getBackground();
@@ -2714,7 +2714,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                             
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            ular
+                            
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
@@ -2725,13 +2725,13 @@ public class AgregarPremTutor extends AppCompatActivity {
                             int nuevoNumero = 150;
                             numRamitasPrem.setText(String.valueOf(nuevoNumero));
 
-                            updateButtonImage("Auriculares.svg");
+                            updateButtonImage("Aurices.svg");
 
                             spinnerCatPrem.setSelection(5); 
                             spinnerNivelPrem.setSelection(1);
                            spinnerTipoPrem.setSelection(3);
 
-                            txtMasInfo.setText("Auriculares de alta calidad para disfrutar de tu música sin cables. Perfectos para hacer ejercicio o simplemente relajarte con tus canciones favoritas.");
+                            txtMasInfo.setText("Aurices de alta calidad para disfrutar de tu música sin cables. Perfectos para hacer ejercicio o simplemente relajarte con tus canciones favoritas.");
                         } catch (Exception ex) {
                             Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
                         }
@@ -2765,7 +2765,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                             
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            ular
+                            
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
@@ -2816,7 +2816,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                             
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            ular
+                            
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
@@ -2867,7 +2867,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                             
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            ular
+                            
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
@@ -2918,7 +2918,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                             
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            ular
+                            
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
@@ -2968,7 +2968,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                             
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            ular
+                            
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
@@ -3019,7 +3019,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                             
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            ular
+                            
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
@@ -3070,7 +3070,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                             
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            ular
+                            
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
@@ -3121,7 +3121,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                             
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            ular
+                            
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
@@ -3172,7 +3172,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                             
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            ular
+                            
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
@@ -3222,7 +3222,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                             
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            ular
+                            
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
@@ -3273,7 +3273,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                             
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            ular
+                            
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
@@ -3324,7 +3324,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                             
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            ular
+                            
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
@@ -3375,7 +3375,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                             
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            ular
+                            
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
@@ -3426,7 +3426,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                             
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            ular
+                            
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
@@ -4162,7 +4162,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                             
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            ular
+                            
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
@@ -4213,7 +4213,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                             
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            ular
+                            
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
@@ -4264,7 +4264,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                             
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            ular
+                            
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
@@ -4315,7 +4315,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                             
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            ular
+                            
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
@@ -4366,7 +4366,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                             
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            ular
+                            
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
@@ -4416,7 +4416,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                             
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            ular
+                            
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
@@ -4467,7 +4467,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                             
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            ular
+                            
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
@@ -4518,7 +4518,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                             
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            ular
+                            
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
@@ -4569,7 +4569,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                             
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            ular
+                            
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
@@ -4620,7 +4620,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                             
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            ular
+                            
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
@@ -4670,7 +4670,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                             
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            ular
+                            
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
@@ -4721,7 +4721,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                             
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            ular
+                            
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
@@ -4772,7 +4772,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                             
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            ular
+                            
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
@@ -4823,7 +4823,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                             
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            ular
+                            
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
@@ -4874,7 +4874,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                             
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            ular
+                            
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
@@ -4924,7 +4924,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                             
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            ular
+                            
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
@@ -4975,7 +4975,7 @@ public class AgregarPremTutor extends AppCompatActivity {
                             
                             text.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
-                            ular
+                            
                             Toast toast = new Toast(getApplicationContext());
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
                             toast.setDuration(Toast.LENGTH_LONG);
@@ -5123,7 +5123,7 @@ public class AgregarPremTutor extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        mostrarModalCerrarView("¡Atención!", "Estás por salir del formulario, si das click en aceptar saldrás y no se guardará la información ingresada.");
+        mostrarModalCerrarView("¡Atención!", "Estás por salir del formio, si das click en aceptar saldrás y no se guardará la información ingresada.");
     }
 
 
