@@ -53,6 +53,10 @@ public class LoadingActivityStart extends AppCompatActivity {
     }
 
     private void showNoConnectionDialog() {
+        if (isFinishing() || isDestroyed()) {
+            return;
+        }
+
         // Crea el AlertDialog para mostrar el mensaje
         new AlertDialog.Builder(this)
                 .setTitle("Conexión a Internet")
@@ -69,7 +73,6 @@ public class LoadingActivityStart extends AppCompatActivity {
         isErrorShown = true;
         isLoading = false; // Detiene el progreso
         handler.removeCallbacksAndMessages(null);
-
     }
 
     private void checkConnectionAndLoad() {

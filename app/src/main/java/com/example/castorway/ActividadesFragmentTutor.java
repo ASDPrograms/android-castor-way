@@ -88,6 +88,7 @@ import org.w3c.dom.Text;
  */
 public class ActividadesFragmentTutor extends Fragment {
     BottomSheetDialog modalFiltros;
+    BottomSheetDialog modalActiGeneral;
     RadioButton radioButtonRojo, radioButtonAmarillo ,radioButtonVerde, radioButtonAzul, radioButtonMorado, radioButtonNegro;
     SwipeRefreshLayout refrescarFragment;
     LinearLayout layout_esta_semana, layout_siguiente_semana, layout_mas_tarde, contenedor_despues, contenedor_esta_semana, contenedor_siguiente_semana, layout_no_usr_kit_seleccionado, linLayContainAllActis;
@@ -159,7 +160,6 @@ public class ActividadesFragmentTutor extends Fragment {
             }
         });
 
-        // Ahora las vistas están inicializadas correctamente
         layout_esta_semana = view.findViewById(R.id.layout_esta_semana);
         layout_siguiente_semana = view.findViewById(R.id.layout_siguiente_semana);
         layout_mas_tarde = view.findViewById(R.id.layout_mas_tarde);
@@ -179,7 +179,7 @@ public class ActividadesFragmentTutor extends Fragment {
         imgFlechSigSemana = view.findViewById(R.id.imgFlechSigSemana);
         imgFlechMasTarde = view.findViewById(R.id.imgFlechSigMasTarde);
 
-        // Ahora puedes configurar listeners
+        // se configuran listeners
         layout_esta_semana.setOnClickListener(v -> alternarVisibActis(contenedor_esta_semana));
         layout_siguiente_semana.setOnClickListener(v -> alternarVisibActis(contenedor_siguiente_semana));
         layout_mas_tarde.setOnClickListener(v -> alternarVisibActis(contenedor_despues));
@@ -220,10 +220,41 @@ public class ActividadesFragmentTutor extends Fragment {
         btn_filtros.setOnClickListener(view1 -> {
             desplFiltros();
         });
+
+        if (isAdded() && getContext() != null) {
+            Log.e("PAVER", "SIPAPI 1");
+
+            SharedPreferences sharedPreferences = getContext().getSharedPreferences("sesionModalActis", Context.MODE_PRIVATE);
+            boolean isModalOpened = sharedPreferences.getBoolean("sesion_activa", false);
+
+            Log.e("PAVER", "estado modal: " + isModalOpened);
+
+            if(isModalOpened){
+                if(modalActiGeneral == null){
+                    // Asegurarse de que la vista del fragmento esté disponible
+                    if (getView() != null) {
+                        Log.e("PAVER", "SIPAPI 3");
+
+                        // Mostrar el modal en el hilo principal usando un Handler
+                        new Handler(Looper.getMainLooper()).post(new Runnable() {
+                            @Override
+                            public void run() {
+                                Log.e("PAVER", "SIPAPI 4");
+                                desplegarModal(getView());
+                            }
+                        });
+                    }
+                }
+            }
+        }else{
+            Log.e("PAVER", "NOPAPI");
+        }
     }
 
     private void desplegarModal(View view) {
         try {
+            SharedPreferences sharedPreferences = view.getContext().getSharedPreferences("actividadSelected", Context.MODE_PRIVATE);
+
             ApiService apiService = RetrofitClient.getApiService();
             Call<List<Actividad>> call = apiService.getAllActividades();
             call.enqueue(new Callback<List<Actividad>>() {
@@ -233,7 +264,6 @@ public class ActividadesFragmentTutor extends Fragment {
 
                     if (actividades != null) {
                         Log.e("DEBUG", "Hay actis");
-                        SharedPreferences sharedPreferences = getContext().getSharedPreferences("actividadSelected", Context.MODE_PRIVATE);
                         for (Actividad actividad : actividades) {
                             int idActividad = sharedPreferences.getInt("idActividad", 0);
                             Log.e("DEBUG", "Id acti: " + idActividad);
@@ -389,37 +419,6 @@ public class ActividadesFragmentTutor extends Fragment {
         modal.show();
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        // Verificar si el fragmento está adjunto y si el contexto está disponible
-        if (isAdded() && getContext() != null) {
-            Log.e("PAVER", "SIPAPI 1");
-
-            SharedPreferences sharedPreferences = getContext().getSharedPreferences("sesionModalActis", Context.MODE_PRIVATE);
-            boolean isModalOpened = sharedPreferences.getBoolean("sesion_activa", false);
-
-            Log.e("PAVER", "estado modal: " + isModalOpened);
-
-            if(isModalOpened){
-                // Asegurarse de que la vista del fragmento esté disponible
-                if (getView() != null) {
-                    Log.e("PAVER", "SIPAPI 3");
-
-                    // Mostrar el modal en el hilo principal usando un Handler
-                    new Handler(Looper.getMainLooper()).post(new Runnable() {
-                        @Override
-                        public void run() {
-                            Log.e("PAVER", "SIPAPI 4");
-                            desplegarModal(getView());
-                        }
-                    });
-                }
-            }
-        }else{
-            Log.e("PAVER", "NOPAPI");
-        }
-    }
     private void alternarVisibActis(LinearLayout contenedor) {
         // Aquí se va alternando la visibilidad de los contenedores de las actividades
         Log.d("DEBUG", "Botón CLICKEADO");
@@ -569,11 +568,12 @@ public class ActividadesFragmentTutor extends Fragment {
                                         editor.putBoolean("sesion_activa", true);
                                         editor.apply();
 
-                                        BottomSheetDialog modal = new BottomSheetDialog(requireContext());
-                                        View view = getLayoutInflater().inflate(R.layout.bottom_modal_view, null);
-                                        modal.setContentView(view);
+                                        modalActiGeneral = new BottomSheetDialog(requireContext());
 
-                                        modal.setOnDismissListener(dialog -> {
+                                        View view = getLayoutInflater().inflate(R.layout.bottom_modal_view, null);
+                                        modalActiGeneral.setContentView(view);
+
+                                        modalActiGeneral.setOnDismissListener(dialog -> {
                                             // Aquí se cambia el valor de la sesión cuando se cierra
                                             SharedPreferences sharedPreferencesCerrar = requireContext().getSharedPreferences("sesionModalActis", MODE_PRIVATE);
                                             SharedPreferences.Editor editorCerrar = sharedPreferencesCerrar.edit();
@@ -622,7 +622,7 @@ public class ActividadesFragmentTutor extends Fragment {
 
                                             btnConfirm.setOnClickListener(v3 -> {
                                                 modalBorrar.dismiss();
-                                                modal.dismiss();
+                                                modalActiGeneral.dismiss();
                                                 borrarActividad(actividad.getIdActividad());
 
                                             });
@@ -661,7 +661,7 @@ public class ActividadesFragmentTutor extends Fragment {
                                         }
                                         Drawable drawable2 = new PictureDrawable(svg.renderToPicture());
                                         imgActiModal.setImageDrawable(drawable2);
-                                        modal.show();
+                                        modalActiGeneral.show();
 
                                         SharedPreferences preferences = requireContext().getSharedPreferences("actividadSelected", MODE_PRIVATE);
                                         SharedPreferences.Editor editor3 = preferences.edit();
@@ -896,7 +896,7 @@ public class ActividadesFragmentTutor extends Fragment {
                 List<Actividad> actividades = response.body();
                 if (actividades != null) {
                     Log.e("DEBUG", "Hay actis");
-                    SharedPreferences sharedPreferences = getContext().getSharedPreferences("usrKitCuentaTutor", Context.MODE_PRIVATE);
+                    SharedPreferences sharedPreferences = requireContext().getSharedPreferences("usrKitCuentaTutor", Context.MODE_PRIVATE);
                     int idKit = sharedPreferences.getInt("idKit", 0);
                     List<Actividad> actisCoincid = new ArrayList<>();
                     Boolean verifiActiCoincid = false;
@@ -1710,6 +1710,7 @@ public class ActividadesFragmentTutor extends Fragment {
                                 //Aquí va lo que pasa cuando quiere ver más información de la acti:
                                 btnVerMasInfoActi.setOnClickListener(v1 -> {
                                     Intent intent = new Intent(requireActivity(), VerMasInfoActi.class);
+                                    modal.dismiss();
                                     startActivity(intent);
                                 });
 

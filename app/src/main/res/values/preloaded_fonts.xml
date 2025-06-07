@@ -3,5 +3,6 @@
     <array name="preloaded_fonts" translatable="false">
         <item>@font/dongle</item>
         <item>@font/dongle_bold</item>
+        <item>@font/gayathri_thin</item>
     </array>
 </resources>

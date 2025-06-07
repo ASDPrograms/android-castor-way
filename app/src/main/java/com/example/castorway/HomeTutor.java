@@ -62,31 +62,6 @@ public class HomeTutor extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_tutor);
 
-        //Al abrir intentar recibir el valor de modal trás actividad creada
-        String fragmentName = getIntent().getStringExtra("fragmentActiCrear");
-        String fragmentNamePremio = getIntent().getStringExtra("fragmenPremCrear");
-        String fragmentNamePremioEditar = getIntent().getStringExtra("fragmenPremEditar");
-
-        Fragment fragment = null;
-
-        if (fragmentName != null && fragmentName.equals("ActividadesFragmentTutor")) {
-            fragment = new ActividadesFragmentTutor();
-        }
-
-        if (fragmentNamePremio != null && fragmentNamePremio.equals("RecompensasFragmentTutor1")) {
-            fragment = new RecompensasFragmentTutor1();
-        }
-        if (fragmentNamePremioEditar != null && fragmentNamePremio.equals("RecompensasFragmentTutor")) {
-            fragment = new RecompensasFragmentTutor();
-        }
-
-// Si se recibe un fragmento válido, lo mostramos
-        if (fragment != null) {
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.frame_container, fragment); // Asegúrate de tener un contenedor adecuado
-            transaction.commit();
-        }
-
         HorizontalScrollView userScrollView = findViewById(R.id.userScrollView);
         userScrollView.setVisibility(View.GONE);
 
@@ -134,13 +109,50 @@ public class HomeTutor extends AppCompatActivity {
         iconDiario.setOnClickListener(iconClickListener);
         iconChat.setOnClickListener(iconClickListener);
 
-        //por default el seleccionado es el de home
-        selectIcon(iconHome);
-        loadFragment(new HomeFragmentTutor());
+
+        //Al abrir intentar recibir el valor de modal trás actividad creada
+        String fragmentName = getIntent().getStringExtra("fragmentActiCrear");
+        String fragmentNamePremio = getIntent().getStringExtra("fragmenPremCrear");
+        String fragmentNamePremioEditar = getIntent().getStringExtra("fragmenPremEditar");
+
+        Fragment fragment = null;
+        ImageView imagenCambiar = null;
+
+        if (fragmentName != null && fragmentName.equals("ActividadesFragmentTutor")) {
+            Log.e("MOVERSEMODALES", "Si entró al if 1");
+            fragment = new ActividadesFragmentTutor();
+            imagenCambiar = iconActividades;
+        } else if (fragmentNamePremio != null && fragmentNamePremio.equals("RecompensasFragmentTutor1")) {
+            fragment = new RecompensasFragmentTutor1();
+            imagenCambiar = iconRecompensas;
+        } else if (fragmentNamePremioEditar != null && fragmentNamePremioEditar.equals("RecompensasFragmentTutor")) {
+            fragment = new RecompensasFragmentTutor();
+            imagenCambiar = iconRecompensas;
+        }
+        // Si se recibe un fragmento válido, se muestra
+        if (fragment != null) {
+            Log.e("MOVERSEMODALES", "Si entró al if 2");
+
+            //pa cambiar el modal:
+            loadFragment(fragment);
+
+            //para cambiar el ícono que le corresponde
+            selectIcon(imagenCambiar);
+        }else {
+            //por default el seleccionado es el de home
+            selectIcon(iconHome);
+            loadFragment(new HomeFragmentTutor());
+        }
 
         //declaración de elementos del xml y funcionalidad para la burbuja de elegir usr kit
         circulogrande = findViewById(R.id.circulo_grande);
+        if (fragment instanceof ChatFragmentTutor) {
+            circulogrande.setVisibility(View.GONE);  // Esconde el círculo
+        } else {
+            circulogrande.setVisibility(View.VISIBLE);  // Muestra el círculo
+        }
         circulogrande.setOnClickListener(this::desplListUsrsKit);
+
 
         //declaración de xml y funcionalidad del botón que despliega los hijos disponibles
         btnDesplegar = findViewById(R.id.btnDesplegar);
@@ -151,39 +163,53 @@ public class HomeTutor extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        // Obtener el nombre del fragmento desde cualquiera de los extras
-        String fragmentName = getIntent().getStringExtra("fragmentActiCrear");
-        String fragmentNamePremio = getIntent().getStringExtra("fragmenPremCrear");
-        String fragmentNamePremioEditar = getIntent().getStringExtra("fragmenPremEditar");
+        // Obtener el último fragmento cargado desde la pila de fragmentos
+        Fragment lastFragment = getSupportFragmentManager().findFragmentById(R.id.frame_container);
 
-        Fragment fragment = null;
-        ImageView iconToSelect = null;
-
-        // Verificar cuál fragmento se debe cargar
-        if (fragmentName != null && fragmentName.equals("ActividadesFragmentTutor")) {
-            fragment = new ActividadesFragmentTutor();
-            iconToSelect = iconActividades;
-        } else if (fragmentNamePremio != null && fragmentNamePremio.equals("RecompensasFragmentTutor1")) {
-            fragment = new RecompensasFragmentTutor1();
-            iconToSelect = iconRecompensas;
-        } else if (fragmentNamePremioEditar != null && fragmentNamePremioEditar.equals("RecompensasFragmentTutor")) {
-            fragment = new RecompensasFragmentTutor();
-            iconToSelect = iconRecompensas;
-        }
-
-        // Cargar el fragmento seleccionado y seleccionar el icono correspondiente
-        if (fragment != null) {
+        // Si hay un fragmento cargado, reiniciarlo completamente
+        if (lastFragment != null) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.frame_container, fragment);
+
+            // Eliminar el fragmento actual si existe
+            transaction.remove(lastFragment);
+
+            // Reemplazarlo por el mismo fragmento o el fragmento que desees cargar
+            // Si necesitas reiniciar completamente el fragmento (como si fuera nuevo), puedes crear una nueva instancia
+            Fragment newFragment = createNewFragmentBasedOnLast(lastFragment);
+
+            transaction.replace(R.id.frame_container, newFragment);
             transaction.commit();
-
-            if (iconToSelect != null) {
-                selectIcon(iconToSelect);
-            }
         }
+    }
 
-        // Confirmar existencia del usuario
-        confirmExistUsrKit();
+    // Método para decidir qué fragmento cargar basado en el fragmento anterior
+    private Fragment createNewFragmentBasedOnLast(Fragment lastFragment) {
+        // Aquí puedes agregar lógica para decidir qué fragmento cargar
+        // Por ejemplo, si el último fragmento era uno específico, cargar uno nuevo similar o el mismo
+        if(lastFragment instanceof HomeFragmentTutor){
+            circulogrande.setVisibility(View.VISIBLE);
+            return new HomeFragmentTutor();
+        } else if (lastFragment instanceof ActividadesFragmentTutor) {
+            circulogrande.setVisibility(View.VISIBLE);
+            return new ActividadesFragmentTutor();
+        } else if (lastFragment instanceof RecompensasFragmentTutor1) {
+            circulogrande.setVisibility(View.VISIBLE);
+            return new RecompensasFragmentTutor1();
+        } else if (lastFragment instanceof RecompensasFragmentTutor) {
+            circulogrande.setVisibility(View.VISIBLE);
+            return new RecompensasFragmentTutor();
+        } else if(lastFragment instanceof  ChatFragmentTutor){
+            circulogrande.setVisibility(View.GONE);
+            return new ChatFragmentTutor();
+        } else if(lastFragment instanceof  CalendarioFragmentTutor){
+            circulogrande.setVisibility(View.VISIBLE);
+            return new CalendarioFragmentTutor();
+        } else if(lastFragment instanceof  DiarioFragmentTutor) {
+            circulogrande.setVisibility(View.VISIBLE);
+            return new DiarioFragmentTutor();
+        }
+        // Puedes agregar más condiciones dependiendo de tus necesidades
+        return new ActividadesFragmentTutor();  // Valor por defecto si no hay coincidencias
     }
 
     //para cuando cierra la app (el activity de hometutor)
@@ -638,6 +664,12 @@ public class HomeTutor extends AppCompatActivity {
             fragment = new DiarioFragmentTutor();
         } else if (iconId == R.id.icon_chat) {
             fragment = new ChatFragmentTutor();
+        }
+
+        if (fragment instanceof ChatFragmentTutor) {
+            circulogrande.setVisibility(View.GONE);  // Esconde el círculo
+        } else {
+            circulogrande.setVisibility(View.VISIBLE);  // Muestra el círculo
         }
 
         if (fragment != null) {

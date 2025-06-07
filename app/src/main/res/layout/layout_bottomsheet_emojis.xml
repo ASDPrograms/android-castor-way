@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:flexbox="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/panelEmojis"
+    android:layout_width="match_parent"
+    android:layout_height="250dp"
+    android:orientation="vertical"
+    android:background="@color/white"
+    app:behavior_hideable="true"
+    app:behavior_peekHeight="0dp"
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+    <View
+        android:layout_width="40dp"
+        android:layout_height="5dp"
+        android:background="@drawable/border_mover_modal_bottom"
+        android:layout_marginTop="8dp"
+        android:layout_gravity="center" />
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp"
+        android:overScrollMode="never">
+
+        <com.google.android.flexbox.FlexboxLayout
+            android:id="@+id/emojiContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            flexbox:flexWrap="wrap"
+            flexbox:justifyContent="flex_start" />
+    </androidx.core.widget.NestedScrollView>
+</LinearLayout>

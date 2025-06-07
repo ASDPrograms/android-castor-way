@@ -407,6 +407,7 @@ public class VerMasInfoActi extends AppCompatActivity {
 
                             if (estadoAsignar.equals("0")) {
                                 //se esconden los botone de aceptar y rechazar:
+                                contBtnAceptRechazActi.removeView(btnAceptarActi);
                                 contBtnAceptRechazActi.removeView(btnRechazarActi);
 
                                 //se pone el texto pa decir que no se puede hacer na

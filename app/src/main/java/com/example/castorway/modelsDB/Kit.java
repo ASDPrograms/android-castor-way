@@ -102,7 +102,7 @@ public class Kit {
         this.hojasCongeladas = hojasCongeladas;
     }
 
-    public boolean isEstadoConect() {
+    public boolean getEstadoConect() {
         return estadoConect;
     }
 

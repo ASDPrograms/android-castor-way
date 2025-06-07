@@ -2,6 +2,8 @@ package com.example.castorway.api;
 
 import com.example.castorway.modelsDB.Actividad;
 import com.example.castorway.modelsDB.Castor;
+import com.example.castorway.modelsDB.Chat;
+import com.example.castorway.modelsDB.Diario;
 import com.example.castorway.modelsDB.Kit;
 import com.example.castorway.modelsDB.Premios;
 import com.example.castorway.modelsDB.RelPrem;
@@ -30,10 +32,10 @@ public interface ApiService {
     @POST("tablaKit")
     Call<Kit> createKit(@Body Kit kit);
 
-
     @PUT("tablaKit")
     Call<Kit> updateKit(@Body Kit kit);
 
+    //Actividades:
     @GET("tablaActividad")
     Call<List<Actividad>> getAllActividades();
 
@@ -71,4 +73,24 @@ public interface ApiService {
     @DELETE("tablaRelPrem")
     Call<Void> deleteRelPrem(@Query("idPremio") int idPremio);
 
+    //Chat:
+    @GET("tablaChat")
+    Call<List<Chat>> getAllChats();
+
+    // Obtener el último registro nada más
+    @GET("tablaChat")
+    Call<List<Chat>> getLastChat(@Query("idKit") int idKit, @Query("idCastor") int idCastor);
+
+    //Diario:
+    @GET("tablaDiario")
+    Call<List<Diario>> getAllDiarios();
+
+    @POST("tablaDiario")
+    Call<Diario> createDiario(@Body Diario diario);
+
+    @PUT("tablaPremios")
+    Call<Premios> updateDiarios(@Body Diario diarios);
+
+    @DELETE("tablaPremios")
+    Call<Void> deleteDiarios(@Query("idDiario") int idDiario);
 }
