@@ -377,7 +377,7 @@ public class ChatTutorConversacion extends AppCompatActivity implements ChatSock
     }
 
 
-    // 👇 Implementación de los métodos de la interfaz:
+    //  Implementación de los métodos de la interfaz:
     @Override
     public void onNuevoMensaje(String emisor, String mensaje, String hora, int idKit){
         runOnUiThread(() -> {
@@ -784,88 +784,8 @@ public class ChatTutorConversacion extends AppCompatActivity implements ChatSock
             return "Error";
         }
     }
-    public static void cargarImagenesDesdeHtml(Context context, String htmlString, LinearLayout contenedor) {
-        Pattern pattern = Pattern.compile("<img[^>]+src\\s*=\\s*\"([^\"]+)\"");
-        Matcher matcher = pattern.matcher(htmlString);
-
-        while (matcher.find()) {
-            String srcCompleto = matcher.group(1);
-            // Extraer solo el nombre del archivo
-            String nombreArchivo = srcCompleto.substring(srcCompleto.lastIndexOf('/') + 1);
-
-            // Crear ImageView
-            ImageView imageView = new ImageView(context);
-
-            int sizeInDp = 100;
-            float density = context.getResources().getDisplayMetrics().density;
-            int sizeInPx = (int) (sizeInDp * density + 0.5f);
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(sizeInPx, sizeInPx);
-            params.gravity = android.view.Gravity.CENTER;
-            int marginInPx = (int) (10 * density + 0.5f);
-            params.setMargins(marginInPx, marginInPx, marginInPx, marginInPx);
-            imageView.setLayoutParams(params);
-
-            // Añadir ImageView al contenedor
-            contenedor.addView(imageView);
-
-            // Cargar la imagen SVG desde assets u otra fuente (debes implementar esta función)
-            cargarSvgDesdeAssets(context, nombreArchivo, imageView);
-        }
-    }
 
     // Ejemplo básico para cargar SVG, adaptar según tu implementación
-    private static void cargarSvgDesdeAssets(Context context, String nombreArchivo, ImageView imageView) {
-        try {
-            java.io.InputStream inputStream = context.getAssets().open("img/" + nombreArchivo);
-            com.caverock.androidsvg.SVG svg = com.caverock.androidsvg.SVG.getFromInputStream(inputStream);
-            android.graphics.drawable.PictureDrawable drawable = new android.graphics.drawable.PictureDrawable(svg.renderToPicture());
-
-            imageView.setImageDrawable(drawable);
-            imageView.setLayerType(android.view.View.LAYER_TYPE_SOFTWARE, null);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void cargarSvgDesdeAssets(String nombreArchivo, ImageView imageView) {
-        try {
-            String ruta = "img/estado_animo_img/" + nombreArchivo;
-            Log.i("cargarSvgDesdeAssets", "Intentando abrir archivo: " + ruta);
-            InputStream inputStream = getAssets().open(ruta);
-            Log.i("cargarSvgDesdeAssets", "Archivo abierto correctamente");
-
-            SVG svg = SVG.getFromInputStream(inputStream);
-            if (svg == null) {
-                Log.e("cargarSvgDesdeAssets", "No se pudo parsear el SVG");
-                return;
-            }
-            Log.i("cargarSvgDesdeAssets", "SVG parseado correctamente");
-
-            PictureDrawable drawable = new PictureDrawable(svg.renderToPicture());
-            if (drawable == null) {
-                Log.e("cargarSvgDesdeAssets", "No se pudo crear PictureDrawable");
-                return;
-            }
-            Log.i("cargarSvgDesdeAssets", "Drawable creado correctamente");
-
-            if (imageView == null) {
-                Log.e("cargarSvgDesdeAssets", "El ImageView es null");
-                return;
-            }
-            Log.i("cargarSvgDesdeAssets", "Asignando drawable al ImageView");
-
-            imageView.setImageDrawable(drawable);
-            imageView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-
-            Log.i("cargarSvgDesdeAssets", "Imagen asignada al ImageView correctamente");
-
-        } catch (IOException | SVGParseException e) {
-            Log.e("cargarSvgDesdeAssets", "Error al cargar SVG", e);
-            e.printStackTrace();
-        }
-    }
-
     private void mostrarModalEmojis() {
         FlexboxLayout emojiContainer = findViewById(R.id.emojiContainer);
         if (emojiContainer == null) {

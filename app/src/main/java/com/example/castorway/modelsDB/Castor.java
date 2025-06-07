@@ -93,7 +93,7 @@ public class Castor {
         this.fechaRegistro = fechaRegistro;
     }
 
-    public boolean isEstadoConect() {
+    public boolean getEstadoConect() {
         return estadoConect;
     }
 
