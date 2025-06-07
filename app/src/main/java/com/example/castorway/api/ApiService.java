@@ -6,6 +6,7 @@ import com.example.castorway.modelsDB.Chat;
 import com.example.castorway.modelsDB.Diario;
 import com.example.castorway.modelsDB.Kit;
 import com.example.castorway.modelsDB.Premios;
+import com.example.castorway.modelsDB.RelDiario;
 import com.example.castorway.modelsDB.RelPrem;
 
 import java.util.List;
@@ -93,4 +94,14 @@ public interface ApiService {
 
     @DELETE("tablaPremios")
     Call<Void> deleteDiarios(@Query("idDiario") int idDiario);
+
+    //RelDiario:
+    @GET("tablaRelDiario")
+    Call<List<RelDiario>> getAllRelDiarios();
+
+    @POST("tablaRelDiario")
+    Call<RelDiario> createRelDiario(@Body RelDiario relDiario);
+
+    @DELETE("tablaRelDiario")
+    Call<Void> deleteRelDiarios(@Query("idRelDiario") int idRelDiario);
 }
