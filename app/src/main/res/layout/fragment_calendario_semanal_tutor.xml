@@ -81,20 +81,26 @@
                         android:text="Día, mes, año"
                         android:textColor="@color/black" />
                     <ImageView
-                        android:id="@+id/btnSemanal"
+                        android:id="@+id/btnAgenda"
                         android:layout_width="100dp"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/btn_semanal"
+                        android:src="@drawable/btn_agenda"
                         android:layout_gravity="center"/>
                 </LinearLayout>
-
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
+                    <View
+                        android:layout_width="35dp"
+                        android:layout_height="match_parent" />
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:gravity="center"
-                    android:layout_marginTop="12dp"
-                    android:background="@drawable/fondo_dias_semana"
+                    android:background="@drawable/fondo_dias_semana_blanco"
                     android:padding="5dp">
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -195,57 +201,83 @@
 
                     </LinearLayout>
                 </LinearLayout>
-
+                </LinearLayout>
             </LinearLayout>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:textSize="28dp"
-                android:fontFamily="@font/gayathri_bold"
-                android:textColor="@color/black"
-                android:text="Actividades"/>
+
             <ScrollView
                 android:id="@+id/scroll_actividades"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="gone"
+                android:visibility="visible"
                 android:fillViewport="true">
+
                 <LinearLayout
-                    android:id="@+id/contenedor_actividades"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
+
+                    <!-- Grid horaria -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <!-- Columna de horas -->
+                        <LinearLayout
+                            android:layout_width="40dp"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+                            <TextView style="@style/HoraTexto" android:text="00:00"/>
+                            <TextView style="@style/HoraTexto" android:text="01:00"/>
+                            <TextView style="@style/HoraTexto" android:text="02:00"/>
+                            <TextView style="@style/HoraTexto" android:text="03:00"/>
+                            <TextView style="@style/HoraTexto" android:text="04:00"/>
+                            <TextView style="@style/HoraTexto" android:text="05:00"/>
+                            <TextView style="@style/HoraTexto" android:text="06:00"/>
+                            <TextView style="@style/HoraTexto" android:text="07:00"/>
+                            <TextView style="@style/HoraTexto" android:text="08:00"/>
+                            <TextView style="@style/HoraTexto" android:text="09:00"/>
+                            <TextView style="@style/HoraTexto" android:text="10:00"/>
+                            <TextView style="@style/HoraTexto" android:text="11:00"/>
+                            <TextView style="@style/HoraTexto" android:text="12:00"/>
+                            <TextView style="@style/HoraTexto" android:text="13:00"/>
+                            <TextView style="@style/HoraTexto" android:text="14:00"/>
+                            <TextView style="@style/HoraTexto" android:text="15:00"/>
+                            <TextView style="@style/HoraTexto" android:text="16:00"/>
+                            <TextView style="@style/HoraTexto" android:text="17:00"/>
+                            <TextView style="@style/HoraTexto" android:text="18:00"/>
+                            <TextView style="@style/HoraTexto" android:text="19:00"/>
+                            <TextView style="@style/HoraTexto" android:text="20:00"/>
+                            <TextView style="@style/HoraTexto" android:text="21:00"/>
+                            <TextView style="@style/HoraTexto" android:text="22:00"/>
+                            <TextView style="@style/HoraTexto" android:text="23:00"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/contenedorColumnasDias"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <!-- Cada una de estas columnas es un día de la semana -->
+                            <LinearLayout
+                                android:id="@+id/columna_d"
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:background="#eeeeee">
+                                <!-- Aquí se agregan bloques de actividades -->
+                            </LinearLayout>
+
+                            <!-- Repetir para L, M, M, J, V, S -->
+                        </LinearLayout>
+                    </LinearLayout>
                 </LinearLayout>
+
             </ScrollView>
-            <LinearLayout
-                android:id="@+id/layout_no_dia_seleccionado"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:visibility="gone"
-                android:gravity="center">
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginTop="5dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/castorestudiando_1">
-                </ImageView>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:textAlignment="center"
-                    android:fontFamily="@font/gayathri_bold"
-                    android:textSize="20dp"
-                    android:textColor="@color/black"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
-                    android:text="Seleccionar una fecha para ver las actividades del día.">
-                </TextView>
-            </LinearLayout>
+
             <LinearLayout
                 android:id="@+id/layout_no_usr_kit_seleccionado"
                 android:layout_width="match_parent"

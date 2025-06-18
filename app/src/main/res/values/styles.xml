@@ -39,5 +39,13 @@
         <item name="colorControlActivated">#566C9F</item>
         <item name="colorControlNormal">#B0BEC5</item>
     </style>
+
+    //para las horitas del calendario
+    <style name="HoraTexto">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">60dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">12sp</item>
+    </style>
 </resources>
 

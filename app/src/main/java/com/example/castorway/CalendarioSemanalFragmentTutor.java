@@ -45,8 +45,6 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
-import java.time.DayOfWeek;
-import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
@@ -58,15 +56,14 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class CalendarioFragmentTutor extends Fragment {
-
+public class CalendarioSemanalFragmentTutor extends Fragment {
     private ScrollView scrollActividades;
-    private LinearLayout layoutDiasSemana, layoutActividades, layout_no_usr_kit_seleccionado, layout_no_dia_seleccionado;
-    private ImageView flechaIzquierda, flechaDerecha, btnAgregarActi, btnSemanal;
+    private LinearLayout layoutDiasSemana, layoutActividades, layout_no_usr_kit_seleccionado;
+    private ImageView flechaIzquierda, flechaDerecha, btnAgregarActi, btnAgenda;
     private Calendar fechaInicioSemana, diaSeleccionado;
     private TextView txtRangoFecha, textoNoActs, btnHoyFecha, diaLunes, diaMartes, diaMiercoles, diaJueves, diaViernes, diaSabado, diaDomingo;
 
-    public CalendarioFragmentTutor() {
+    public CalendarioSemanalFragmentTutor() {
         // Required empty public constructor
     }
 
@@ -76,7 +73,6 @@ public class CalendarioFragmentTutor extends Fragment {
 
         layoutDiasSemana = view.findViewById(R.id.contenedor_dias_semana);
         layoutActividades = view.findViewById(R.id.contenedor_actividades);
-        layout_no_dia_seleccionado = view.findViewById(R.id.layout_no_dia_seleccionado);
         layout_no_usr_kit_seleccionado = view.findViewById(R.id.layout_no_usr_kit_seleccionado);
         btnAgregarActi = view.findViewById(R.id.btnAgregarActi);
         txtRangoFecha = view.findViewById(R.id.txtRangoFecha);
@@ -85,7 +81,7 @@ public class CalendarioFragmentTutor extends Fragment {
         flechaIzquierda = view.findViewById(R.id.imgFlechaBotonAnterior);
         flechaDerecha = view.findViewById(R.id.imgFlechaBotonSiguiente);
         btnHoyFecha = view.findViewById(R.id.btnHoyFecha);
-        btnSemanal = view.findViewById(R.id.btnSemanal);
+        btnAgenda = view.findViewById(R.id.btnAgenda);
 
         diaLunes = view.findViewById(R.id.dia_lunes);
         diaMartes = view.findViewById(R.id.dia_martes);
@@ -139,7 +135,6 @@ public class CalendarioFragmentTutor extends Fragment {
             fechaInicioSemana.add(Calendar.DAY_OF_MONTH, diferencia2);
             actualizarTextoRangoFecha(fechaInicioSemana);
             scrollActividades.setVisibility(View.VISIBLE);
-            layout_no_dia_seleccionado.setVisibility(View.GONE);
             mostrarDiasSemana(fechaInicioSemana);
             desplegActis(hoy);
         });
@@ -153,13 +148,12 @@ public class CalendarioFragmentTutor extends Fragment {
                 startActivity(intent);
             }
         });
-        // falta corregir bn esto
-        if (btnSemanal == null) {
-            Log.e("Error", "btnSemanal es null");
+        if (btnAgenda == null) {
+            Log.e("Error", "btnAgenda es null");
         }else{
-        btnSemanal.setOnClickListener(v -> {
+        btnAgenda.setOnClickListener(v -> {
             new Handler(Looper.getMainLooper()).postDelayed(() -> {
-                Fragment nuevoFragment = new CalendarioSemanalFragmentTutor();
+                Fragment nuevoFragment = new CalendarioFragmentTutor();
                 FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
                 FragmentTransaction transaction = fragmentManager.beginTransaction();
                 transaction.replace(R.id.frame_container, nuevoFragment);
@@ -202,20 +196,10 @@ public class CalendarioFragmentTutor extends Fragment {
             ));
 
             // Fondo por defecto
-            diaView.setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.fondo_dias_semana));
+            diaView.setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.fondo_dias_semana_blanco));
 
             // Resaltar si es hoy
             if (esMismoDia(diaActual, hoy)) {
-                diaView.setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.bg_dia_hoy));
-                diaView.setTextColor(Color.WHITE);
-            }
-
-            // Resaltar si es el día seleccionado
-            if (diaSeleccionado != null && esMismoDia(diaActual, diaSeleccionado)) {
-                diaView.setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.bg_dia_seleccionado));
-            }
-
-            if (diaSeleccionado != null && esMismoDia(diaActual, diaSeleccionado) && esMismoDia(diaActual, hoy)) {
                 diaView.setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.bg_dia_hoy));
                 diaView.setTextColor(Color.WHITE);
             }
@@ -225,7 +209,6 @@ public class CalendarioFragmentTutor extends Fragment {
                 try {
                     diaSeleccionado = (Calendar) v.getTag();
                     scrollActividades.setVisibility(View.VISIBLE);
-                    layout_no_dia_seleccionado.setVisibility(View.GONE);
                     mostrarDiasSemana(inicioSemanaOriginal);
                     desplegActis(diaSeleccionado);
 
@@ -266,10 +249,8 @@ public class CalendarioFragmentTutor extends Fragment {
     private void hayDiaSeleccionado(Calendar diaSeleccionado) {
         Log.d("vistita", "hay día: " + diaSeleccionado);
         if (diaSeleccionado == null) {
-            layout_no_dia_seleccionado.setVisibility(View.VISIBLE);
             scrollActividades.setVisibility(View.GONE);
         } else {
-            layout_no_dia_seleccionado.setVisibility(View.GONE);
             scrollActividades.setVisibility(View.VISIBLE);
         }
     }

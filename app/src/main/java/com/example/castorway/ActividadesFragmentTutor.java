@@ -4,6 +4,8 @@ import static android.content.Context.MODE_PRIVATE;
 
 import static androidx.core.content.ContextCompat.getSystemService;
 
+import static java.time.LocalDate.parse;
+
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -2791,8 +2793,8 @@ public class ActividadesFragmentTutor extends Fragment {
         });
     }
     private void filtrPorIntervaloFechas(){
-        LocalDate fechaInicioFiltro = LocalDate.parse(txtFechaInicial.getText().toString());
-        LocalDate fechaFinFiltro = LocalDate.parse(txtFechaFinal.getText().toString());
+        LocalDate fechaInicioFiltro = parse(txtFechaInicial.getText().toString());
+        LocalDate fechaFinFiltro = parse(txtFechaFinal.getText().toString());
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
@@ -2813,8 +2815,8 @@ public class ActividadesFragmentTutor extends Fragment {
                         Log.e("DEBUG", "idKit: " + idKit);
                         if (actividad.getIdKit() == idKit) {
 
-                            LocalDate fechaInicioAct = LocalDate.parse(actividad.getDiaInicioHabito(), formatter);
-                            LocalDate fechaFinAct = LocalDate.parse(actividad.getDiaMetaHabito(), formatter);
+                            LocalDate fechaInicioAct = parse(actividad.getDiaInicioHabito(), formatter);
+                            LocalDate fechaFinAct = parse(actividad.getDiaMetaHabito(), formatter);
 
                             if (!fechaInicioAct.isAfter(fechaFinFiltro) && !fechaFinAct.isBefore(fechaInicioFiltro)) {
                                 actisCoincid.add(actividad);
@@ -3066,7 +3068,7 @@ public class ActividadesFragmentTutor extends Fragment {
                             //se formate la fecha fin
 
                             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-                            LocalDate fechaFinAct = LocalDate.parse(fechaFin, formatter);
+                            LocalDate fechaFinAct = parse(fechaFin, formatter);
                             LocalDate hoy = LocalDate.now();
 
                             String[] valores = listEstadosActi.split(",");
